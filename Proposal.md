@@ -2,7 +2,7 @@
 A Light Weight Extreme Feedback Device
 
 ## Project Title
-My project&#39s title is lwefd, for Light Weight Exreme Feedback Device
+My project's title is lwefd, for Light Weight Exreme Feedback Device
 
 
 ## Purpose
@@ -29,7 +29,7 @@ This type of system could also be very useful to managers in a software engineer
 The managers could then use this dashboard to gain a quick view of how there codebase is 
 doing, and whether or not there needs to be action items. 
 
-Such a system will need to track each component&#39s notifications, and update its web
+Such a system will need to track each component's notifications, and update its web
 front-end with information based on the notification. The project will then need to 
 understand notifications from Jenkins and Travis CI, or support a general notification
 packet, which plugins could be written for Travis CI and Jenkins. A general notification
