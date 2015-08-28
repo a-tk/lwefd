@@ -25,7 +25,15 @@ whenever each of them builds a component, then I can know in one moment if each 
 has passing or failing tests, broken components, and why. All without knowing the 
 technical details of each CI system. 
 
+This type of system could also be very useful to managers in a software engineering shop.
+The managers could then use this dashboard to gain a quick view of how there codebase is 
+doing, and whether or not there needs to be action items. 
 
+Such a system will need to track each component&#39s notifications, and update its web
+front-end with information based on the notification. The project will then need to 
+understand notifications from Jenkins and Travis CI, or support a general notification
+packet, which plugins could be written for Travis CI and Jenkins. A general notification
+packet would be essential for aggregating generic notifications in one place. 
 
 ## Web Technologies
 Node.js webserver
@@ -36,4 +44,13 @@ Sqlite DB
 
 ## Stretch Goals
 
+### Metrics to track each systems state over time. 
+This would be used to track software development trends, like codebase health
+or development capability. 
+
+### Email capability
+Would be useful to notify based on CI System health. Jenkins and Travis already can
+do this though.
+
+### GPIO Pin support for a platform like Raspberry pi
 
