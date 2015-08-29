@@ -32,16 +32,22 @@ the smallest households or organizations.
 The goal to the project will be a single page web app, capability to run on Raspberry 
 Pi, interface with more than one type of CI system, be user extensible and configurable.
 
+lwefd manages data from each user configurable group, like a list of "jobs" that make up a 
+group, and their "state". States could be what is typical of CI systems, Failed (component
+failed to build) unstable (component has failing unit tests), and success (no problem). 
+lwefd would then also need to keep track of the user configurable groups, and their state.
+I envision that their state's would represent each jobs state as considered as a whole. 
+
 ## Web Technologies
 
 ###Node.js webserver
-The base of the system
+The base of the system.
 ###Ext.js MVC framework
-Allow strong software development paradigms
+Allow strong software development paradigms.
 ###Angular.js
-Allow the front end to be a dynamic single page app
+Allow the front end to be a dynamic single page app.
 ###Sqlite DB
-A strong and resilient back end
+A lightweight, strong and resilient back end.
 
 
 ## Stretch Goals
@@ -58,4 +64,8 @@ do this though.
 This would allow users to plug in relays to the Raspberry Pi's GPIO pins, 
 and connect these triggers to fun EFD systems, like a traffic light or 
 to anything that they may want. 
+
+### Authentication System
+Since the website is hosted publically, it may need to manage who it recieves notifications
+from, therefor needing a notification authentication scheme.
 
