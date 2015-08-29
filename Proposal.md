@@ -29,17 +29,19 @@ The system is called "light weight" because it will be designed to run on top of
 simple and cheap hardware, such as Raspberry Pi, so that it is accessible to even
 the smallest households or organizations. 
 
-The goal to the project will be: 
-	- single page web app
-	- capability to run on Raspberry Pi
-	- Interface with more than one type of CI system
-	- 
+The goal to the project will be a single page web app, capability to run on Raspberry 
+Pi, interface with more than one type of CI system, be user extensible and configurable.
 
 ## Web Technologies
-Node.js webserver
-Ext.js MVC framework
-Angular.js
-Sqlite DB
+
+###Node.js webserver
+The base of the system
+###Ext.js MVC framework
+Allow strong software development paradigms
+###Angular.js
+Allow the front end to be a dynamic single page app
+###Sqlite DB
+A strong and resilient back end
 
 
 ## Stretch Goals
@@ -53,4 +55,7 @@ Would be useful to notify based on CI System health. Jenkins and Travis already 
 do this though.
 
 ### GPIO Pin support for a platform like Raspberry pi
+This would allow users to plug in relays to the Raspberry Pi's GPIO pins, 
+and connect these triggers to fun EFD systems, like a traffic light or 
+to anything that they may want. 
 
