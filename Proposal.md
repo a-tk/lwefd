@@ -2,7 +2,8 @@
 A Light Weight Extreme Feedback Device
 
 ## Project Title
-My project's title is lwefd, for Light Weight Exreme Feedback Device
+My project's title is lwefd, for Light Weight Exreme Feedback Device - a website 
+aggragation dashboard.
 
 
 ## Purpose
