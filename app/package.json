@@ -1,0 +1,26 @@
+{
+  "name": "lwefd",
+  "version": "0.0.1",
+  "description": "Light-Weight Extreme Feedback Device",
+  "main": "app.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a-tk/lwefd.git"
+  },
+  "keywords": [
+    "extreme",
+    "programming"
+  ],
+  "author": "Andre Keys",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/a-tk/lwefd/issues"
+  },
+  "homepage": "https://github.com/a-tk/lwefd#readme"
+}
