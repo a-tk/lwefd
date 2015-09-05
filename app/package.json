@@ -1,6 +1,10 @@
 {
   "name": "lwefd",
   "version": "0.0.1",
+  "dependencies": {
+    "express": "4.x",
+    "log4js": "0.6.x"
+  },
   "description": "Light-Weight Extreme Feedback Device",
   "main": "app.js",
   "directories": {
