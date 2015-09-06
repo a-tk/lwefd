@@ -7,9 +7,13 @@ var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
 var jobs = require('./routes/jobs');
+var notify = require('./routes/notify');
+
+var NotificationService = require('./util/Notifications/NotificationService'),
+    notificationService = new NotificationService();
 
 var app = express();
-var log = log4js.getLogger();
+var log = log4js.getLogger('app');
 var serverConfig = {
   port: 3000
 };
@@ -33,6 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  */
 app.use('/', routes);
 app.use('/jobs', jobs);
+app.use('/notify', notify);
 
 
 /**
@@ -65,6 +70,8 @@ log.info("app.get('env') = " + app.get('env'));
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    log.error(err.message);
+    log.error(err.stack);
     res.render('error', {
       message: err.message,
       error: err
@@ -77,6 +84,8 @@ if (app.get('env') === 'development') {
  */
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
+  log.error(err.message);
+  log.error(err.stack);
   res.render('error', {
     message: err.message,
     error: {}
@@ -89,5 +98,7 @@ var server = app.listen(serverConfig.port, function () {
 
   log.info('lwefd listening at http://'+ host + ':' + port)
 });
+
+notificationService.start();
 
 module.exports = app;

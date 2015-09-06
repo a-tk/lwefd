@@ -16,7 +16,8 @@
     "jade": "~1.11.0",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "log4js": "~0.6.x"
+    "log4js": "~0.6.x",
+    "sqlite3": "~3.0.x"
   },
   "author": "Andre Keys",
   "license": "MIT",
