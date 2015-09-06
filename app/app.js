@@ -10,7 +10,7 @@ var jobs = require('./routes/jobs');
 var notify = require('./routes/notify');
 
 var NotificationService = require('./util/Notifications/NotificationService'),
-    notificationService = new NotificationService();
+  notificationService = new NotificationService();
 
 var app = express();
 var log = log4js.getLogger('app');
