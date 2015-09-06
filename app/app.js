@@ -6,7 +6,7 @@ var log4js = require('log4js');
 var bodyParser = require('body-parser');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
+var jobs = require('./routes/jobs');
 
 var app = express();
 var log = log4js.getLogger();
@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
  *
  */
 app.use('/', routes);
-app.use('/users', users);
+app.use('/jobs', jobs);
 
 
 /**
