@@ -4,6 +4,9 @@
   "description": "Light-Weight Extreme Feedback Device",
   "private": true,
   "main": "app.js",
+  "scripts": {
+      "test": "echo \"no existing tests\" && exit 1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/a-tk/lwefd.git"
