@@ -8,6 +8,6 @@ describe('NotificationQueue', function() {
       var note2 = new NotificationQueue();
 
       assert.equal(note1, note2);
-    })
+    });
   });
 });
