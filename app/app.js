@@ -14,9 +14,8 @@ var NotificationService = require('./util/Notifications/NotificationService'),
 
 var app = express();
 var log = log4js.getLogger('app');
-var serverConfig = {
-  port: 3000
-};
+var environment = process.argv[2] || 'development';
+var serverConfig = require('./env.json')[ environment ];
 
 
 // view engine setup
@@ -66,8 +65,7 @@ app.use(function(req, res, next) {
 /**
  * Development Error handler
  */
-log.info("app.get('env') = " + app.get('env'));
-if (app.get('env') === 'development') {
+if (environment === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     log.error(err.message);
