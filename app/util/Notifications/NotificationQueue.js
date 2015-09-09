@@ -1,6 +1,6 @@
 var log4js = require('log4js'),
   log = log4js.getLogger('Notification Queue');
-
+/*
 function NotificationQueue () {
 
   if (arguments.callee._singletonInstance) {
@@ -14,5 +14,15 @@ function NotificationQueue () {
     //this.addNotification = function (notification) {
   }
 }
+*/
+
+var NotificationQueue = function () {
+  var log4js = require('log4js'),
+    log = log4js.getLogger('NotificationQueue');
+
+  return {
+    //methods
+  };
+}();
 
 module.exports = NotificationQueue;
