@@ -17,7 +17,7 @@ function NotificationParser () {
 }
 
 var parse = function (req) {
-  console.log(JSON.stringify(req));
+  console.log(JSON.stringify(req.body));
 };
 
 module.exports = NotificationParser;

@@ -2,8 +2,8 @@
 A Light Weight Extreme Feedback Device
 
 ## Project Title
-My project's title is lwefd, for Light Weight Exreme Feedback Device - a website 
-aggragation dashboard.
+My project's title is lwefd, for Light Weight Extreme Feedback Device - a website 
+aggregation dashboard.
 
 
 ## Purpose
@@ -18,8 +18,8 @@ program managers.
 This model makes it necessary for the lwefd to be a web application, allowing
 multiple simultaneous usage of the lwefd to anyone with an internet connection.
 
-In detail, the lwefd will recieve notifications (JSON or XML) from CI systems and group these 
-notifications into user defined catagories. These catagories can represent any 
+In detail, the lwefd will receive notifications (JSON or XML) from CI systems and group these 
+notifications into user defined categories. These categories can represent any 
 thing that a user could need, such as Software components or even creative 
 non-software related things, as long as the site also accepts a generic notification.
 
@@ -45,7 +45,7 @@ I envision that their state's would represent each jobs state as considered as a
 The base of the system.
 ###Ext.js MVC framework
 Allow strong software development paradigms.
-###Angular.js
+###Angular.js or other modern UI framework
 Allow the front end to be a dynamic single page app.
 ###Sqlite DB
 A lightweight, strong and resilient back end.

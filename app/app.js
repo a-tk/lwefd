@@ -14,7 +14,7 @@ var NotificationService = require('./util/Notifications/NotificationService'),
 
 var app = express();
 var log = log4js.getLogger('app');
-var environment = process.argv[2] || 'development';
+var environment = app.get('env') || process.argv[2] || 'development';
 var serverConfig = require('./env.json')[ environment ];
 
 
@@ -22,8 +22,7 @@ var serverConfig = require('./env.json')[ environment ];
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(reqLogger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -91,10 +90,8 @@ app.use(function(err, req, res, next) {
 });
 
 var server = app.listen(serverConfig.port, function () {
-  var host = server.address().address;
-  var port = server.address().port;
 
-  log.info('lwefd listening at http://'+ host + ':' + port)
+  log.info('lwefd listening on port '+ serverConfig.port)
 });
 
 notificationService.start();
