@@ -4,17 +4,14 @@ var log4js = require('log4js'),
 var express = require('express');
 var router = express.Router();
 
-var NotificationParser = require('../util/Notifications/NotificationParser'),
-  notificationParser = new NotificationParser();
-
-var NotificationController = require('../controllers/NotificationController'),
-  notificationController = new NotificationController(notificationParser);
+var notificationParser = require('../util/Notifications/NotificationParser');
+var notificationController = require('../controllers/NotificationController');
 
 router.post('/', function (req, res) {
   try {
 
     log.info('POST received, passing request to NotificationController');
-    var notification = notificationController.handleNotification(req);
+    var notification = notificationController.handleNotification(notificationParser, req);
 
   }catch(err) {
 
