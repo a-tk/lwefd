@@ -5,12 +5,14 @@ var reqLogger= require('morgan');
 var log4js = require('log4js');
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var jobs = require('./routes/jobs');
-var notify = require('./routes/notify');
+var di = require('./di.json');
 
-var NotificationService = require('./util/Notifications/NotificationService'),
-  notificationService = new NotificationService();
+var Notification = require('./util/Notifications/Notification.js'),
+  NotificationParser = require('./util/Notifications/NotificationParser.js'),
+  NotificationQueue = require('./util/Notifications/NotificationQueue.js'),
+  NotificationService = require('./util/Notifications/NotificationService.js');
+
+var NotificationController = require('./controllers/NotificationController.js');
 
 var app = express();
 var log = log4js.getLogger('app');
@@ -28,11 +30,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- *
- * Routes
- *
- */
 app.use('/', routes);
 app.use('/jobs', jobs);
 app.use('/notify', notify);
@@ -94,6 +91,6 @@ var server = app.listen(serverConfig.port, function () {
   log.info('lwefd listening on port '+ serverConfig.port)
 });
 
-notificationService.start();
+NotificationService.start();
 
 module.exports = app;
