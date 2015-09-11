@@ -5,8 +5,6 @@ var reqLogger= require('morgan');
 var log4js = require('log4js');
 var bodyParser = require('body-parser');
 
-var di = require('./di.json');
-
 var Notification = require('./util/Notifications/Notification.js'),
   NotificationParser = require('./util/Notifications/NotificationParser.js'),
   NotificationQueue = require('./util/Notifications/NotificationQueue.js'),
@@ -45,7 +43,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-
+require ('./di.js')(log, app, require('./di.json'), {});
 
 /**
  *
@@ -86,6 +84,6 @@ var server = app.listen(serverConfig.port, function () {
   log.info('lwefd listening on port '+ serverConfig.port)
 });
 
-NotificationService.start();
+NotificationService.start(log);
 
 module.exports = app;

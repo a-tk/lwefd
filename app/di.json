@@ -1,3 +1,20 @@
 {
-
+  "databaseFile": "something.sqlite",
+  "required": {
+    "Notification":"./util/Notifications/Notification.js",
+    "NotificationParser":"./util/Notifications/NotificationParser.js",
+    "NotificationQueue":"./util/Notifications/NotificationQueue.js",
+    "NotificationService":"./util/Notifications/NotificationService.js",
+    "NotificationController":"./controllers/NotificationController.js"
+  },
+  "routes": {
+    "/notify": {
+      "controller": "NotificationController",
+      "depends": [
+        "Notification",
+        "NotificationParser",
+        "NotificationService"
+      ]
+    }
+  }
 }
