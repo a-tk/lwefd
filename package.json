@@ -20,7 +20,6 @@
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "log4js": "~0.6.x",
-    "sqlite3": "~3.0.x",
     "mocha": "~2.3.x"
   },
   "author": "Andre Keys",
