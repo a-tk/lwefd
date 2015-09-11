@@ -1,10 +1,10 @@
+var log4js = require('log4js'),
+  log = log4js.getLogger('Notification');
 
-var Notification = function () {
-  return {
-    test: function ($logger) {
-      $logger.info('Notification.test');
-    }
-  };
-}();
+function Notification () {
+  log.info('Notification Created')
+}
 
-module.exports = Notification;
+Notification.prototype = {
+
+};
