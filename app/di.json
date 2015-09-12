@@ -1,11 +1,14 @@
 {
   "/": {
-    "controller": "./controllers/index.js"
+    "controller": "./controllers/index/index.js"
   },
   "/jobs" : {
     "controller": "./controllers/jobs/index.js"
   },
   "/notify": {
-    "controller": "./controllers/notify/index.js"
+    "controller": "./controllers/notify/index.js",
+    "dependsOn": {
+
+    }
   }
 }
