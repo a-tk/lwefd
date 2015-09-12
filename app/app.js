@@ -15,7 +15,7 @@ log4js.configure({
 
 var bodyParser = require('body-parser');
 
-var di = require('./di.js');
+var dispatcher = require('./dispatcher.js');
 
 var app = express();
 var log = log4js.getLogger('app');
@@ -33,7 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('*', di(fs, log4js));
+app.use('*', dispatcher(fs, log4js));
 
 /**
  *

@@ -1,4 +1,4 @@
-var NotificationController = require('../../controllers/NotificationController');
+var NotificationController = require('notify/NotificationController');
 var assert = require('assert');
 
 describe('NotificationController', function() {
