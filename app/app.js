@@ -1,16 +1,21 @@
 var express = require('express');
 var path = require('path');
+var fs = require('fs');
 var favicon = require('serve-favicon');
 var reqLogger= require('morgan');
 var log4js = require('log4js');
+/*
+log4js.configure({
+  appenders: [
+    {type: 'console'},
+    {type: 'file', filename: 'logs/app.log', category: 'app'}
+  ]
+});
+*/
+
 var bodyParser = require('body-parser');
 
-var routes = require('./routes/index');
-var jobs = require('./routes/jobs');
-var notify = require('./routes/notify');
-
-var NotificationService = require('./util/Notifications/NotificationService'),
-  notificationService = new NotificationService();
+var di = require('./di.js');
 
 var app = express();
 var log = log4js.getLogger('app');
@@ -28,15 +33,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-/**
- *
- * Routes
- *
- */
-app.use('/', routes);
-app.use('/jobs', jobs);
-app.use('/notify', notify);
-
+app.use('*', di(fs, log4js));
 
 /**
  *
@@ -44,9 +41,6 @@ app.use('/notify', notify);
  *
  */
 
-/**
- * 404 - forward to error handler
- */
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
@@ -61,9 +55,6 @@ app.use(function(req, res, next) {
  *
  */
 
-/**
- * Development Error handler
- */
 if (environment === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -76,9 +67,6 @@ if (environment === 'development') {
   });
 }
 
-/**
- * Production Error Handler
- */
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   log.error(err.message);
@@ -93,7 +81,5 @@ var server = app.listen(serverConfig.port, function () {
 
   log.info('lwefd listening on port '+ serverConfig.port)
 });
-
-notificationService.start();
 
 module.exports = app;

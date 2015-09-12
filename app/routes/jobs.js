@@ -1,8 +1,9 @@
-var express = require('express');
-var router = express.Router();
+var Jobs = function (log4js) {
+  var log = log4js.getLogger('/jobs');
 
-router.get('/', function(req, res, next) {
-  res.render('jobs/jobs', { title: 'Express' });
-});
+  Jobs.prototype.get = function (req, res, next) {
+    res.render('jobs/jobs', {title: 'Jobs'});
+  }
+};
 
-module.exports = router;
+module.exports = Jobs;
