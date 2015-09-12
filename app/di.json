@@ -1,11 +1,11 @@
 {
   "/": {
-    "route": "./routes/index.js"
+    "route": "./controllers/index.js"
   },
   "/jobs" : {
-    "route": "./routes/jobs.js"
+    "route": "./controllers/jobs/index.js"
   },
   "/notify": {
-    "route": "./routes/notify.js"
+    "route": "./controllers/notify/index.js"
   }
 }
