@@ -8,7 +8,10 @@
   "/notify": {
     "controller": "./controllers/notify/index.js",
     "dependsOn": {
-
+      "Notification": "./controllers/notify/Notification.js",
+      "NotificationParser": "./controllers/notify/NotificationParser.js",
+      "NotificationHandler": "./controllers/notify/NotificationHandler.js",
+      "NotificationQueue": "./controllers/notify/NotificationQueue.js"
     }
   }
 }

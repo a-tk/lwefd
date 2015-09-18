@@ -1,15 +1,16 @@
+function NotificationHandler(log4js,
+                             Notification,
+                             NotificationParser,
+                             NotificationQueue) {
 
+  var log = log4js/getLogger('NotificationHandler');
+  var notification = Notification,
+    parser = NotificationParser,
+    queue = NotificationQueue;
 
-var NotificationController = function () {
-  var log4js = require('log4js'),
-    log = log4js.getLogger('NotificationController');
+  NotificationHandler.prototype.handleNotification = function () {
+    log.info('handleNotification callled');
+  }
+}
 
-  return {
-    handleNotification: function (notificationParser, req) {
-      log.info('handleNotification');
-      notificationParser.parse(req);
-    }
-  };
-}();
-
-module.exports = NotificationController;
+module.exports = NotificationHandler;
