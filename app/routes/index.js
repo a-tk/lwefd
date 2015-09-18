@@ -1,4 +1,4 @@
-var index = function(log4js, express) {
+var index = (function(log4js, express) {
   var log = log4js.getLogger('/jobs');
   var index = express.Router();
 
@@ -7,7 +7,6 @@ var index = function(log4js, express) {
   });
 
   return index;
-};
-
+});
 
 module.exports = index;

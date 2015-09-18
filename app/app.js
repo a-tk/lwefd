@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var fs = require('fs');
 var favicon = require('serve-favicon');
 var reqLogger= require('morgan');
 var log4js = require('log4js');
@@ -20,8 +19,6 @@ var log = log4js.getLogger('app');
 var environment = app.get('env') || process.argv[2] || 'development';
 var serverConfig = require('./env.json')[ environment ];
 
-var index = require('./routes/index.js')(log4js, express);
-var jobs = require('./routes/jobs.js')(log4js, express);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,8 +30,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', index);
-app.use('/jobs', jobs);
+var index = require('./routes/index.js');
+var jobs = require('./routes/jobs.js');
+
+app.use('/', index(log4js, express));
+app.use('/jobs', jobs(log4js, express));
 
 /**
  *

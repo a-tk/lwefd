@@ -1,10 +1,8 @@
 
-function Index (log4js) {
-  var log = log4js.getLogger('/');
+var Index = (function () {
+  return {
 
-  Index.prototype.get = function(req, res, next) {
-    res.render('index', { title: 'Index'});
   }
-}
+});
 
 module.exports = Index;

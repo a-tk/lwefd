@@ -1,4 +1,4 @@
-var jobs = function(log4js, express) {
+var jobs = (function(log4js, express) {
   var log = log4js.getLogger('/jobs');
   var jobs = express.Router();
 
@@ -7,7 +7,6 @@ var jobs = function(log4js, express) {
   });
 
   return jobs;
-};
-
+});
 
 module.exports = jobs;
