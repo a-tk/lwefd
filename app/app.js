@@ -15,13 +15,13 @@ log4js.configure({
 
 var bodyParser = require('body-parser');
 
-var dispatcher = require('./dispatcher.js');
-
 var app = express();
 var log = log4js.getLogger('app');
 var environment = app.get('env') || process.argv[2] || 'development';
 var serverConfig = require('./env.json')[ environment ];
 
+var index = require('./routes/index.js')(log4js, express);
+var jobs = require('./routes/jobs.js')(log4js, express);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -33,7 +33,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('*', dispatcher(fs, log4js));
+app.use('/', index);
+app.use('/jobs', jobs);
 
 /**
  *
