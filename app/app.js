@@ -30,11 +30,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var index = require('./routes/index.js');
-var jobs = require('./routes/jobs.js');
+var routes = require('./routes/routes.js');
 
-app.use('/', index(log4js, express));
-app.use('/jobs', jobs(log4js, express));
+app.use('/', routes(log4js, express));
 
 /**
  *
