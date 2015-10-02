@@ -32,7 +32,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes/routes.js');
 
-app.use('/', routes(log4js, express));
+app.use('', routes(log4js, express));
 
 /**
  *

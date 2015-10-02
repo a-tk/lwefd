@@ -10,6 +10,10 @@ var routes = (function(log4js, express) {
     res.render('jobs/jobs',{title: 'New routing'});
   });
 
+  routes.post('/notify', function(req,res, next) {
+    res.send('POST received\n');
+  });
+
   return routes;
 });
 
