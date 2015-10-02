@@ -30,9 +30,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var routes = require('./routes/routes.js');
 
-app.use('', routes(log4js, express));
+/**
+ * set routes up
+ */
+var routes = require('./routes/routes.js');
+app.use(routes(log4js, express));
 
 /**
  *
