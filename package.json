@@ -20,7 +20,8 @@
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
     "log4js": "~0.6.x",
-    "mocha": "~2.3.x"
+    "mocha": "~2.3.x",
+    "mongodb": "~2.0"
   },
   "author": "Andre Keys",
   "license": "MIT",

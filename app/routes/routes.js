@@ -1,4 +1,4 @@
-var routes = (function(log4js, express) {
+var routes = (function(log4js, express, model) {
   var log = log4js.getLogger('/routes');
   var routes = express.Router();
 
@@ -6,17 +6,25 @@ var routes = (function(log4js, express) {
     res.render('index',{title: 'New routing'});
   });
 
-  routes.get('/jobs/', function (req, res, next) {
-    res.render('jobs/jobs',{title: 'New routing'});
+  routes.get('/:product/', function (req, res, next) {
+    res.send('got ' + req.params.product);
   });
 
-  routes.post('/notify/:id',
-    function (req, res, next) {
-    console.log('this is middleware, id is ' + req.params.id); next();
-  }, function(req,res, next) {
-    res.send('POST received\n');
+  routes.get('/:product/notify/', function (req, res, next) {
+    res.send('got ' + req.params.product);
   });
 
+  routes.post('/:product/notify/', function (req, res, next) {
+    res.send('got ' + req.params.product);
+  });
+
+  routes.get('/:product/jobs/', function (req, res, next) {
+    res.send('got ' + req.params.product);
+  });
+
+  routes.get('/:product/jobs/:id/', function (req, res, next) {
+    res.send('got ' + req.params.product + ' and id ' + req.params.id);
+  });
   return routes;
 });
 

@@ -30,12 +30,15 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+var model = require('./model/model.js');
+model.connect();
+
 
 /**
  * set routes up
  */
 var routes = require('./routes/routes.js');
-app.use(routes(log4js, express));
+app.use(routes(log4js, express, model));
 
 /**
  *
