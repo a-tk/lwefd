@@ -10,7 +10,10 @@ var routes = (function(log4js, express) {
     res.render('jobs/jobs',{title: 'New routing'});
   });
 
-  routes.post('/notify/:id', function (req, res, next) {console.log('this is middleware, id is ' + req.params.id); next();}, function(req,res, next) {
+  routes.post('/notify/:id',
+    function (req, res, next) {
+    console.log('this is middleware, id is ' + req.params.id); next();
+  }, function(req,res, next) {
     res.send('POST received\n');
   });
 

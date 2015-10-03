@@ -1,4 +1,4 @@
-var NotificationController = require('notify/NotificationController');
+/*var NotificationController = require('notify/NotificationController');
 var assert = require('assert');
 
 describe('NotificationController', function() {
@@ -10,4 +10,4 @@ describe('NotificationController', function() {
       assert.equal(note1, note2);
     });
   });
-});
+});*/
