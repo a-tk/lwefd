@@ -29,8 +29,8 @@ var model = (function () {
 
   var addRun = function (productId, name, status, callback) {
     db.collection(jobs).updateOne( {
+      _id: name,
       productId : productId,
-      name : name,
       runs: [
 
       ]
@@ -48,6 +48,12 @@ var model = (function () {
     });
   };
 
+  var outDB = function (callback) {
+   db.collection(jobs).find().toArray().then(function (result) {
+     callback(result);
+   });
+  };
+
   var close = function() {
     db.close();
   };
@@ -56,6 +62,7 @@ var model = (function () {
     connect: connect,
     addProduct: addProduct,
     addRun : addRun,
+    outDB: outDB,
     close: close
   }
 })();
