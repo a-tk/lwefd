@@ -30,12 +30,8 @@ var model = (function () {
   var addRun = function (productId, name, status, callback) {
     db.collection(jobs).updateOne( {
       _id: name,
-      productId : productId,
-      runs: [
-
-      ]
-    }, {
-        $push : {
+      productId : productId
+    }, {$push : {
           runs : {
             date: Date.now(),
             status : status
@@ -50,7 +46,7 @@ var model = (function () {
 
   var outDB = function (callback) {
    db.collection(jobs).find().toArray().then(function (result) {
-     callback(result);
+     callback(JSON.stringify(result));
    });
   };
 
