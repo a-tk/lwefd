@@ -30,8 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var modelClosure = require('./model/model.js'),
-  model = modelClosure(log4js);
+var model = require('./model/model.js');
+model = model(log4js);
 model.connect();
 
 
@@ -39,7 +39,8 @@ model.connect();
  * set routes up
  */
 var routes = require('./routes/routes.js');
-app.use(routes(log4js, express, model));
+routes = routes(log4js, express, model);
+app.use(routes);
 
 /**
  *
