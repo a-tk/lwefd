@@ -1,6 +1,6 @@
 #October 8
 For this checkpoint I would really like to have a working end-to-end
-backend for the site. This means for the site to be recieving notifications,
+backend for the site. This means for the site to be receiving notifications,
 parsing them, and storing them in a sensible database. 
 
 This is the first checkpoint with a large deliverable, but in my 
