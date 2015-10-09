@@ -1,4 +1,5 @@
-var model = (function () {
+var model = (function (log4js) {
+  var log = log4js.getLogger('model');
   var MongoClient = require('mongodb').MongoClient,
     assert = require('assert');
 
@@ -10,7 +11,7 @@ var model = (function () {
   var connect = function () {
       MongoClient.connect(url, function (err, connection) {
         assert.equal(null, err);
-        console.log('connected to the server!');
+        log.info('connected to the mongo server');
         db = connection;
     });
   };
@@ -44,6 +45,21 @@ var model = (function () {
     });
   };
 
+  var getJob = function (callback) {
+    log.warn('getJob not implemented');
+    callback();
+  };
+
+  var getJobListing = function (callback) {
+    log.warn('getJobListing not implemented');
+    callback();
+  };
+
+  var getProduct = function (callback) {
+    log.warn('getProduct not implemented');
+    callback();
+  };
+
   var outDB = function (callback) {
    db.collection(jobs).find().toArray().then(function (result) {
      callback(JSON.stringify(result));
@@ -58,9 +74,12 @@ var model = (function () {
     connect: connect,
     addProduct: addProduct,
     addRun : addRun,
+    getJob: getJob,
+    getProduct: getProduct,
+    getJobListing: getJobListing,
     outDB: outDB,
     close: close
   }
-})();
+});
 
 module.exports = model;

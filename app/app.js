@@ -21,7 +21,7 @@ var serverConfig = require('./env.json')[ environment ];
 
 
 // view engine setup
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'jade');
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
@@ -30,7 +30,8 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-var model = require('./model/model.js');
+var modelClosure = require('./model/model.js'),
+  model = modelClosure(log4js);
 model.connect();
 
 
@@ -83,7 +84,6 @@ app.use(function(err, req, res, next) {
 });
 
 var server = app.listen(serverConfig.port, function () {
-
   log.info('lwefd listening on port '+ serverConfig.port)
 });
 

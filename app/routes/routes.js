@@ -3,30 +3,43 @@ var routes = (function(log4js, express, model) {
   var routes = express.Router();
 
   routes.get('/', function (req, res, next) {
-    model.outDB(console.log);
-    res.render('index',{title: 'New routing'});
+    //TODO: display all of the routes
+    model.outDB(function (result) {
+      res.render('index',{title: '/', data: result});
+    });
   });
 
   routes.get('/:product/', function (req, res, next) {
-    model.addProduct(1, req.params.product, 'TESTING', console.log);
-    res.send('got ' + req.params.product);
+    //TODO: display product info
+    model.getProduct(function (result) {
+      res.render('jobs/jobs',{title: '/:product/', data: result});
+    });
   });
 
   routes.get('/:product/notify/', function (req, res, next) {
+    //TODO: on how to notify
     res.send('got ' + req.params.product);
   });
 
   routes.post('/:product/notify/', function (req, res, next) {
-    res.send('got ' + req.params.product);
+    //TODO: process notification
+    model.getProduct(function (result) {
+      res.render('jobs/jobs',{title: '/:product/notify', data: result});
+    });
   });
 
   routes.get('/:product/jobs/', function (req, res, next) {
-    res.send('got ' + req.params.product);
+    //TODO: view all jobs belonging to a product
+    model.getJobListing(function (result) {
+      res.render('jobs/jobs',{title: '/:product/jobs/', data: result});
+    });
   });
 
   routes.get('/:product/jobs/:id/', function (req, res, next) {
-    model.addRun(req.params.product, 'Test Job', 'SUCCESS', console.log);
-    res.send('got ' + req.params.product + ' and id ' + req.params.id);
+    //TODO: display all of the run information for a specific job
+    model.getJob(function (result) {
+      res.render('jobs/jobs',{title: '/:product/jobs/:id', data: result});
+    });
   });
 
   return routes;
