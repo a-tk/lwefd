@@ -11,34 +11,43 @@ var routes = (function(log4js, express, model) {
 
   routes.get('/:product/', function (req, res, next) {
     //TODO: display product info
-    model.getProduct(function (result) {
-      res.render('jobs/jobs',{title: '/:product/', data: result});
+    model.getProduct(req.params.product, function (result) {
+      res.render('jobs/jobs',{title: '/' + req.params.product + '/', data: result});
+    });
+  });
+
+  routes.get('/:product/create/:name', function (req, res, next) {
+    //TODO: display product info
+    model.addProduct(req.params.product, req.params.name ,function (result) {
+      res.render('jobs/jobs',{title: '/'+req.params.product+'/create/' + req.params.name, data: result});
     });
   });
 
   routes.get('/:product/notify/', function (req, res, next) {
-    //TODO: on how to notify
-    res.send('got ' + req.params.product);
+    //TODO: doc on how to notify
+    model.addRun(req.params.product, 'test job', 'SUCCESS', function (result) {
+      res.render('jobs/jobs',{title: '/'+req.params.product+'/notify', data: result});
+    });
   });
 
   routes.post('/:product/notify/', function (req, res, next) {
     //TODO: process notification
     model.getProduct(function (result) {
-      res.render('jobs/jobs',{title: '/:product/notify', data: result});
+      res.render('jobs/jobs',{title: '/'+req.params.product+'/notify', data: result});
     });
   });
 
   routes.get('/:product/jobs/', function (req, res, next) {
     //TODO: view all jobs belonging to a product
-    model.getJobListing(function (result) {
-      res.render('jobs/jobs',{title: '/:product/jobs/', data: result});
+    model.getJobListing(req.params.product, function (result) {
+      res.render('jobs/jobs',{title: '/' + req.params.product + '/jobs/', data: result});
     });
   });
 
   routes.get('/:product/jobs/:id/', function (req, res, next) {
     //TODO: display all of the run information for a specific job
-    model.getJob(function (result) {
-      res.render('jobs/jobs',{title: '/:product/jobs/:id', data: result});
+    model.getJob(req.params.product, req.params.id, function (result) {
+      res.render('jobs/jobs',{title: '/'+req.params.product +'/jobs/'+req.params.id, data: result});
     });
   });
 
