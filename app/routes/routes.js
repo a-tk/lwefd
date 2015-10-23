@@ -23,7 +23,7 @@ var routes = (function(log4js, express, model) {
     });
   });
 
-  routes.get('/api/create/:product', function (req, res, next) {
+  routes.post('/api/create/:product', function (req, res, next) {
     //TODO: display product info
     model.addProduct(req.params.product, function (result) {
       res.send(result);

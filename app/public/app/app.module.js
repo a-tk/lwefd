@@ -18,6 +18,9 @@
           .when('/jobs', {
               templateUrl: 'app/jobs/jobs.html'
           })
+          .when('/configure', {
+            templateUrl: 'app/configure/configure.html'
+          })
 
           .otherwise({ redirectTo: '/' });
     }
