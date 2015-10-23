@@ -7,7 +7,7 @@
 
   ConfigureCtrl.$inject = ['DataService'];
 
-  function ConfigureCtrl (DataService) {
+  function ConfigureCtrl(DataService) {
 
     var vm = this;
     vm.addProduct = addProduct;
@@ -19,11 +19,11 @@
 
     }
 
-    function addProduct () {
+    function addProduct() {
 
     }
 
-    function testNotification () {
+    function testNotification() {
 
     }
   }

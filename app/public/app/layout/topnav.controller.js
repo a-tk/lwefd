@@ -1,19 +1,19 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    angular.module('app')
-        .controller('TopNavCtrl', TopNavCtrl);
+  angular.module('app')
+    .controller('TopNavCtrl', TopNavCtrl);
 
-    TopNavCtrl.$inject = ['$route', '$location'];
+  TopNavCtrl.$inject = ['$route', '$location'];
 
-    function TopNavCtrl($route, $location) {
-        /* jshint validthis:true */
-        var vm = this;
+  function TopNavCtrl($route, $location) {
+    /* jshint validthis:true */
+    var vm = this;
 
-        vm.isRoute = isRoute;
+    vm.isRoute = isRoute;
 
-        function isRoute(r) {
-            return $location.path() === r;
-        }
+    function isRoute(r) {
+      return $location.path() === r;
     }
+  }
 })();

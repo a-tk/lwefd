@@ -8,7 +8,7 @@ var model = (function (log4js) {
   var db = null;
 
   var connect = function () {
-    db = new DbClient.Database(dbfile, function(err) {
+    db = new DbClient.Database(dbfile, function (err) {
       if (err) {
         log.fatal('Could not connect to DB: ' + dbfile);
       } else {
@@ -18,7 +18,7 @@ var model = (function (log4js) {
     });
   };
 
-  var initialize = function() {
+  var initialize = function () {
     var createProductTable = 'CREATE TABLE IF NOT EXISTS products ' +
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
@@ -41,21 +41,21 @@ var model = (function (log4js) {
       'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
       ');';
 
-    db.run(createProductTable, function(err) {
+    db.run(createProductTable, function (err) {
       if (err) {
         log.fatal('cannot add table products');
       } else {
         log.info('added products table')
       }
     });
-    db.run(createJobTable, function(err) {
+    db.run(createJobTable, function (err) {
       if (err) {
         log.fatal('cannot add jobs');
       } else {
         log.info('added jobs table')
       }
     });
-    db.run(createRunTable, function(err) {
+    db.run(createRunTable, function (err) {
       if (err) {
         log.fatal('cannot add runs');
       } else {
@@ -74,13 +74,13 @@ var model = (function (log4js) {
       name +
       '");';
     console.log(sql);
-    db.run(sql, function(err) {
+    db.run(sql, function (err) {
         if (err) {
           log.warn('could not add product ' + name);
         }
         callback(err);
       }
-      );
+    );
 
   };
 
@@ -93,7 +93,7 @@ var model = (function (log4js) {
       'name="' + jobName + '"' +
       ';';
 
-    db.all(checkQuery, function(err, result) {
+    db.all(checkQuery, function (err, result) {
       //TODO:inc and dec counters in products table
       if (!err) {
         if (result.length !== 0) {
@@ -107,7 +107,7 @@ var model = (function (log4js) {
             '"' + status + '"' +
             ');';
           console.log(runEntry);
-          db.run(runEntry, function(err) {
+          db.run(runEntry, function (err) {
             if (err) {
               log.warn('could not add run: ' + err);
             }
@@ -125,7 +125,7 @@ var model = (function (log4js) {
               '"' + status + '"' +
               ');';
             console.log(runEntry);
-            db.run(runEntry, function(err) {
+            db.run(runEntry, function (err) {
               if (err) {
                 log.warn('could not add run: ' + err);
               }
@@ -150,7 +150,7 @@ var model = (function (log4js) {
       productId + ', ' +
       '"' + jobName + '" ' +
       ');';
-    db.run(jobEntry, function(err) {
+    db.run(jobEntry, function (err) {
       if (!err) {
         var id;
         if (this.lastID) {
@@ -212,7 +212,7 @@ var model = (function (log4js) {
     });
   };
 
-  var close = function() {
+  var close = function () {
     db.close(function (err) {
       if (err) {
         log.fatal('could not close DB');
@@ -223,7 +223,7 @@ var model = (function (log4js) {
   return {
     connect: connect,
     addProduct: addProduct,
-    addRun : addRun,
+    addRun: addRun,
     getJobRuns: getJobRuns,
     getProducts: getProducts,
     getAllJobs: getAllJobs,

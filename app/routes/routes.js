@@ -1,11 +1,11 @@
-var routes = (function(log4js, express, model) {
+var routes = (function (log4js, express, model) {
   var log = log4js.getLogger('/routes');
   var routes = express.Router();
 
   routes.get('/api/', function (req, res, next) {
     //TODO: display all of the routes
     model.getProducts(function (result) {
-      res.render('index/api_index',{title: '/api/', data: JSON.stringify(result)});
+      res.render('index/api_index', {title: '/api/', data: JSON.stringify(result)});
     });
   });
 
@@ -18,7 +18,7 @@ var routes = (function(log4js, express, model) {
   //TODO: make this consistent based on ID
   routes.get('/api/:product/', function (req, res, next) {
     //TODO: display product info
-    model.getProducts( function (result) {
+    model.getProducts(function (result) {
       res.send(result);
     });
   });

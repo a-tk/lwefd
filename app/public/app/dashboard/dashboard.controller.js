@@ -1,33 +1,33 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app')
-        .controller('DashboardCtrl', DashboardCtrl);
+  angular
+    .module('app')
+    .controller('DashboardCtrl', DashboardCtrl);
 
-    DashboardCtrl.$inject = ['DataService'];
+  DashboardCtrl.$inject = ['DataService'];
 
-    function DashboardCtrl(DataService) {
-        /* jshint validthis: true */
-        var vm = this;
+  function DashboardCtrl(DataService) {
+    /* jshint validthis: true */
+    var vm = this;
 
-        vm.getProducts = getProducts;
-        vm.products = [];
-        vm.selectedPost = undefined;
-        vm.title = 'Products';
+    vm.getProducts = getProducts;
+    vm.products = [];
+    vm.selectedPost = undefined;
+    vm.title = 'Products';
 
-        activate();
+    activate();
 
-        function activate() {
-            getProducts();
-        }
-
-        function getProducts() {
-            return DataService.getProducts()
-                .then(function(products){
-                    vm.products = products.data;
-                });
-        }
-
+    function activate() {
+      getProducts();
     }
+
+    function getProducts() {
+      return DataService.getProducts()
+        .then(function (products) {
+          vm.products = products.data;
+        });
+    }
+
+  }
 })();

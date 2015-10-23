@@ -1,28 +1,28 @@
 (function () {
-    'use strict';
+  'use strict';
 
-    angular
-        .module('app', ['ngAnimate', 'ngRoute'])
-        .config(routeConfig);
+  angular
+    .module('app', ['ngAnimate', 'ngRoute'])
+    .config(routeConfig);
 
-    routeConfig.$inject = ['$routeProvider'];
+  routeConfig.$inject = ['$routeProvider'];
 
-    function routeConfig($routeProvider) {
-        $routeProvider
-          .when('/', {
-              templateUrl: 'app/dashboard/dashboard.html'
-          })
-          .when('/dashboard', {
-              redirectTo: '/'
-          })
-          .when('/jobs', {
-              templateUrl: 'app/jobs/jobs.html'
-          })
-          .when('/configure', {
-            templateUrl: 'app/configure/configure.html'
-          })
+  function routeConfig($routeProvider) {
+    $routeProvider
+      .when('/', {
+        templateUrl: 'app/dashboard/dashboard.html'
+      })
+      .when('/dashboard', {
+        redirectTo: '/'
+      })
+      .when('/jobs', {
+        templateUrl: 'app/jobs/jobs.html'
+      })
+      .when('/configure', {
+        templateUrl: 'app/configure/configure.html'
+      })
 
-          .otherwise({ redirectTo: '/' });
-    }
+      .otherwise({redirectTo: '/'});
+  }
 
 })();
