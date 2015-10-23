@@ -9,6 +9,12 @@ var routes = (function(log4js, express, model) {
     });
   });
 
+  routes.get('/api/products/', function (req, res, next) {
+    model.getProducts(function (result) {
+      res.send(result);
+    });
+  });
+
   //TODO: make this consistent based on ID
   routes.get('/api/:product/', function (req, res, next) {
     //TODO: display product info
