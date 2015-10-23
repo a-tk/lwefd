@@ -3,21 +3,21 @@
 
   angular
     .module('app')
-    .controller('UsersCtrl', UsersCtrl);
+    .controller('JobsCtrl', JobsCtrl);
 
-  UsersCtrl.$inject = ['usersService'];
+  JobsCtrl.$inject = ['DataService'];
 
-  function UsersCtrl(usersService) {
+  function JobsCtrl(DataService) {
     /* jshint validthis:true */
     var vm = this;
-    vm.title = 'Users';
-    vm.users = [];
+    vm.title = 'Jobs';
+    vm.jobs = [];
     vm.activate = activate;
 
     activate();
 
     function activate() {
-      vm.users = usersService.getAll();
+      vm.jobs = DataService.getJobs(1);
     }
   }
 })();

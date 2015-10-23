@@ -1,15 +1,15 @@
-<div data-ng-controller="UsersCtrl as vm">
+<div data-ng-controller="JobsCtrl as vm">
     <h2>{{vm.title}}</h2>
     <div>
         <label>Filter</label>
-        <input data-ng-model="personFilter"/>
+        <input data-ng-model="jobFilter"/>
     </div>
     <table class="table table-bordered table-striped table-condensed">
         <thead>
         <th>First</th>
         </thead>
         <tbody>
-        <tr data-ng-repeat="p in vm.users | filter:personFilter">
+        <tr data-ng-repeat="p in vm.jobs | filter:jobFilter">
             <td>{{p}}</td>
         </tr>
         </tbody>
