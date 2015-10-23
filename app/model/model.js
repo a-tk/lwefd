@@ -1,179 +1,236 @@
 var model = (function (log4js) {
   var log = log4js.getLogger('model');
 
-  //TODO: commenting out to try an in memory impl.
-  /*var MongoClient = require('mongodb').MongoClient,
+  var DbClient = require('sqlite3').verbose(),
+    dbfile = ':memory:',
     assert = require('assert');
 
   var db = null;
-  var products = 'products';
-  var jobs = 'jobs';
 
-  var url = 'mongodb://localhost:27017/lwefd';
   var connect = function () {
-      MongoClient.connect(url, function (err, connection) {
-        assert.equal(null, err);
-        log.info('connected to the mongo server');
-        db = connection;
+    db = new DbClient.Database(dbfile, function(err) {
+      if (err) {
+        log.fatal('Could not connect to DB: ' + dbfile);
+      } else {
+        log.info('Model connected to ' + dbfile);
+        initialize();
+      }
     });
   };
 
-  var addProduct = function (id, name, displayName, callback) {
-    db.collection(products).insertOne( {
-      _id : id,
-      name : name,
-      displayName : displayName
-    }, function (err, result) {
-      assert.equal(null, err);
-      console.log('added product');
-      callback(result);
+  var initialize = function() {
+    var createProductTable = 'CREATE TABLE IF NOT EXISTS products ' +
+      '(' +
+      'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+      'name VARCHAR(64) NOT NULL UNIQUE, ' +
+      'numFailed INTEGER NOT NULL DEFAULT 0, ' +
+      'numUnstable INTEGER NOT NULL DEFAULT 0' +
+      ');';
+    var createJobTable = 'CREATE TABLE IF NOT EXISTS jobs ' +
+      '(' +
+      'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+      'productId INTEGER NOT NULL, ' +
+      'name VARCHAR(64) NOT NULL DEFAULT "NO_NAME_PROVIDED" UNIQUE, ' +
+      'FOREIGN KEY(productId) REFERENCES products(id)' +
+      ');';
+    var createRunTable = 'CREATE TABLE IF NOT EXISTS runs ' +
+      '(' +
+      'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+      'jobId INTEGER NOT NULL, ' +
+      'status VARCHAR(16) NOT NULL, ' +
+      'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
+      ');';
+
+    db.run(createProductTable, function(err) {
+      if (err) {
+        log.fatal('cannot add table products');
+      } else {
+        log.info('added products table')
+      }
+    });
+    db.run(createJobTable, function(err) {
+      if (err) {
+        log.fatal('cannot add jobs');
+      } else {
+        log.info('added jobs table')
+      }
+    });
+    db.run(createRunTable, function(err) {
+      if (err) {
+        log.fatal('cannot add runs');
+      } else {
+        log.info('added runs table')
+      }
     });
   };
 
-  var addRun = function (productId, name, status, callback) {
-    db.collection(jobs).updateOne( {
-      _id: name,
-      productId : productId
-    }, {$push : {
-          runs : {
-            date: Date.now(),
-            status : status
-          }
+  var addProduct = function (name, callback) {
+    var sql = 'INSERT INTO products ' +
+      '(' +
+      'name' +
+      ') ' +
+      'VALUES ' +
+      '("' +
+      name +
+      '");';
+    console.log(sql);
+    db.run(sql, function(err) {
+        if (err) {
+          log.warn('could not add product ' + name);
         }
-      }, {upsert: true}).then(function (err, result) {
-      assert.equal(null, err);
-      console.log('added run');
-      callback(result);
+        callback(err);
+      }
+      );
+
+  };
+
+  var addRun = function (productId, jobName, status, callback) {
+    //if first entry, add job, then add run, otherwise just add run
+    var checkQuery = 'SELECT id FROM ' +
+      'jobs ' +
+      'WHERE ' +
+      'productId=' + productId + ', ' +
+      'name="' + jobName + '"' +
+      ';';
+
+    db.all(checkQuery, function(err, result) {
+      //TODO:inc and dec counters in products table
+      if (!err) {
+        if (result) {
+          //there is already a job entry, so add a run
+          var runEntry = 'INSERT INTO runs ' +
+            '(' +
+            'jobID, ' +
+            'status' +
+            ') VALUES (' +
+            result[0].id + ', ' +
+            '"' + status + '"' +
+            ');';
+          db.run(runEntry, function(err) {
+            if (err) {
+              log.warn('could not add run: ' + err);
+            }
+            callback(err);
+          });
+        } else {
+          //add a job entry, then add a run
+          addJobEntry(productId, jobName, function (jobId) {
+            var runEntry = 'INSERT INTO runs ' +
+              '(' +
+              'jobID, ' +
+              'status' +
+              ') VALUES (' +
+              jobId + ', ' +
+              '"' + status + '"' +
+              ');';
+            db.run(runEntry, function(err) {
+              if (err) {
+                log.warn('could not add run: ' + err);
+              }
+              callback(err);
+            });
+          });
+        }
+      } else {
+        log.warn('could not add run: ' + err);
+        callback(err);
+      }
     });
   };
 
-  var getJob = function (callback) {
-    log.warn('getJob not implemented');
-    callback();
+  var addJobEntry = function (productId, jobName, callback) {
+    var jobEntry = 'INSERT INTO jobs ' +
+      '(' +
+      'productId, ' +
+      'name' +
+      ') VALUES (' +
+      productId + ', ' +
+      '"' + jobName + '" ' +
+      ');';
+    db.run(jobEntry, function(err) {
+      if (!err) {
+        var id;
+        if (this.lastID) {
+          id = this.lastID;
+        } else {
+          id = 0; // never present id
+        }
+        callback(id);
+      } else {
+        log.warn('adding job entry failed: ' + err);
+      }
+    });
+
   };
 
-  var getJobListing = function (callback) {
-    log.warn('getJobListing not implemented');
-    callback();
+  var getJobRuns = function (jobId, callback) {
+    var runQuery = 'SELECT * FROM runs ' +
+      'WHERE ' +
+      'jobId=' + jobId + '' +
+      ';';
+
+    db.all(runQuery, function (err, result) {
+      if (!err) {
+        callback(result);
+      } else {
+        log.warn('could not getJobRuns for jobId ' + jobId);
+        callback([]);
+      }
+    });
+  };
+
+  var getAllJobs = function (productId, callback) {
+    var jobQuery = 'SELECT * FROM jobs ' +
+      'WHERE ' +
+      'productId=' + productId + '' +
+      ';';
+
+    db.all(jobQuery, function (err, result) {
+      if (!err) {
+        callback(result);
+      } else {
+        log.warn('could not getAllJobs for productId ' + productId);
+        callback([]);
+      }
+    });
   };
 
   var getProduct = function (callback) {
-    log.warn('getProduct not implemented');
-    callback();
+    var productQuery = 'SELECT * FROM products ' +
+      'WHERE 1;';
+
+    db.all(productQuery, function (err, result) {
+      if (!err) {
+        callback(result);
+      } else {
+        log.warn('could not getProducts: ' + err);
+        callback([]);
+      }
+    });
   };
 
   var outDB = function (callback) {
-   db.collection(jobs).find().toArray().then(function (result) {
-     callback(JSON.stringify(result));
-   });
+    db.all('SELECT * FROM products WHERE 1;', function(err, result) {
+      console.log(err + '' + result);
+      callback(result);
+    });
   };
 
   var close = function() {
-    db.close();
-  };*/
-
-  var db = {
-    products: {
-
-    }
-  };
-
-  var connect = function () {
-    log.info('connected to virtual DB');
-  };
-
-  var addProduct = function (name, displayName, callback) {
-
-    var newProduct = {
-      displayName : displayName,
-      jobs : {
-
+    db.close(function (err) {
+      if (err) {
+        log.fatal('could not close DB');
       }
-    };
-
-    db.products[name] = newProduct;
-
-    console.log(JSON.stringify(db));
-    callback(JSON.stringify(newProduct));
-  };
-
-  var addRun = function (productName, jobName, status, callback) {
-
-    if (!db.products.hasOwnProperty(productName)) {
-      log.error('could not add run, product does not exist');
-      callback(JSON.stringify(db));
-      return;
-    }
-
-    var newRun = {
-      date : Date.now(),
-      status : status
-    };
-
-    if (!db.products[productName].jobs.hasOwnProperty(jobName)) {
-      log.info('adding a new job');
-      db.products[productName].jobs[jobName] = {
-        runs : [
-
-        ]
-      };
-    }
-
-    db.products[productName].jobs[jobName].runs.push(newRun);
-
-    console.log(JSON.stringify(db));
-    callback(JSON.stringify(newRun));
-  };
-
-  var getJob = function (productName, jobName, callback) {
-    var result = {};
-    if (db.products.hasOwnProperty(productName)) {
-      if (db.products[productName].jobs.hasOwnProperty(jobName)) {
-        result = db.products[productName].jobs[jobName];
-      }else {
-        log.warn('requested job does not exist');
-      }
-    } else {
-      log.warn('requested product does not exist');
-    }
-    callback(JSON.stringify(result));
-  };
-
-  var getJobListing = function (productName, callback) {
-    var result = {};
-    if (db.products.hasOwnProperty(productName)) {
-      result = db.products[productName].jobs;
-    } else {
-      log.warn('requested product does not exist');
-    }
-    callback(JSON.stringify(result));
-  };
-
-  var getProduct = function (productName, callback) {
-    var result = {};
-    if (db.products.hasOwnProperty(productName)) {
-      result = db.products[productName];
-    } else {
-      log.warn('requested product does not exist');
-    }
-    callback(JSON.stringify(result));
-  };
-
-  var outDB = function (callback) {
-    callback(JSON.stringify(db));
-  };
-
-  var close = function() {
-    log.info('DB closed');
+    });
   };
 
   return {
     connect: connect,
     addProduct: addProduct,
     addRun : addRun,
-    getJob: getJob,
+    getJobRuns: getJobRuns,
     getProduct: getProduct,
-    getJobListing: getJobListing,
+    getAllJobs: getAllJobs,
     outDB: outDB,
     close: close
   }
