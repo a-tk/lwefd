@@ -86,17 +86,17 @@ var model = (function (log4js) {
 
   var addRun = function (productId, jobName, status, callback) {
     //if first entry, add job, then add run, otherwise just add run
-    var checkQuery = 'SELECT id FROM ' +
+    var checkQuery = 'SELECT * FROM ' +
       'jobs ' +
       'WHERE ' +
-      'productId=' + productId + ', ' +
+      'productId=' + productId + ' AND ' +
       'name="' + jobName + '"' +
       ';';
 
     db.all(checkQuery, function(err, result) {
       //TODO:inc and dec counters in products table
       if (!err) {
-        if (result) {
+        if (result.length !== 0) {
           //there is already a job entry, so add a run
           var runEntry = 'INSERT INTO runs ' +
             '(' +
@@ -106,6 +106,7 @@ var model = (function (log4js) {
             result[0].id + ', ' +
             '"' + status + '"' +
             ');';
+          console.log(runEntry);
           db.run(runEntry, function(err) {
             if (err) {
               log.warn('could not add run: ' + err);
@@ -123,6 +124,7 @@ var model = (function (log4js) {
               jobId + ', ' +
               '"' + status + '"' +
               ');';
+            console.log(runEntry);
             db.run(runEntry, function(err) {
               if (err) {
                 log.warn('could not add run: ' + err);
@@ -133,6 +135,7 @@ var model = (function (log4js) {
         }
       } else {
         log.warn('could not add run: ' + err);
+        console.log(checkQuery);
         callback(err);
       }
     });
@@ -153,7 +156,7 @@ var model = (function (log4js) {
         if (this.lastID) {
           id = this.lastID;
         } else {
-          id = 0; // never present id
+          id = -1; // never present id
         }
         callback(id);
       } else {
@@ -174,7 +177,7 @@ var model = (function (log4js) {
         callback(result);
       } else {
         log.warn('could not getJobRuns for jobId ' + jobId);
-        callback([]);
+        callback();
       }
     });
   };
@@ -195,7 +198,7 @@ var model = (function (log4js) {
     });
   };
 
-  var getProduct = function (callback) {
+  var getProducts = function (callback) {
     var productQuery = 'SELECT * FROM products ' +
       'WHERE 1;';
 
@@ -206,13 +209,6 @@ var model = (function (log4js) {
         log.warn('could not getProducts: ' + err);
         callback([]);
       }
-    });
-  };
-
-  var outDB = function (callback) {
-    db.all('SELECT * FROM products WHERE 1;', function(err, result) {
-      console.log(err + '' + result);
-      callback(result);
     });
   };
 
@@ -229,9 +225,8 @@ var model = (function (log4js) {
     addProduct: addProduct,
     addRun : addRun,
     getJobRuns: getJobRuns,
-    getProduct: getProduct,
+    getProducts: getProducts,
     getAllJobs: getAllJobs,
-    outDB: outDB,
     close: close
   }
 });
