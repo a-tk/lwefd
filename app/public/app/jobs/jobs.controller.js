@@ -17,7 +17,14 @@
     activate();
 
     function activate() {
-      vm.jobs = DataService.getJobs(1);
+      getJobs();
+    }
+
+    function getJobs() {
+      return DataService.getJobs(1)
+        .then( function(data) {
+          vm.jobs = data.data;
+        });
     }
   }
 })();

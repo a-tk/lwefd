@@ -13,7 +13,6 @@
 
     vm.getProducts = getProducts;
     vm.products = [];
-    vm.selectedPost = undefined;
     vm.title = 'Products';
 
     activate();

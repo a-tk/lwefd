@@ -6,11 +6,13 @@
     </div>
     <table class="table table-bordered table-striped table-condensed">
         <thead>
-        <th>First</th>
+        <th>ID</th>
+        <th>Name</th>
         </thead>
         <tbody>
         <tr data-ng-repeat="p in vm.jobs | filter:jobFilter">
-            <td>{{p}}</td>
+            <td>{{p.id}}</td>
+            <td>{{p.name}}</td>
         </tr>
         </tbody>
     </table>
