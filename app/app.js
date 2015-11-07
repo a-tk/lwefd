@@ -30,16 +30,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+
 var model = require('./model/model.js');
 model = model(log4js);
 model.connect();
 
+var notify = require('./controllers/notify/notify.js');
+notify = notify(log4js, model);
 
 /**
  * set routes up
  */
 var routes = require('./routes/routes.js');
-routes = routes(log4js, express, model);
+routes = routes(log4js, express, model, notify);
 app.use(routes);
 
 /**

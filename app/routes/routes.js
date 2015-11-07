@@ -1,4 +1,4 @@
-var routes = (function (log4js, express, model) {
+var routes = (function (log4js, express, model, notify) {
   var log = log4js.getLogger('/routes');
   var routes = express.Router();
 

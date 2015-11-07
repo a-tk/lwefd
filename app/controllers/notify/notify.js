@@ -72,6 +72,6 @@ var notify = (function (log4js, model) {
     return result;
   }
 
-})();
+});
 
 module.exports = notify;
