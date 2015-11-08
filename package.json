@@ -3,9 +3,9 @@
   "version": "0.0.1",
   "description": "Light-Weight Extreme Feedback Device",
   "private": true,
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-      "test": "./node_modules/mocha/bin/mocha --recursive app/test/"
+      "test": "./node_modules/mocha/bin/mocha --recursive test/"
   },
   "repository": {
     "type": "git",
