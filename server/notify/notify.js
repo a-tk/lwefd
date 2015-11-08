@@ -38,31 +38,30 @@ var notify = (function (log4js, model) {
       productId: productId
     };
 
-    if (data !== undefined) {
-      if (data.hasOwnProperty('name')) {
-        notification.name = data.name;
-      }
-      if (data.hasOwnProperty('build')) {
-        notification.build = {};
-        if (data.hasOwnProperty('full_url')) {
-          notification.build.full_url = data.build.full_url;
-        }
-        if (data.hasOwnProperty('number')) {
-          notification.build.number = data.build.number;
-        }
-        if (data.hasOwnProperty('phase')) {
-          notification.build.phase = data.build.phase;
-        }
-        if (data.hasOwnProperty('status')) {
-          notification.build.status = data.build.status;
-        }
-        if (data.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {
+    if (data !== undefined &&
+      data.hasOwnProperty('name') &&
+      data.hasOwnProperty('build') &&
+      data.build.hasOwnProperty('full_url') &&
+      data.build.hasOwnProperty('number') &&
+      data.build.hasOwnProperty('phase') &&
+      data.build.hasOwnProperty('status')
+    ) {
+      notification.name = data.name;
+      notification.build = {};
+      notification.build.full_url = data.build.full_url;
+      notification.build.number = data.build.number;
+      notification.build.phase = data.build.phase;
+      notification.build.status = data.build.status;
+
+      if (data.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {
           notification.build.value = data.build.value;
           notification.build.valueUnit = data.build.valueUnit;
-        }
       }
+    } else {
+      log.warn('notification does not have all required fields, aborting insert');
     }
   }
+
 
   function push(notification) {
     log.info('added notification to queue');
