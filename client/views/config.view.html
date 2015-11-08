@@ -1,0 +1,21 @@
+<div class="hero-unit">
+  <div data-ng-controller="ConfigCtrl as vm">
+    <div class="col-md-12">
+      <div data-ng-repeat="pproduct in vm.products | orderBy: $index track by $index">
+        <div id="post-{{$index}}" class="line-horizontal">
+          <h3>{{product.name}}
+            <small>by {{product.id}}</small>
+          </h3>
+        </div>
+      </div>
+
+      <div>
+        <form class="form-inline">
+          <div class="form-group">
+            <input type="text" class="form-control" placeholder="productName"/>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

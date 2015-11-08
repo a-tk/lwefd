@@ -2,26 +2,27 @@
 
 /**
  * @ngdoc overview
- * @name simpleBlogApp
+ * @name lwefd
  * @description
- * # simpleBlogApp
+ * # lwefd
  *
  * Main module of the application.
  */
 angular
-  .module('simpleBlogApp', [
+  .module('lwefd', [
     'ngAnimate',
-    'ngCookies',
     'ngResource',
-    'ngRoute',
-    'ngSanitize',
-    'ngTouch'
+    'ngRoute'
   ])
   .config(function ($routeProvider) {
     $routeProvider
       .when('/', {
-        templateUrl: 'views/main.html',
-        controller: 'MainCtrl'
+        templateUrl: 'views/summary.view.html',
+        controller: 'SummaryCtrl'
+      })
+      .when('/configure', {
+        templateUrl: 'views/config.view.html',
+        controller: 'ConfigCtrl'
       })
       .otherwise({
         redirectTo: '/'

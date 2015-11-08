@@ -7,7 +7,7 @@
    * @description
    * # scrollToElement
    */
-  angular.module('simpleBlogApp')
+  angular.module('lwefd')
     .directive('scrollToElement', function () {
       return {
         scope: {

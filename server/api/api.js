@@ -23,7 +23,7 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
-  api.post('/api/create/:productName', function (req, res, next) {
+  api.get('/api/create/:productName', function (req, res, next) {
     //TODO: display product info
     model.addProduct(req.params.productName, function (result) {
       res.send(result);
@@ -31,8 +31,7 @@ var api = (function (log4js, express, model, notify) {
   });
 
   api.get('/api/:productId/notify/', function (req, res, next) {
-    //TODO: doc on how to notify
-    res.send('not implemented')
+    res.send(JSON.stringify(api.stack));
   });
 
   api.post('/api/:productId/notify/', function (req, res, next) {
