@@ -4,13 +4,13 @@ This is what I expect a notification to look like.
 
 {
   "name": "notification name",
+  "valueUnit": "MPH", //for use in assigning a value to a notification, like on a performance run!
   "build": {
     "full_url": "http://something.com",
     "number": 13,
     "phase": "COMPLETED", //could be STARTED or COMPLETED,
     "status": "SUCCESS", //could be SUCCESS UNSTABLE or FAILURE
     "value": 0 //for use in assigning a value to a notification, like on a performance run!
-    "valueUnit": "MPH" //for use in assigning a value to a notification, like on a performance run!
   }
 };
 */
@@ -38,7 +38,7 @@ var notify = (function (log4js, model) {
       productId: productId
     };
 
-    if (data) {
+    if (data !== undefined) {
       if (data.hasOwnProperty('name')) {
         notification.name = data.name;
       }
@@ -72,7 +72,7 @@ var notify = (function (log4js, model) {
   function poll(callback) {
     polling = true;
     var notification = queue.pop();
-    model.addRun(notification.productId, notification, function () {
+    model.addRun(notification, function () {
       if (notificationsInQueue()) {
         log.info('polling again');
         poll(callback);

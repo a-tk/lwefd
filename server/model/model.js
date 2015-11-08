@@ -7,6 +7,16 @@ var model = (function (log4js) {
 
   var db = null;
 
+  var status = {
+    SUCCESS: "SUCCESS",
+    FAILURE: "FAILURE",
+    UNSTABLE: "UNSTABLE"
+  };
+  var phase = {
+    STARTED: "STARTED",
+    COMPLETED: "COMPLETED"
+  };
+
   var connect = function () {
     db = new DbClient.Database(dbfile, function (err) {
       if (err) {
@@ -22,22 +32,27 @@ var model = (function (log4js) {
     var createProductTable = 'CREATE TABLE IF NOT EXISTS products ' +
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
-      'name VARCHAR(64) NOT NULL UNIQUE, ' +
-      'numFailed INTEGER NOT NULL DEFAULT 0, ' +
-      'numUnstable INTEGER NOT NULL DEFAULT 0' +
+      'name TEXT NOT NULL UNIQUE, ' +
+      'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '" ' +
       ');';
     var createJobTable = 'CREATE TABLE IF NOT EXISTS jobs ' +
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'productId INTEGER NOT NULL, ' +
-      'name VARCHAR(64) NOT NULL DEFAULT "NO_NAME_PROVIDED" UNIQUE, ' +
+      'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED" UNIQUE, ' +
+      'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
+      'valueUnit TEXT NOT NULL DEFAULT "NO_VALUE", ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +
       ');';
     var createRunTable = 'CREATE TABLE IF NOT EXISTS runs ' +
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'jobId INTEGER NOT NULL, ' +
-      'status VARCHAR(16) NOT NULL, ' +
+      'full_url TEXT NOT NULL, ' +
+      'number INTEGER NOT NULL, ' +
+      'status TEXT NOT NULL, ' +
+      'phase TEXT NOT NULL, ' +
+      'value TEXT, ' +
       'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
       ');';
 
@@ -84,23 +99,22 @@ var model = (function (log4js) {
 
   };
 
-  var addRun = function (productId, jobName, status, callback) {
+  var addRun = function (notification, callback) {
     //if first entry, add job, then add run, otherwise just add run
     var checkQuery = 'SELECT * FROM ' +
       'jobs ' +
       'WHERE ' +
-      'productId=' + productId + ' AND ' +
-      'name="' + jobName + '"' +
+      'productId=' + notification.productId + ' AND ' +
+      'name="' + notification.name + '"' +
       ';';
 
     db.all(checkQuery, function (err, result) {
-      //TODO:inc and dec counters in products table
       if (!err) {
         if (result.length !== 0) {
           //there is already a job entry, so add a run
           var runEntry = 'INSERT INTO runs ' +
             '(' +
-            'jobID, ' +
+            'jobId, ' +
             'status' +
             ') VALUES (' +
             result[0].id + ', ' +
