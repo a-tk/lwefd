@@ -16,42 +16,39 @@ var api = (function (log4js, express, model, notify) {
   });
 
   //TODO: make this consistent based on ID
-  api.get('/api/:product/', function (req, res, next) {
+  api.get('/api/:productId/', function (req, res, next) {
     //TODO: display product info
     model.getProducts(function (result) {
       res.send(result);
     });
   });
 
-  api.post('/api/create/:product', function (req, res, next) {
+  api.post('/api/create/:productName', function (req, res, next) {
     //TODO: display product info
-    model.addProduct(req.params.product, function (result) {
+    model.addProduct(req.params.productName, function (result) {
       res.send(result);
     });
   });
 
   api.get('/api/:productId/notify/', function (req, res, next) {
     //TODO: doc on how to notify
-    model.addRun(req.params.productId, 'test job', 'SUCCESS', function (result) {
+    res.send('not implemented')
+  });
+
+  api.post('/api/:productId/notify/', function (req, res, next) {
+    notify.process(req.params.productId, req.body, function (result) {
       res.send(result);
     });
   });
 
-  api.post('/api/:product/notify/', function (req, res, next) {
-    //TODO: process notification by adding to queue
-    model.getProducts(function (result) {
-      res.send(result);
-    });
-  });
-
-  api.get('/api/:product/jobs/', function (req, res, next) {
+  api.get('/api/:productId/jobs/', function (req, res, next) {
     //TODO: view all jobs belonging to a product
-    model.getAllJobs(req.params.product, function (result) {
+    model.getAllJobs(req.params.productId, function (result) {
       res.send(result);
     });
   });
 
-  api.get('/api/:product/jobs/:id/', function (req, res, next) {
+  api.get('/api/:productId/jobs/:id/', function (req, res, next) {
     //TODO: display all of the run information for a specific job
     model.getJobRuns(req.params.id, function (result) {
       res.send(result);
