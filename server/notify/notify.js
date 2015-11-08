@@ -27,9 +27,11 @@ var notify = (function (log4js, model) {
 
   function process (productId, data, callback) {
     var notification = parseNotification(productId, data);
-    push(notification);
-    if (polling === false) {
-      poll(callback);
+    if (notification !== null) {
+      push(notification);
+      if (polling === false) {
+        poll(callback);
+      }
     }
   }
 
@@ -57,8 +59,11 @@ var notify = (function (log4js, model) {
           notification.build.value = data.build.value;
           notification.build.valueUnit = data.build.valueUnit;
       }
+
+      return notification;
     } else {
       log.warn('notification does not have all required fields, aborting insert');
+      return null;
     }
   }
 

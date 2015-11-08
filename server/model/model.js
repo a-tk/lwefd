@@ -41,7 +41,7 @@ var model = (function (log4js) {
       'productId INTEGER NOT NULL, ' +
       'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED" UNIQUE, ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
-      'valueUnit TEXT NOT NULL DEFAULT "NO_VALUE", ' +
+      'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +
       ');';
     var createRunTable = 'CREATE TABLE IF NOT EXISTS runs ' +
@@ -52,7 +52,7 @@ var model = (function (log4js) {
       'number INTEGER NOT NULL, ' +
       'status TEXT NOT NULL, ' +
       'phase TEXT NOT NULL, ' +
-      'value TEXT, ' +
+      'value INTEGER, ' +
       'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
       ');';
 
@@ -115,10 +115,18 @@ var model = (function (log4js) {
           var runEntry = 'INSERT INTO runs ' +
             '(' +
             'jobId, ' +
-            'status' +
+            'full_url, ' +
+            'number, ' +
+            'phase, ' +
+            'status ' +
+            ((notification.build.value !== undefined) ? ', value ':'') +
             ') VALUES (' +
             result[0].id + ', ' +
-            '"' + status + '"' +
+            '"' + notification.full_url + '", ' +
+            notification.number + ', ' +
+            '"' + notification.phase + '", ' +
+            '"' + notification.status + '" ' +
+            ((notification.build.value !== undefined) ? ', ' + notification.build.value + ' ':'') +
             ');';
           console.log(runEntry);
           db.run(runEntry, function (err) {
@@ -129,14 +137,22 @@ var model = (function (log4js) {
           });
         } else {
           //add a job entry, then add a run
-          addJobEntry(productId, jobName, function (jobId) {
+          addJobEntry(notification, function (jobId) {
             var runEntry = 'INSERT INTO runs ' +
               '(' +
-              'jobID, ' +
-              'status' +
+              'jobId, ' +
+              'full_url, ' +
+              'number, ' +
+              'phase, ' +
+              'status ' +
+              ((notification.build.value !== undefined) ? ', value ':'') +
               ') VALUES (' +
               jobId + ', ' +
-              '"' + status + '"' +
+              '"' + notification.full_url + '", ' +
+              notification.number + ', ' +
+              '"' + notification.phase + '", ' +
+              '"' + notification.status + '" ' +
+              ((notification.build.value !== undefined) ? ', ' + notification.build.value + ' ':'') +
               ');';
             console.log(runEntry);
             db.run(runEntry, function (err) {
@@ -155,14 +171,16 @@ var model = (function (log4js) {
     });
   };
 
-  var addJobEntry = function (productId, jobName, callback) {
+  var addJobEntry = function (notification, callback) {
     var jobEntry = 'INSERT INTO jobs ' +
       '(' +
       'productId, ' +
       'name' +
+      ((notification.valueUnit !== undefined) ? ', valueUnit ':'') +
       ') VALUES (' +
-      productId + ', ' +
-      '"' + jobName + '" ' +
+      notification.productId + ', ' +
+      '"' + notification.name + '" ' +
+      ((notification.valueUnit !== undefined) ? ', "' + notification.valueUnit + '" ':'') +
       ');';
     db.run(jobEntry, function (err) {
       if (!err) {
