@@ -1,3 +1,21 @@
+
+/*
+This is what I expect a notification to look like.
+
+{
+  "name": "notification name",
+  "build": {
+    "full_url": "http://something.com",
+    "number": 13,
+    "phase": "COMPLETED", //could be STARTED or COMPLETED,
+    "status": "SUCCESS", //could be SUCCESS UNSTABLE or FAILURE
+    "value": 0 //for use in assigning a value to a notification, like on a performance run!
+    "valueUnit": "MPH" //for use in assigning a value to a notification, like on a performance run!
+  }
+};
+*/
+
+
 var notify = (function (log4js, model) {
   var log = log4js.getLogger('notify');
   var queue = [];
@@ -7,11 +25,11 @@ var notify = (function (log4js, model) {
     process: process
   };
 
-  function process (productId, data) {
+  function process (productId, data, callback) {
     var notification = parseNotification(productId, data);
     push(notification);
     if (polling === false) {
-      poll();
+      poll(callback);
     }
   }
 
@@ -23,9 +41,6 @@ var notify = (function (log4js, model) {
     if (data) {
       if (data.hasOwnProperty('name')) {
         notification.name = data.name;
-      }
-      if (data.hasOwnProperty('url')) {
-        notification.url = data.url;
       }
       if (data.hasOwnProperty('build')) {
         notification.build = {};
@@ -41,6 +56,10 @@ var notify = (function (log4js, model) {
         if (data.hasOwnProperty('status')) {
           notification.build.status = data.build.status;
         }
+        if (data.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {
+          notification.build.value = data.build.value;
+          notification.build.valueUnit = data.build.valueUnit;
+        }
       }
     }
   }
@@ -50,16 +69,17 @@ var notify = (function (log4js, model) {
     queue.unshift(notification);
   }
 
-  function poll() {
+  function poll(callback) {
     polling = true;
     var notification = queue.pop();
     model.addRun(notification.productId, notification, function () {
       if (notificationsInQueue()) {
         log.info('polling again');
-        poll();
+        poll(callback);
       } else {
         log.info('polling done');
         polling = false;
+        callback();
       }
     });
   }
