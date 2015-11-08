@@ -1,6 +1,5 @@
 var express = require('express');
 var path = require('path');
-var favicon = require('serve-favicon');
 var reqLogger= require('morgan');
 var log4js = require('log4js');
 /*
@@ -21,14 +20,15 @@ var serverConfig = require('./env.json')[ environment ];
 
 
 // view engine setup
+/*
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'jade');
-
-app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+*/
 app.use(reqLogger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use('/', express.static('./client/'));
+app.use('/', express.static('./'));
 
 
 
@@ -36,15 +36,15 @@ var model = require('./model/model.js');
 model = model(log4js);
 model.connect();
 
-var notify = require('./controllers/notify/notify.js');
+var notify = require('./notify/notify.js');
 notify = notify(log4js, model);
 
 /**
- * set routes up
+ * set api routes up
  */
-var routes = require('./routes/routes.js');
-routes = routes(log4js, express, model, notify);
-app.use(routes);
+var api = require('./api/api.js');
+api = api(log4js, express, model, notify);
+app.use(api);
 
 /**
  *
@@ -65,7 +65,7 @@ app.use(function(req, res, next) {
  * Error Handlers
  *
  */
-
+/*
 if (environment === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
@@ -87,7 +87,7 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
-
+*/
 var server = app.listen(serverConfig.port, function () {
   log.info('lwefd listening on port '+ serverConfig.port)
 });
