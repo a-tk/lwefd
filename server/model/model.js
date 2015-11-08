@@ -258,10 +258,13 @@ var model = (function (log4js) {
 
   var updateProductStatus = function (productId, callback) {
     //TODO
+
+    callback();
   };
 
-  var updateJobStatus = function (ProductId, jobId, callback) {
+  var updateJobStatus = function (productId, jobId, callback) {
     //TODO: and call updateProductStatus with callback after done updating
+    updateProductStatus(productId, callback);
   };
 
   return {
@@ -271,7 +274,9 @@ var model = (function (log4js) {
     getJobRuns: getJobRuns,
     getProducts: getProducts,
     getAllJobs: getAllJobs,
-    close: close
+    close: close,
+    status: status,
+    phase: phase
   }
 });
 
