@@ -55,9 +55,12 @@ var notify = (function (log4js, model) {
       notification.build.phase = data.build.phase;
       notification.build.status = data.build.status;
 
-      if (data.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {
+      if (data.build.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {
           notification.build.value = data.build.value;
-          notification.build.valueUnit = data.build.valueUnit;
+          notification.valueUnit = data.build.valueUnit;
+      } else {
+        notification.build.value = null;
+        notification.valueUnit = null;
       }
 
       return notification;

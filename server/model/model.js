@@ -119,21 +119,23 @@ var model = (function (log4js) {
             'number, ' +
             'phase, ' +
             'status ' +
-            ((notification.build.value !== undefined) ? ', value ':'') +
+            ((notification.build.value !== null) ? ', value ':'') +
             ') VALUES (' +
             result[0].id + ', ' +
             '"' + notification.full_url + '", ' +
             notification.number + ', ' +
             '"' + notification.phase + '", ' +
             '"' + notification.status + '" ' +
-            ((notification.build.value !== undefined) ? ', ' + notification.build.value + ' ':'') +
+            ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
             ');';
           console.log(runEntry);
           db.run(runEntry, function (err) {
             if (err) {
               log.warn('could not add run: ' + err);
+              callback(err);
+            } else {
+              updateJobStatus(notification.productId, result[0].id, callback);
             }
-            callback(err);
           });
         } else {
           //add a job entry, then add a run
@@ -145,21 +147,23 @@ var model = (function (log4js) {
               'number, ' +
               'phase, ' +
               'status ' +
-              ((notification.build.value !== undefined) ? ', value ':'') +
+              ((notification.build.value !== null) ? ', value ':'') +
               ') VALUES (' +
               jobId + ', ' +
               '"' + notification.full_url + '", ' +
               notification.number + ', ' +
               '"' + notification.phase + '", ' +
               '"' + notification.status + '" ' +
-              ((notification.build.value !== undefined) ? ', ' + notification.build.value + ' ':'') +
+              ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
               ');';
             console.log(runEntry);
             db.run(runEntry, function (err) {
               if (err) {
                 log.warn('could not add run: ' + err);
+                callback(err);
+              } else {
+                updateJobStatus(notification.productId, jobId, callback);
               }
-              callback(err);
             });
           });
         }
@@ -180,7 +184,7 @@ var model = (function (log4js) {
       ') VALUES (' +
       notification.productId + ', ' +
       '"' + notification.name + '" ' +
-      ((notification.valueUnit !== undefined) ? ', "' + notification.valueUnit + '" ':'') +
+      ((notification.valueUnit !== null) ? ', "' + notification.valueUnit + '" ':'') +
       ');';
     db.run(jobEntry, function (err) {
       if (!err) {
@@ -250,6 +254,14 @@ var model = (function (log4js) {
         log.fatal('could not close DB');
       }
     });
+  };
+
+  var updateProductStatus = function (productId, callback) {
+    //TODO
+  };
+
+  var updateJobStatus = function (ProductId, jobId, callback) {
+    //TODO: and call updateProductStatus with callback after done updating
   };
 
   return {
