@@ -6,3 +6,17 @@ body {
     margin-top:1em;
     margin-bottom:1em;
 }
+
+.summary-block {
+    height:250px;
+    text-align: center;
+}
+
+.summary-content {
+    vertical-align: middle;
+    display: inline-block;
+}
+
+span{
+    line-height: 250px;
+}

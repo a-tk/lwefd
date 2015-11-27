@@ -18,8 +18,8 @@
 
       function getProducts () {
         DbService.getProducts(function (result) {
-          console.log(result);
           vm.products = result.data;
+          //console.log(vm.products);
         });
       }
 

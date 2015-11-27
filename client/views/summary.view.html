@@ -1,12 +1,14 @@
 <div class="hero-unit">
   <div data-ng-controller="SummaryCtrl as vm">
     <div class="col-md-12">
-      <div data-ng-repeat="pproduct in vm.products | orderBy: $index track by $index">
+      <div data-ng-repeat="product in vm.products | orderBy: $index track by $index">
         <div id="post-{{$index}}" class="line-horizontal">
-          <h3>{{product.name}}
-            <small>by {{product.id}}</small>
-          </h3>
-
+          <div class="col-md-4 bg-success summary-block">
+            <span></span>
+            <div class="summary-content">
+              <h1>{{product.name}}</h1>
+            </div>
+          </div>
         </div>
       </div>
     </div>
