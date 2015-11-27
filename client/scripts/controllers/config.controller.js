@@ -12,7 +12,7 @@
     .controller('ConfigCtrl', function ($scope, $http, DbService) {
       var vm = this;
       vm.products = [];
-      vm.activate = activate;
+      vm.activate = activate();
       vm.getProducts = getProducts;
 
       function getProducts () {
