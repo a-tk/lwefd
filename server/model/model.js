@@ -91,7 +91,7 @@ var model = (function (log4js) {
     //console.log(sql);
     db.run(sql, function (err) {
         if (err) {
-          log.warn('error adding product ' + name);
+          log.warn('error adding product ' + name + ': ' + err);
         }
         getProductIdForName(name, callback);
       }
@@ -116,6 +116,7 @@ var model = (function (log4js) {
 
   var addRun = function (notification, callback) {
     //if first entry, add job, then add run, otherwise just add run
+
     var checkQuery = 'SELECT * FROM ' +
       'jobs ' +
       'WHERE ' +
@@ -137,16 +138,16 @@ var model = (function (log4js) {
             ((notification.build.value !== null) ? ', value ':'') +
             ') VALUES (' +
             result[0].id + ', ' +
-            '"' + notification.full_url + '", ' +
-            notification.number + ', ' +
-            '"' + notification.phase + '", ' +
-            '"' + notification.status + '" ' +
+            '"' + notification.build.full_url + '", ' +
+            notification.build.number + ', ' +
+            '"' + notification.build.phase + '", ' +
+            '"' + notification.build.status + '" ' +
             ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
             ');';
-          console.log(runEntry);
+          //log.info(runEntry);
           db.run(runEntry, function (err) {
             if (err) {
-              log.warn('could not add run: ' + err);
+              log.warn('could not add run [1]: ' + err);
               callback(err);
             } else {
               updateJobStatus(notification.productId, result[0].id, callback);
@@ -165,16 +166,16 @@ var model = (function (log4js) {
               ((notification.build.value !== null) ? ', value ':'') +
               ') VALUES (' +
               jobId + ', ' +
-              '"' + notification.full_url + '", ' +
-              notification.number + ', ' +
-              '"' + notification.phase + '", ' +
-              '"' + notification.status + '" ' +
+              '"' + notification.build.full_url + '", ' +
+              notification.build.number + ', ' +
+              '"' + notification.build.phase + '", ' +
+              '"' + notification.build.status + '" ' +
               ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
               ');';
-            console.log(runEntry);
+            //log.info(runEntry);
             db.run(runEntry, function (err) {
               if (err) {
-                log.warn('could not add run: ' + err);
+                log.warn('could not add run [2]: ' + err);
                 callback(err);
               } else {
                 updateJobStatus(notification.productId, jobId, callback);
@@ -183,8 +184,7 @@ var model = (function (log4js) {
           });
         }
       } else {
-        log.warn('could not add run: ' + err);
-        console.log(checkQuery);
+        log.warn('could not add run [3]: ' + err);
         callback(err);
       }
     });
@@ -199,7 +199,7 @@ var model = (function (log4js) {
       ') VALUES (' +
       notification.productId + ', ' +
       '"' + notification.name + '" ' +
-      ((notification.valueUnit !== null) ? ', "' + notification.valueUnit + '" ':'') +
+      ((notification.valueUnit !== undefined) ? ', "' + notification.valueUnit + '" ':'') +
       ');';
     db.run(jobEntry, function (err) {
       if (!err) {

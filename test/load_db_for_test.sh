@@ -9,9 +9,21 @@ echo curl "http://localhost:3000/api/create/${PRODUCT_NAME}"
 curl "http://localhost:3000/api/create/${PRODUCT_NAME}"
 echo
 
-for i in `seq 1 10`; do
+echo -------------------- blocking submission ---------------------
+for i in `seq 1 5`; do
 # add POST test run
  echo curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json"
  curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json"
+ echo
+done
+
+echo sleep 2
+sleep 2
+
+echo -------------------- non-blocking submission ---------------------
+for i in `seq 1 5`; do
+# add POST test run
+ echo curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json" &
+ curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json" &
  echo
 done
