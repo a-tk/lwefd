@@ -88,7 +88,6 @@ var model = (function (log4js) {
       '("' +
       name +
       '");';
-    //console.log(sql);
     db.run(sql, function (err) {
         if (err) {
           log.warn('error adding product ' + name + ': ' + err);
@@ -274,7 +273,7 @@ var model = (function (log4js) {
   var updateProductStatus = function (productId, callback) {
     //TODO
 
-    callback();
+    callback('updateProductStatus not implemented');
   };
 
   var updateJobStatus = function (productId, jobId, callback) {
