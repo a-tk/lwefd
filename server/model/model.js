@@ -58,21 +58,21 @@ var model = (function (log4js) {
 
     db.run(createProductTable, function (err) {
       if (err) {
-        log.fatal('cannot add table products');
+        log.fatal('cannot add table products: ' + err);
       } else {
         log.info('added products table')
       }
     });
     db.run(createJobTable, function (err) {
       if (err) {
-        log.fatal('cannot add jobs');
+        log.fatal('cannot add jobs: ' + err);
       } else {
         log.info('added jobs table')
       }
     });
     db.run(createRunTable, function (err) {
       if (err) {
-        log.fatal('cannot add runs');
+        log.fatal('cannot add runs: ' + err);
       } else {
         log.info('added runs table')
       }
