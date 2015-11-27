@@ -88,15 +88,30 @@ var model = (function (log4js) {
       '("' +
       name +
       '");';
-    console.log(sql);
+    //console.log(sql);
     db.run(sql, function (err) {
         if (err) {
-          log.warn('could not add product ' + name);
+          log.warn('error adding product ' + name);
         }
-        callback(err);
+        getProductIdForName(name, callback);
       }
     );
+  };
 
+  var getProductIdForName = function (name, callback) {
+    var selectId = 'SELECT id FROM ' +
+      'products ' +
+      'WHERE ' +
+      'name="' + name + '" ' +
+      ';';
+    db.all(selectId, function (err, result) {
+      if (err) {
+        log.warn('error getting product ID for name ' + name);
+        callback(err);
+      } else {
+        callback(result);
+      }
+    });
   };
 
   var addRun = function (notification, callback) {
