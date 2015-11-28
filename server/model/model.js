@@ -39,7 +39,7 @@ var model = (function (log4js) {
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'productId INTEGER NOT NULL, ' +
-      'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED" UNIQUE, ' +
+      'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED", ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
       'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +

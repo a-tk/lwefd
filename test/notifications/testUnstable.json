@@ -1,0 +1,9 @@
+{
+  "name": "testUnstable",
+  "build": {
+    "full_url": "http://localhost:3000",
+    "number": 2,
+    "phase": "COMPLETED",
+    "status": "UNSTABLE"
+  }
+}

@@ -1,29 +1,37 @@
 #!/bin/bash
 
 PRODUCT_NAME="TEST"
-FILE_NAME="./notifications/testrun1.json"
-ID="1"
+NOTIFICATIONS=("./notifications/testSuccess.json" "./notifications/testUnstable.json" "./notifications/testFailure.json" "./notifications/testStarted.json" "./notifications/testValue.json")
+NUMBER_OF_PRODUCTS=5
 
-# add test product
-echo curl "http://localhost:3000/api/create/${PRODUCT_NAME}"
-curl "http://localhost:3000/api/create/${PRODUCT_NAME}"
-echo
+createProducts () {
+  for i in `seq 1 ${NUMBER_OF_PRODUCTS}`; do
+    echo curl "http://localhost:3000/api/create/test${i}"
+    curl "http://localhost:3000/api/create/test${i}"
+  done
+}
 
-echo -------------------- blocking submission ---------------------
-for i in `seq 1 5`; do
-# add POST test run
- echo curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json"
- curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json"
- echo
-done
+submitNotifications () {
+  for i in `seq 1 ${NUMBER_OF_PRODUCTS}`; do
+    for j in ${NOTIFICATIONS[@]}; do
+      echo curl -X POST --data @${j} "http://localhost:3000/api/${i}/notify" --header "Content-Type: application/json" &
+      curl -X POST --data @${j} "http://localhost:3000/api/${i}/notify" --header "Content-Type: application/json"  &
+    done
+  done
+}
 
-echo sleep 2
-sleep 2
+runTest () {
 
-echo -------------------- non-blocking submission ---------------------
-for i in `seq 1 5`; do
-# add POST test run
- echo curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json" &
- curl -X POST --data @${FILE_NAME} "http://localhost:3000/api/${ID}/notify" --header "Content-Type: application/json" &
- echo
-done
+  echo ------------ SUBMIT ------------
+
+  createProducts
+  sleep 1
+  for n in `seq 1`; do
+    echo ------------ SUBMISSION ------------
+    submitNotifications
+  done
+
+  echo ------------ DONE ------------
+}
+
+runTest

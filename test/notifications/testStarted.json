@@ -1,0 +1,9 @@
+{
+  "name": "testStarted",
+  "build": {
+    "full_url": "http://localhost:3000",
+    "number": 13,
+    "phase": "STARTED",
+    "status": "SUCCESS"
+  }
+}

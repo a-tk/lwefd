@@ -1,5 +1,5 @@
 {
-  "name": "TEST_JOB",
+  "name": "testValue",
   "valueUnit": "MPH",
   "build": {
     "full_url": "http://localhost:3000",
