@@ -19,7 +19,6 @@ This is what I expect a notification to look like.
 var notify = (function (log4js, model) {
   var log = log4js.getLogger('notify');
   var queue = [];
-  var callbackQueue = [];
   var polling = false;
 
   return {
@@ -88,14 +87,18 @@ var notify = (function (log4js, model) {
 
   function push(notification, callback) {
     log.info('added notification to queue');
-    queue.unshift(notification);
-    callbackQueue.unshift(callback);
+    var queueItem = {
+      'notification': notification,
+      'callback': callback
+    };
+    queue.unshift(queueItem);
   }
 
   function poll() {
     polling = true;
-    var notification = queue.pop();
-    var callback = callbackQueue.pop();
+    var queueItem = queue.pop();
+    var notification = queueItem.notification;
+    var callback = queueItem.callback;
     model.addRun(notification, function (result) {
       if (notificationsInQueue()) {
         log.info('polling again');
