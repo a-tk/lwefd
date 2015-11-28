@@ -26,8 +26,8 @@ runTest () {
 
   createProducts
   sleep 1
-  for n in `seq 1`; do
-    echo ------------ SUBMISSION ------------
+  echo ------------ SUBMISSION ------------
+  for n in `seq 1 10`; do
     submitNotifications
   done
 
