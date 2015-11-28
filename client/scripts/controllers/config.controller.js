@@ -14,6 +14,9 @@
       vm.products = [];
       vm.activate = activate();
       vm.getProducts = getProducts;
+      vm.addProduct = addProduct;
+      vm.updateProductName = updateProductName;
+      vm.deleteProduct = deleteProduct;
 
       function getProducts () {
         DbService.getProducts(function (result) {
@@ -21,14 +24,30 @@
         });
       }
 
+      function updateProductName (id) {
+        DbService.updateProductName(id, function () {
+          getProducts();
+        }, errorWithStyle);
+      }
+
+      function deleteProduct (id) {
+        DbService.deleteProduct(id, function () {
+          getProducts();
+        }, errorWithStyle);
+      }
+
       function addProduct(productName) {
         DbService.addProduct(productName, function () {
           getProducts();
-        });
+        }, errorWithStyle);
       }
 
       function activate() {
         getProducts();
+      }
+
+      function errorWithStyle(err) {
+        alert('err: ' + err);
       }
     });
 })();

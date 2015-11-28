@@ -1,22 +1,32 @@
 <div class="hero-unit">
   <div data-ng-controller="ConfigCtrl as vm">
     <div class="col-md-12">
-      <div data-ng-repeat="product in vm.products | orderBy: $index track by $index">
-        <div id="post-{{$index}}" class="line-horizontal">
-          <div class="col-md-12 bg-info">
-            <div class="summary-content">
-              {{product.name}}
-            </div>
-          </div>
-        </div>
-      </div>
-      <div>
-      <form class="form-inline">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="productName"/>
-        </div>
-      </form>
-    </div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Product ID #</th>
+          <th>Product Name</th>
+          <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
+          <td>{{product.id}}</td>
+          <td><input type="text" class="form-control" placeholder="{{product.name}}"/></td>
+          <td>
+            <button ng-click="vm.updateProductName(product.id);" class="glyphicon glyphicon-pencil btn btn-success"></button>
+            <button ng-click="vm.deleteProduct(product.id)" class="glyphicon glyphicon-trash btn btn-danger"></button>
+          </td>
+        </tr>
+        <tr>
+          <td>#</td>
+          <td><input ng-model="newProductName" type="text" class="form-control" placeholder="New Product Name"/></td>
+          <td>
+            <button ng-click="vm.addProduct(newProductName)" class="glyphicon glyphicon-ok btn btn-success"></button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
     </div>
   </div>
 </div>
