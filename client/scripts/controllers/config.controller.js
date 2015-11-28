@@ -24,8 +24,8 @@
         });
       }
 
-      function updateProductName (id) {
-        DbService.updateProductName(id, function () {
+      function updateProductName (id, name) {
+        DbService.updateProductName(id, name, function () {
           getProducts();
         }, errorWithStyle);
       }
@@ -47,7 +47,7 @@
       }
 
       function errorWithStyle(err) {
-        alert('err: ' + err);
+        alert('err: ' + JSON.stringify(err));
       }
     });
 })();

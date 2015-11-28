@@ -30,6 +30,18 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
+  api.get('/api/update/productName/:productId/:productName', function (req, res, next) {
+    model.updateProductName(req.params.productId, req.params.productName, function (result) {
+      res.send(result);
+    });
+  });
+
+  api.get('/api/delete/product/:productId', function (req, res, next) {
+    model.deleteProduct(req.params.productId, function (result) {
+      res.send(result);
+    });
+  });
+
   api.get('/api/:productId/notify/', function (req, res, next) {
     res.send(JSON.stringify(api.stack));
   });

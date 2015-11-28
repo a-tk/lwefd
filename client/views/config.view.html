@@ -12,9 +12,9 @@
         <tbody>
         <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
           <td>{{product.id}}</td>
-          <td><input type="text" class="form-control" placeholder="{{product.name}}"/></td>
+          <td><input type="text" class="form-control" ng-model="name" placeholder="{{product.name}}"/></td>
           <td>
-            <button ng-click="vm.updateProductName(product.id);" class="glyphicon glyphicon-pencil btn btn-success"></button>
+            <button ng-click="vm.updateProductName(product.id, name);" class="glyphicon glyphicon-pencil btn btn-success"></button>
             <button ng-click="vm.deleteProduct(product.id)" class="glyphicon glyphicon-trash btn btn-danger"></button>
           </td>
         </tr>

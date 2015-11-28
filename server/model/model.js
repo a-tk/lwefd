@@ -98,6 +98,40 @@ var model = (function (log4js) {
     );
   };
 
+  var updateProductName = function (id, name, callback) {
+
+    var sql = 'UPDATE products SET ' +
+      'name=' +
+      '"' +
+      name +
+      '" ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product ' + name + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
+  var deleteProduct = function (id, callback) {
+
+    var sql = 'DELETE FROM products ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product ' + name + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
   var getProductIdForName = function (name, callback) {
     var selectId = 'SELECT id FROM ' +
       'products ' +
@@ -289,6 +323,8 @@ var model = (function (log4js) {
   return {
     connect: connect,
     addProduct: addProduct,
+    updateProductName: updateProductName,
+    deleteProduct: deleteProduct,
     addRun: addRun,
     getJobRuns: getJobRuns,
     getProducts: getProducts,

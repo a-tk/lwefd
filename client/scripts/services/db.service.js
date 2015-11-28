@@ -31,12 +31,12 @@
         });
       }
 
-      function updateProductName (id, callback, errorCallback) {
-
+      function updateProductName (id, name, callback, errorCallback) {
+        $http.get('api/update/productName/' + id + '/' + name).then(callback, errorCallback);
       }
 
       function deleteProduct(id, callback, errorCallback) {
-
+        $http.get('api/delete/product/' + id).then(callback, errorCallback);
       }
     });
 })();

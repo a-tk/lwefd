@@ -27,11 +27,11 @@ runTest () {
   createProducts
   sleep 1
   echo ------------ SUBMISSION ------------
-  for n in `seq 1 10`; do
+  for n in `seq 1 $1`; do
     submitNotifications
   done
 
   echo ------------ DONE ------------
 }
 
-runTest
+runTest $1
