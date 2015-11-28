@@ -1,5 +1,5 @@
 body {
-    margin: 3em 0 0 0;
+    /*margin: 3em 0 0 0;*/
 }
 
 .row {
@@ -8,11 +8,31 @@ body {
 }
 
 .summary-block {
-    height:250px;
+    height:370px;
     text-align: center;
+    border: 1px solid;
+    -webkit-border-radius: 5%;
+    -moz-border-radius: 5%;
+    border-radius: 3%;
 }
 
 .summary-content {
     vertical-align: middle;
     display: inline-block;
+}
+
+.SUCCESS {
+    background: #5cb85c;
+}
+
+.UNSTABLE {
+    background: #f0ad4e;
+}
+
+.FAILURE {
+    background: #d9534f;
+}
+
+.RUNNING {
+    background: #5bc0de;
 }

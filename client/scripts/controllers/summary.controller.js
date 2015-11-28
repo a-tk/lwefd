@@ -19,6 +19,11 @@
       function getProducts () {
         DbService.getProducts(function (result) {
           vm.products = result.data;
+          for (var i in vm.products) {
+            if (vm.products.hasOwnProperty(i)) {
+              vm.products[i].statusColor = 'bg-success';
+            }
+          }
         });
       }
 
