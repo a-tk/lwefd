@@ -48,6 +48,7 @@ var model = (function (log4js) {
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'jobId INTEGER NOT NULL, ' +
+      'time INTEGER NOT NULL, ' +
       'full_url TEXT NOT NULL, ' +
       'number INTEGER NOT NULL, ' +
       'status TEXT NOT NULL, ' +
@@ -130,6 +131,7 @@ var model = (function (log4js) {
           var runEntry = 'INSERT INTO runs ' +
             '(' +
             'jobId, ' +
+            'time, ' +
             'full_url, ' +
             'number, ' +
             'phase, ' +
@@ -137,6 +139,7 @@ var model = (function (log4js) {
             ((notification.build.value !== null) ? ', value ':'') +
             ') VALUES (' +
             result[0].id + ', ' +
+            Date.now() + ', ' +
             '"' + notification.build.full_url + '", ' +
             notification.build.number + ', ' +
             '"' + notification.build.phase + '", ' +
@@ -158,6 +161,7 @@ var model = (function (log4js) {
             var runEntry = 'INSERT INTO runs ' +
               '(' +
               'jobId, ' +
+              'time, ' +
               'full_url, ' +
               'number, ' +
               'phase, ' +
@@ -165,6 +169,7 @@ var model = (function (log4js) {
               ((notification.build.value !== null) ? ', value ':'') +
               ') VALUES (' +
               jobId + ', ' +
+              Date.now() + ', ' +
               '"' + notification.build.full_url + '", ' +
               notification.build.number + ', ' +
               '"' + notification.build.phase + '", ' +
