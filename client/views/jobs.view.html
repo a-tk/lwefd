@@ -12,7 +12,7 @@
         </thead>
       </table>
       <div ng-repeat="job in vm.jobs">
-        <table class="table">
+        <table class="table table-condensed table-hover table-bordered">
           <tbody>
           <tr ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
@@ -23,19 +23,19 @@
           </tbody>
         </table>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
-          <table class="table">
+          <table class="table table-condensed table-hover table-bordered">
             <thead>
               <tr>
-                <th>Run #</th>
+                <th width="10%">Run #</th>
                 <th>Time Received</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr ng-repeat="run in job.runs">
-                <td>{{run.number}}</td>
+                <td width="10%">{{run.number}}</td>
                 <td>{{run.time}}</td>
-                <td><button ng-click="alert('not impl');" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
+                <td><button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
               </tr>
             </tbody>
           </table>

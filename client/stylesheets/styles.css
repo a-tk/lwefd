@@ -57,17 +57,17 @@ body {
 }
 
 .SUCCESS {
-    background: #5cb85c;
+    background: #dff0d8;
 }
 
 .UNSTABLE {
-    background: #f0ad4e;
+    background: #fcf8e3;
 }
 
 .FAILURE {
-    background: #d9534f;
+    background: #f2dede;
 }
 
 .RUNNING {
-    background: #5bc0de;
+    background: #d9edf7;
 }
