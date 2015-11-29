@@ -14,12 +14,7 @@
       vm.activate = activate();
       vm.jobs = [];
       vm.id = $routeParams.id;
-
-      $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
-        $('.collapse').on('show.bs.collapse', function () {
-          $('.collapse.in').collapse('hide');
-        });
-      });
+      vm.loadRuns = loadRuns;
 
       function getJobs(id) {
         DbService.getJobs(id, function (result) {
@@ -27,6 +22,19 @@
         }, function (err) {
           alert(JSON.stringify(err));
         });
+      }
+
+      function loadRuns (jobindex, id, force) {
+        if (!force && vm.jobs[jobindex].hasOwnProperty('runsAlreadyLoaded')) {
+          console.log('not reloading runs for jid ' + id);
+        } else {
+          DbService.getRuns(vm.id, id, function (result) {
+            vm.jobs[jobindex].runs = result.data;
+            vm.jobs[jobindex].runsAlreadyLoaded = true;
+          }, function (err) {
+            alert(JSON.stringify(err));
+          });
+        }
       }
 
       function activate() {

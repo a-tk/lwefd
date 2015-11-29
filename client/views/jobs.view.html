@@ -6,7 +6,8 @@
       <div class="col-md-4">Time Received</div>
       <div class="col-md-3">Actions</div>
       <div ng-repeat="job in vm.jobs">
-        <div class="col-md-12 {{job.currentStatus}} job-row collapsed" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+        <div ng-click="vm.loadRuns($index, job.id, false);" class="col-md-12 {{job.currentStatus}} job-row collapsed" data-toggle="collapse"
+             data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
           <div class="col-md-1">
             {{job.id}}
           </div>
@@ -20,8 +21,10 @@
             Not Done
           </div>
         </div>
-        <div id="runs-{{job.id}}" class="collapse" aria-expanded="false">
-          Hello!
+        <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1" aria-expanded="false">
+          <div ng-repeat="run in job.runs">
+            {{run.id}}
+          </div>
         </div>
       </div>
     </div>
