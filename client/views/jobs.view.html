@@ -1,6 +1,7 @@
 <div class="hero-unit">
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
+      <p>Search <input type="text" ng-model="jobFilter"></p>
       <table class="table table-condensed table-hover">
         <thead>
         <tr>
@@ -11,10 +12,12 @@
         </tr>
         </thead>
       </table>
-      <div ng-repeat="job in vm.jobs">
-        <table class="table table-condensed table-hover table-borde job-table">
+      <!-- TODO orderBy with Date! -->
+      <div ng-repeat="job in vm.jobs | orderBy: 'name' | filter:jobFilter">
+        <table class="table table-condensed table-hover table-bordered job-table">
           <tbody>
-          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse"
+              data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
             <td width="30%">{{job.name}}</td>
             <td width="30%">Not Done</td>
@@ -25,18 +28,20 @@
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
           <table class="table table-condensed table-hover">
             <thead>
-              <tr>
-                <th width="10%">Run #</th>
-                <th>Time Received</th>
-                <th>Actions</th>
-              </tr>
+            <tr>
+              <th width="10%">Run #</th>
+              <th>Time Received</th>
+              <th>Actions</th>
+            </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="run in job.runs" class="{{run.status}}">
-                <td width="10%">{{run.number}}</td>
-                <td>{{run.time}}</td>
-                <td><button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
-              </tr>
+            <tr ng-repeat="run in job.runs" class="{{run.status}}">
+              <td width="10%">{{run.number}}</td>
+              <td>{{run.time}}</td>
+              <td>
+                <button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button>
+              </td>
+            </tr>
             </tbody>
           </table>
         </div>
