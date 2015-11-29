@@ -4,26 +4,25 @@
 
   /**
    * @ngdoc function
-   * @name lwefd.controller:SummaryCtrl
+   * @name lwefd.controller:NavCtrl
    * @description
-   * # SummaryCtrl
-   * Controller of the lwefd summary
+   * # NavCtrl
    */
   angular.module('lwefd')
-    .controller('SummaryCtrl', function ($scope, $http, DbService) {
+    .controller('NavCtrl', function ($scope, DbService) {
       var vm = this;
-      vm.products = [];
       vm.activate = activate();
+      vm.products = [];
       vm.getProducts = getProducts;
+
+      function activate() {
+        getProducts();
+      }
 
       function getProducts () {
         DbService.getProducts(function (result) {
           vm.products = result.data;
         });
-      }
-
-      function activate() {
-        getProducts();
       }
     });
 })();
