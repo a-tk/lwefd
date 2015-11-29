@@ -1,6 +1,9 @@
 <div class="hero-unit">
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
+      <div ng-repeat="job in vm.jobs">
+        {{job.name}} <br>
+      </div>
     </div>
   </div>
 </div>

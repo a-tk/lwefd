@@ -15,7 +15,8 @@
         addProduct: addProduct,
         getProducts: getProducts,
         updateProductName: updateProductName,
-        deleteProduct: deleteProduct
+        deleteProduct: deleteProduct,
+        getJobs: getJobs
       };
 
       return DbService;
@@ -37,6 +38,10 @@
 
       function deleteProduct(id, callback, errorCallback) {
         $http.get('api/delete/product/' + id).then(callback, errorCallback);
+      }
+
+      function getJobs(id, callback, errorCallback) {
+        $http.get('api/' + id + '/jobs').then(callback, errorCallback);
       }
     });
 })();
