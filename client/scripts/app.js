@@ -20,6 +20,10 @@ angular
         templateUrl: 'views/summary.view.html',
         controller: 'SummaryCtrl'
       })
+      .when('/jobs/:productName', {
+        templateUrl: 'views/jobs.view.html',
+        controller: 'JobsCtrl'
+      })
       .when('/configure', {
         templateUrl: 'views/config.view.html',
         controller: 'ConfigCtrl'
