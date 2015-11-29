@@ -12,8 +12,9 @@
         </tr>
         </thead>
       </table>
-      <!-- TODO orderBy with Date! -->
-      <div ng-repeat="job in vm.jobs | orderBy: 'name' | filter:jobFilter">
+      <!-- TODO orderBy with Date! orderBy breaks $index!-->
+      <div ng-repeat="job in vm.jobs | filter:jobFilter">
+        <!--<div ng-repeat="job in vm.jobs | orderBy: 'name' | filter:jobFilter">-->
         <table class="table table-condensed table-hover table-bordered job-table">
           <tbody>
           <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse"
