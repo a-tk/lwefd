@@ -1,27 +1,27 @@
 <div class="hero-unit">
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
-      <div class="col-md-1">#</div>
-      <div class="col-md-4">Job Name</div>
-      <div class="col-md-4">Time Received</div>
-      <div class="col-md-3">Actions</div>
+      <table class="table">
+        <thead>
+        <tr>
+          <th width="10%">#</th>
+          <th width="30%">Job Name</th>
+          <th width="30%">Time Received</th>
+          <th width="30%">Actions</th>
+        </tr>
+        </thead>
+      </table>
       <div ng-repeat="job in vm.jobs">
-        <div ng-click="vm.loadRuns($index, job.id, false);" class="col-md-12 {{job.currentStatus}} job-row collapsed"
-             data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false"
-             aria-controls="runs-{{job.id}}">
-          <div class="col-md-1">
-            {{job.id}}
-          </div>
-          <div class="col-md-4">
-            {{job.name}}
-          </div>
-          <div class="col-md-4">
-            Not Done
-          </div>
-          <div class="col-md-3">
-            Not Done
-          </div>
-        </div>
+        <table class="table">
+          <tbody>
+          <tr ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+            <td width="10%">{{job.id}}</td>
+            <td width="30%">{{job.name}}</td>
+            <td width="30%">Not Done</td>
+            <td width="30%">Not done</td>
+          </tr>
+          </tbody>
+        </table>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
           <table class="table">
             <thead>
@@ -35,7 +35,7 @@
               <tr ng-repeat="run in job.runs">
                 <td>{{run.number}}</td>
                 <td>{{run.time}}</td>
-                <td><button ng-click="alert('not impl')" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
+                <td><button ng-click="alert('not impl');" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
               </tr>
             </tbody>
           </table>
