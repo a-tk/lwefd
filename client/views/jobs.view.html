@@ -23,18 +23,22 @@
           </div>
         </div>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
-          <div class="col-md-11 run-row-header">
-            <div class="col-md-4">Run #</div>
-            <div class="col-md-4">Time Received</div>
-            <div class="col-md-3">Actions</div>
-          </div>
-          <div ng-repeat="run in job.runs">
-            <div class="col-md-11 run-row {{run.status}}">
-              <div class="col-md-4">{{run.number}}</div>
-              <div class="col-md-4">{{run.time}}</div>
-              <div class="col-md-3">{{run.status}}</div>
-            </div>
-          </div>
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Run #</th>
+                <th>Time Received</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="run in job.runs">
+                <td>{{run.number}}</td>
+                <td>{{run.time}}</td>
+                <td><button ng-click="alert('not impl')" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
