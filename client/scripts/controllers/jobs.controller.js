@@ -15,6 +15,12 @@
       vm.jobs = [];
       vm.id = undefined;
 
+      $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
+        $('.collapse').on('show.bs.collapse', function () {
+          $('.collapse.in').collapse('hide');
+        });
+      });
+
       function getJobs(id) {
         DbService.getJobs(id, function (result) {
           vm.jobs = result.data;
