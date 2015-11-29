@@ -21,6 +21,16 @@ body {
     display: inline-block;
 }
 
+.job-row {
+    border: 1px solid;
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.div-anchor {
+    color: inherit;
+}
+
 .SUCCESS {
     background: #5cb85c;
 }

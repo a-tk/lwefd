@@ -1,26 +1,29 @@
 <div class="hero-unit">
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
-      <table class="table table-condensed" style="border-collapse: collapse;">
-        <thead>
-        <tr>
-          <th>#</th>
-          <th>Job Name</th>
-        </tr>
-        </thead>
-        <tbody ng-repeat="job in vm.jobs" render-on-finish>
-        <tr data-toggle="collapse" data-target="#{{job.id}}">
-          <td>{{job.name}}</td>
-        </tr>
-        <tr>
-          <td class="hidden-row">
-            <div id="{{job.id}}" class="collapse">
-              This is a test!
-            </div>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+      <div class="col-md-1">#</div>
+      <div class="col-md-4">Job Name</div>
+      <div class="col-md-4">Time Received</div>
+      <div class="col-md-3">Actions</div>
+      <div ng-repeat="job in vm.jobs">
+        <div class="col-md-12 {{job.currentStatus}} job-row collapsed" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+          <div class="col-md-1">
+            {{job.id}}
+          </div>
+          <div class="col-md-4">
+            {{job.name}}
+          </div>
+          <div class="col-md-4">
+            Not Done
+          </div>
+          <div class="col-md-3">
+            Not Done
+          </div>
+        </div>
+        <div id="runs-{{job.id}}" class="collapse" aria-expanded="false">
+          Hello!
+        </div>
+      </div>
     </div>
   </div>
 </div>

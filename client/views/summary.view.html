@@ -3,7 +3,7 @@
     <div class="col-md-12">
       <div data-ng-repeat="product in vm.products | orderBy: $index track by $index">
         <div id="post-{{$index}}" class="line-horizontal">
-          <a style="color: inherit;" href="#/jobs/{{product.id}}">
+          <a class="div-anchor" href="#/jobs/{{product.id}}">
             <div class="col-md-3 summary-block {{product.currentStatus}}">
               <span style="line-height: 370px;"></span>
               <div class="summary-content">

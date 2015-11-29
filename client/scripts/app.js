@@ -24,6 +24,10 @@ angular
         templateUrl: 'views/jobs.view.html',
         controller: 'JobsCtrl'
       })
+      .when('/jobs/:id/:jobId', {
+        templateUrl: 'views/jobs.view.html',
+        controller: 'JobsCtrl'
+      })
       .when('/configure', {
         templateUrl: 'views/config.view.html',
         controller: 'ConfigCtrl'

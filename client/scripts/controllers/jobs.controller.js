@@ -13,7 +13,7 @@
       var vm = this;
       vm.activate = activate();
       vm.jobs = [];
-      vm.id = undefined;
+      vm.id = $routeParams.id;
 
       $scope.$on('ngRepeatFinished', function (ngRepeatFinishedEvent) {
         $('.collapse').on('show.bs.collapse', function () {
