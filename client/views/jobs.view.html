@@ -1,7 +1,7 @@
 <div class="hero-unit">
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
-      <table class="table">
+      <table class="table table-bordered table-condensed table-hover">
         <thead>
         <tr>
           <th width="10%">#</th>
@@ -12,9 +12,9 @@
         </thead>
       </table>
       <div ng-repeat="job in vm.jobs">
-        <table class="table table-condensed table-hover table-bordered">
+        <table class="table table-condensed table-hover table-bordered job-table">
           <tbody>
-          <tr ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
             <td width="30%">{{job.name}}</td>
             <td width="30%">Not Done</td>
@@ -32,7 +32,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr ng-repeat="run in job.runs">
+              <tr ng-repeat="run in job.runs" class="{{run.status}}">
                 <td width="10%">{{run.number}}</td>
                 <td>{{run.time}}</td>
                 <td><button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button></td>
