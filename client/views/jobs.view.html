@@ -6,8 +6,9 @@
       <div class="col-md-4">Time Received</div>
       <div class="col-md-3">Actions</div>
       <div ng-repeat="job in vm.jobs">
-        <div ng-click="vm.loadRuns($index, job.id, false);" class="col-md-12 {{job.currentStatus}} job-row collapsed" data-toggle="collapse"
-             data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+        <div ng-click="vm.loadRuns($index, job.id, false);" class="col-md-12 {{job.currentStatus}} job-row collapsed"
+             data-toggle="collapse" data-target="#runs-{{job.id}}" aria-expanded="false"
+             aria-controls="runs-{{job.id}}">
           <div class="col-md-1">
             {{job.id}}
           </div>
@@ -21,9 +22,18 @@
             Not Done
           </div>
         </div>
-        <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1" aria-expanded="false">
+        <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
+          <div class="col-md-11 run-row-header">
+            <div class="col-md-4">Run #</div>
+            <div class="col-md-4">Time Received</div>
+            <div class="col-md-3">Actions</div>
+          </div>
           <div ng-repeat="run in job.runs">
-            {{run.id}}
+            <div class="col-md-11 run-row {{run.status}}">
+              <div class="col-md-4">{{run.number}}</div>
+              <div class="col-md-4">{{run.time}}</div>
+              <div class="col-md-3">{{run.status}}</div>
+            </div>
           </div>
         </div>
       </div>

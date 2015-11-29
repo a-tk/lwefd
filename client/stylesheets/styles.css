@@ -21,8 +21,33 @@ body {
     display: inline-block;
 }
 
+.job-row-header {
+    font-weight: bold;
+
+}
+
 .job-row {
     border: 1px solid;
+    padding: 8px;
+    padding-left: 0;
+    padding-right: 0;
+    -webkit-border-radius: 5%;
+    -moz-border-radius: 5%;
+    border-radius: 3%;
+}
+
+.run-row-header {
+    font-weight: bold;
+    padding-right: 0;
+    padding-left: 0;
+    border-bottom: 2px solid #ddd;
+}
+
+.run-row {
+    padding: 8px;
+}
+
+.no-padding {
     padding-left: 0;
     padding-right: 0;
 }
