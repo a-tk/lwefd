@@ -11,7 +11,7 @@ create_product () {
 }
 
 submit_start () {
-  curl -X POST --data @"./self.json" "http://localhost:3000/api/${i}/notify" --header "Content-Type: application/json"
+  curl -X POST --data @"./self.json" "http://localhost:3000/api/${PRODUCT_NUM}/notify" --header "Content-Type: application/json"
 }
 
 submit_end () {
