@@ -41,6 +41,7 @@ var model = (function (log4js) {
       'productId INTEGER NOT NULL, ' +
       'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED", ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
+      'latestTime INTEGER, ' +
       'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +
       ');';
@@ -159,6 +160,7 @@ var model = (function (log4js) {
       ';';
 
     db.all(checkQuery, function (err, result) {
+      var time = Date.now();
       if (!err) {
         if (result.length !== 0) {
           //there is already a job entry, so add a run
@@ -173,7 +175,7 @@ var model = (function (log4js) {
             ((notification.build.value !== null) ? ', value ':'') +
             ') VALUES (' +
             result[0].id + ', ' +
-            Date.now() + ', ' +
+            time + ', ' +
             '"' + notification.build.full_url + '", ' +
             notification.build.number + ', ' +
             '"' + notification.build.phase + '", ' +
@@ -186,6 +188,7 @@ var model = (function (log4js) {
               log.warn('could not add run [1]: ' + err);
               callback(err);
             } else {
+              updateJobTime(result[0].id, time);
               updateJobStatus(notification.productId, result[0].id, callback);
             }
           });
@@ -203,7 +206,7 @@ var model = (function (log4js) {
               ((notification.build.value !== null) ? ', value ':'') +
               ') VALUES (' +
               jobId + ', ' +
-              Date.now() + ', ' +
+              time + ', ' +
               '"' + notification.build.full_url + '", ' +
               notification.build.number + ', ' +
               '"' + notification.build.phase + '", ' +
@@ -216,6 +219,7 @@ var model = (function (log4js) {
                 log.warn('could not add run [2]: ' + err);
                 callback(err);
               } else {
+                updateJobTime(jobId, time);
                 updateJobStatus(notification.productId, jobId, callback);
               }
             });
@@ -226,6 +230,24 @@ var model = (function (log4js) {
         callback(err);
       }
     });
+  };
+
+  var updateJobTime = function (jid, time) {
+
+    var sql = 'UPDATE jobs SET ' +
+      'latestTime=' +
+      '"' +
+      time +
+      '" ' +
+      'WHERE ' +
+      ' id='+ jid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating job time ' + jid + ' to ' + time +': ' + err);
+        }
+      }
+    );
   };
 
   var addJobEntry = function (notification, callback) {

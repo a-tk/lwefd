@@ -21,7 +21,7 @@
               data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
             <td width="30%">{{job.name}}</td>
-            <td width="30%">Not Done</td>
+            <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">Not done</td>
           </tr>
           </tbody>
@@ -36,9 +36,9 @@
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat="run in job.runs" class="{{run.status}}">
+            <tr ng-repeat="run in job.runs | orderBy: '-time'" class="{{run.status}}">
               <td width="10%">{{run.number}}</td>
-              <td>{{run.time}}</td>
+              <td>{{run.time | date: 'medium'}}</td>
               <td>
                 <button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button>
               </td>
