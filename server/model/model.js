@@ -343,26 +343,77 @@ var model = (function (log4js) {
     });
   };
 
+  var getRunsCountByStatus = function (jid, callback) {
+    var sql = 'SELECT ' +
+      'SUM(CASE WHEN status="UNSTABLE" THEN 1 else 0 end) numUnstable, ' +
+      'SUM(CASE WHEN status="FAILURE" THEN 1 else 0 end) numFailed ' +
+      'FROM runs ' +
+      'WHERE ' +
+      'jobId=' + jid +
+      ';';
+
+    db.all(sql, function (err, result) {
+      if (!err) {
+        callback(jid, result[0].numUnstable, result[0].numFailed);
+        //log.fatal(jid + ' jid: result = ' + JSON.stringify(result));
+      } else {
+        log.warn('could not getRunsCountByStatus: ' + err);
+        //callback([]);
+      }
+    });
+
+  };
+
   var updateProductsStatus = function () {
-    log.info('products to update ' + JSON.stringify(productIdQueue));
+    //log.info('products to update ' + JSON.stringify(productIdQueue));
   };
 
   var updateJobsStatus = function () {
-    log.info('jobs to update ' + JSON.stringify(jobIdQueue));
+    //log.info('jobs to update ' + JSON.stringify(jobIdQueue));
+    for (var jid in jobIdQueue) {
+      if (jobIdQueue.hasOwnProperty(jid)) {
+        getRunsCountByStatus(jid, function (jid, numUnstable, numFailed) {
+          if (numFailed > numUnstable) {
+            //log.info('setting jid ' + jid + ' to failed');
+            setJobToStatus(jid, status.FAILURE);
+          } else if (numUnstable > 0) {
+            //log.info('setting jid ' + jid + ' to unstable');
+            setJobToStatus(jid, status.UNSTABLE);
+          }
+        });
+      }
+    }
+  };
 
+  var setJobToStatus = function (jid, status, callback) {
+
+    var sql = 'UPDATE jobs SET ' +
+      'currentStatus=' +
+      '"' +
+      status +
+      '" ' +
+      'WHERE ' +
+      ' id='+ jid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating job status ' + jid + ' to ' + status +': ' + err);
+        }
+      }
+    );
   };
 
   var addJobIdToQueue = function (jid) {
     if (!jobIdQueue.hasOwnProperty(jid)) {
       jobIdQueue[jid] = jid;
-      log.info('added jid ' + jid + ' to queue');
+      //log.info('added jid ' + jid + ' to queue');
     }
   };
 
   var addProductIdToQueue = function (pid) {
     if (!productIdQueue.hasOwnProperty(pid)) {
       productIdQueue[pid] = pid;
-      log.info('added pid ' + pid + ' to queue');
+      //log.info('added pid ' + pid + ' to queue');
     }
   };
 
