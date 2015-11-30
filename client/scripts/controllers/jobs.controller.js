@@ -26,7 +26,7 @@
 
       function loadRuns (jobindex, id, force) {
         if (!force && vm.jobs[jobindex].hasOwnProperty('runsAlreadyLoaded')) {
-          console.log('not reloading runs for jid ' + id);
+          //console.log('not reloading runs for jid ' + id);
         } else {
           DbService.getRuns(vm.id, id, function (result) {
             vm.jobs[jobindex].runs = result.data;

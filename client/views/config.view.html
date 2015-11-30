@@ -4,7 +4,8 @@
       <table class="table">
         <thead>
         <tr>
-          <th>Product ID #</th>
+          <th width="10%">Product ID #</th>
+          <th>Endpoint</th>
           <th>Product Name</th>
           <th>Actions</th>
         </tr>
@@ -12,6 +13,7 @@
         <tbody>
         <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
           <td>{{product.id}}</td>
+          <td>http://lwefd.me/api/{{product.id}}/notify/</td>
           <td><input type="text" class="form-control" ng-model="name" placeholder="{{product.name}}"/></td>
           <td>
             <button ng-click="vm.updateProductName(product.id, name);" class="glyphicon glyphicon-pencil btn btn-success"></button>
@@ -20,6 +22,7 @@
         </tr>
         <tr>
           <td>#</td>
+          <td></td>
           <td><input ng-model="newProductName" type="text" class="form-control" placeholder="New Product Name"/></td>
           <td>
             <button ng-click="vm.addProduct(newProductName)" class="glyphicon glyphicon-ok btn btn-success"></button>
