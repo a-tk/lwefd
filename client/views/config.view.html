@@ -13,7 +13,7 @@
         <tbody>
         <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
           <td>{{product.id}}</td>
-          <td>http://lwefd.me/api/{{product.id}}/notify/</td>
+          <td>http://{{vm.url}}/api/{{product.id}}/notify/</td>
           <td><input type="text" class="form-control" ng-model="name" placeholder="{{product.name}}"/></td>
           <td>
             <button ng-click="vm.updateProductName(product.id, name);" class="glyphicon glyphicon-pencil btn btn-success"></button>
