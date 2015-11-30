@@ -343,6 +343,26 @@ var model = (function (log4js) {
     });
   };
 
+  var getJobsCountByStatus = function (pid, callback) {
+    var sql = 'SELECT ' +
+      'SUM(CASE WHEN currentStatus="UNSTABLE" THEN 1 else 0 end) numUnstable, ' +
+      'SUM(CASE WHEN currentStatus="FAILURE" THEN 1 else 0 end) numFailed ' +
+      'FROM jobs ' +
+      'WHERE ' +
+      'productId=' + pid +
+      ';';
+
+    db.all(sql, function (err, result) {
+      if (!err) {
+        callback(pid, result[0].numUnstable, result[0].numFailed);
+        //log.fatal(jid + ' jid: result = ' + JSON.stringify(result));
+      } else {
+        log.warn('could not getJobsCountByStatus: ' + err);
+        //callback([]);
+      }
+    });
+  };
+
   var getRunsCountByStatus = function (jid, callback) {
     var sql = 'SELECT ' +
       'SUM(CASE WHEN status="UNSTABLE" THEN 1 else 0 end) numUnstable, ' +
@@ -366,20 +386,54 @@ var model = (function (log4js) {
 
   var updateProductsStatus = function () {
     //log.info('products to update ' + JSON.stringify(productIdQueue));
+    for (var pid in productIdQueue) {
+      if (productIdQueue.hasOwnProperty(pid)) {
+        delete productIdQueue[pid];
+        getJobsCountByStatus(pid, function (pid, numUnstable, numFailed) {
+          if (numFailed > 0) {
+            //log.info('setting jid ' + jid + ' to failed');
+            setProductToStatus(pid, status.FAILURE);
+          } else if (numUnstable > 0) {
+            //log.info('setting jid ' + jid + ' to unstable');
+            setProductToStatus(pid, status.UNSTABLE);
+          }
+        });
+      }
+    }
   };
 
-  var updateJobsStatus = function () {
+  var setProductToStatus = function (pid, status, callback) {
+
+    var sql = 'UPDATE products SET ' +
+      'currentStatus=' +
+      '"' +
+      status +
+      '" ' +
+      'WHERE ' +
+      ' id='+ pid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product status ' + pid + ' to ' + status +': ' + err);
+        }
+      }
+    );
+  };
+
+  var updateJobsStatus = function (updateProductsStatus) {
     //log.info('jobs to update ' + JSON.stringify(jobIdQueue));
     for (var jid in jobIdQueue) {
       if (jobIdQueue.hasOwnProperty(jid)) {
+        delete jobIdQueue[jid];
         getRunsCountByStatus(jid, function (jid, numUnstable, numFailed) {
-          if (numFailed > numUnstable) {
+          if (numFailed > 0) {
             //log.info('setting jid ' + jid + ' to failed');
             setJobToStatus(jid, status.FAILURE);
           } else if (numUnstable > 0) {
             //log.info('setting jid ' + jid + ' to unstable');
             setJobToStatus(jid, status.UNSTABLE);
           }
+          setTimeout(updateProductsStatus, 1000); //ugly I know, but need to fix race conditions with DB
         });
       }
     }
