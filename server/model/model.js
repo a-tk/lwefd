@@ -255,11 +255,11 @@ var model = (function (log4js) {
       '(' +
       'productId, ' +
       'name' +
-      ((notification.valueUnit !== undefined) ? ', valueUnit ':'') +
+      ((notification.valueUnit !== undefined && notification.valueUnit !== null) ? ', valueUnit ':'') +
       ') VALUES (' +
       notification.productId + ', ' +
       '"' + notification.name + '" ' +
-      ((notification.valueUnit !== undefined) ? ', "' + notification.valueUnit + '" ':'') +
+      ((notification.valueUnit !== undefined && notification.valueUnit !== null) ? ', "' + notification.valueUnit + '" ':'') +
       ');';
     db.run(jobEntry, function (err) {
       if (!err) {

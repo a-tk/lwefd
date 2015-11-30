@@ -32,6 +32,7 @@
             <tr>
               <th width="10%">Run #</th>
               <th>Time Received</th>
+              <th ng-if="job.valueUnit !== 'NULL'">Run Value ({{job.valueUnit}})</th>
               <th>Actions</th>
             </tr>
             </thead>
@@ -39,6 +40,7 @@
             <tr ng-repeat="run in job.runs | orderBy: '-time'" class="{{run.status}}">
               <td width="10%">{{run.number}}</td>
               <td>{{run.time | date: 'medium'}}</td>
+              <td ng-if="run.value !== null">{{run.value}}</td>
               <td>
                 <button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button>
               </td>
