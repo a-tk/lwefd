@@ -42,6 +42,7 @@ var model = (function (log4js) {
       'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED", ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
       'latestTime INTEGER, ' +
+      'full_url TEXT, ' +
       'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +
       ');';
@@ -188,7 +189,7 @@ var model = (function (log4js) {
               log.warn('could not add run [1]: ' + err);
               callback(err);
             } else {
-              updateJobTime(result[0].id, time);
+              updateJobTimeAndUrl(result[0].id, time, notification.build.url);
               updateJobStatus(notification.productId, result[0].id, callback);
             }
           });
@@ -219,7 +220,7 @@ var model = (function (log4js) {
                 log.warn('could not add run [2]: ' + err);
                 callback(err);
               } else {
-                updateJobTime(jobId, time);
+                updateJobTimeAndUrl(jobId, time, notification.build.full_url);
                 updateJobStatus(notification.productId, jobId, callback);
               }
             });
@@ -232,12 +233,16 @@ var model = (function (log4js) {
     });
   };
 
-  var updateJobTime = function (jid, time) {
+  var updateJobTimeAndUrl = function (jid, time, url) {
 
     var sql = 'UPDATE jobs SET ' +
       'latestTime=' +
-      '"' +
+      '' +
       time +
+      ', ' +
+      'full_url=' +
+      '"' +
+      url +
       '" ' +
       'WHERE ' +
       ' id='+ jid +
@@ -245,6 +250,7 @@ var model = (function (log4js) {
     db.run(sql, function (err) {
         if (err) {
           log.warn('error updating job time ' + jid + ' to ' + time +': ' + err);
+          log.warn('error updating job time ' + jid + ' to ' + url +': ' + err);
         }
       }
     );

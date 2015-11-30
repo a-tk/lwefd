@@ -21,7 +21,7 @@
           <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse"
               data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
-            <td width="30%">{{job.name}}</td>
+            <td width="30%"><a href="{{job.full_url}}">{{job.name}}</a></td>
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">Not done</td>
           </tr>
