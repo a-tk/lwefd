@@ -17,6 +17,9 @@ var model = (function (log4js) {
     COMPLETED: "COMPLETED"
   };
 
+  var jobIdQueue = {};
+  var productIdQueue = {};
+
   var connect = function () {
     db = new DbClient.Database(dbfile, function (err) {
       if (err) {
@@ -190,7 +193,8 @@ var model = (function (log4js) {
               callback(err);
             } else {
               updateJobTimeAndUrl(result[0].id, time, notification.build.url);
-              updateJobStatus(notification.productId, result[0].id, callback);
+              updateJobsStatus();
+              callback();
             }
           });
         } else {
@@ -221,7 +225,9 @@ var model = (function (log4js) {
                 callback(err);
               } else {
                 updateJobTimeAndUrl(jobId, time, notification.build.full_url);
-                updateJobStatus(notification.productId, jobId, callback);
+                addJobIdToQueue(jobId);
+                addProductIdToQueue(notification.productId);
+                callback(err);
               }
             });
           });
@@ -337,15 +343,27 @@ var model = (function (log4js) {
     });
   };
 
-  var updateProductStatus = function (productId, callback) {
-    //TODO
-
-    callback('updateProductStatus not implemented');
+  var updateProductsStatus = function () {
+    log.info('products to update ' + JSON.stringify(productIdQueue));
   };
 
-  var updateJobStatus = function (productId, jobId, callback) {
-    //TODO: and call updateProductStatus with callback after done updating
-    updateProductStatus(productId, callback);
+  var updateJobsStatus = function () {
+    log.info('jobs to update ' + JSON.stringify(jobIdQueue));
+
+  };
+
+  var addJobIdToQueue = function (jid) {
+    if (!jobIdQueue.hasOwnProperty(jid)) {
+      jobIdQueue[jid] = jid;
+      log.info('added jid ' + jid + ' to queue');
+    }
+  };
+
+  var addProductIdToQueue = function (pid) {
+    if (!productIdQueue.hasOwnProperty(pid)) {
+      productIdQueue[pid] = pid;
+      log.info('added pid ' + pid + ' to queue');
+    }
   };
 
   return {
@@ -357,6 +375,8 @@ var model = (function (log4js) {
     getJobRuns: getJobRuns,
     getProducts: getProducts,
     getAllJobs: getAllJobs,
+    updateJobsStatus: updateJobsStatus,
+    updateProductsStatus: updateProductsStatus,
     close: close,
     status: status,
     phase: phase
