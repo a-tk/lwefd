@@ -16,6 +16,7 @@
 
 var travis_ci = (function (log4js) {
   var log = log4js.getLogger('travis-ci');
+  log.fatal('message received');
 
   return {
     transform: transform
