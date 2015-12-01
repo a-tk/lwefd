@@ -363,21 +363,22 @@ var model = (function (log4js) {
     });
   };
 
-  var getRunsCountByStatus = function (jid, callback) {
+  var getRunsStatus = function (jid, callback) {
     var sql = 'SELECT ' +
-      'SUM(CASE WHEN status="UNSTABLE" THEN 1 else 0 end) numUnstable, ' +
-      'SUM(CASE WHEN status="FAILURE" THEN 1 else 0 end) numFailed ' +
+      'status ' +
       'FROM runs ' +
       'WHERE ' +
+      'time= (SELECT MAX(TIME) FROM runs WHERE jobId='+jid+') ' +
+      'AND ' +
       'jobId=' + jid +
       ';';
 
     db.all(sql, function (err, result) {
       if (!err) {
-        callback(jid, result[0].numUnstable, result[0].numFailed);
-        //log.fatal(jid + ' jid: result = ' + JSON.stringify(result));
+        //log.fatal('result = ' +JSON.stringify(result));
+        callback(jid, result[0].status);
       } else {
-        log.warn('could not getRunsCountByStatus: ' + err);
+        log.warn('could not getRunsStatus: ' + err);
         //callback([]);
       }
     });
@@ -425,13 +426,10 @@ var model = (function (log4js) {
     for (var jid in jobIdQueue) {
       if (jobIdQueue.hasOwnProperty(jid)) {
         delete jobIdQueue[jid];
-        getRunsCountByStatus(jid, function (jid, numUnstable, numFailed) {
-          if (numFailed > 0) {
+        getRunsStatus(jid, function (jid, resultStatus) {
+          if (status.hasOwnProperty(resultStatus)) {
             //log.info('setting jid ' + jid + ' to failed');
-            setJobToStatus(jid, status.FAILURE);
-          } else if (numUnstable > 0) {
-            //log.info('setting jid ' + jid + ' to unstable');
-            setJobToStatus(jid, status.UNSTABLE);
+            setJobToStatus(jid, status[resultStatus]);
           }
           setTimeout(updateProductsStatus, 1000); //ugly I know, but need to fix race conditions with DB
         });
