@@ -18,6 +18,7 @@ var model = (function (log4js) {
   };
 
   var productIdQueue = {};
+  var polling = false;
 
   var connect = function () {
     db = new DbClient.Database(dbfile, function (err) {
@@ -191,7 +192,7 @@ var model = (function (log4js) {
               log.warn('could not add run [1]: ' + err);
               callback(err);
             } else {
-              addProductIdToQueue(notification.productId);
+              pushProductId(notification.productId);
               updateJobFromRun(result[0].id, time, notification.build.full_url, notification.build.status, callback);
             }
           });
@@ -222,7 +223,7 @@ var model = (function (log4js) {
                 log.warn('could not add run [2]: ' + err);
                 callback(err);
               } else {
-                addProductIdToQueue(notification.productId);
+                pushProductId(notification.productId);
                 updateJobFromRun(jobId, time, notification.build.full_url, notification.build.status, callback);
               }
             });
@@ -356,7 +357,7 @@ var model = (function (log4js) {
 
     db.all(sql, function (err, result) {
       if (!err) {
-        callback(pid, result[0].numUnstable, result[0].numFailed);
+        callback(result[0].numUnstable, result[0].numFailed);
         //log.fatal(jid + ' jid: result = ' + JSON.stringify(result));
       } else {
         log.warn('could not getJobsCountByStatus: ' + err);
@@ -387,26 +388,58 @@ var model = (function (log4js) {
 
   };
 
-  var updateProductsStatus = function () {
-    //log.info('products to update ' + JSON.stringify(productIdQueue));
-    for (var pid in productIdQueue) {
-      if (productIdQueue.hasOwnProperty(pid)) {
-        log.info('productIdQueue = ' + JSON.stringify(productIdQueue));
-        delete productIdQueue[pid];
-        getJobsCountByStatus(pid, function (pid, numUnstable, numFailed) {
-          if (numFailed > 0) {
-            log.info('setting pid ' + pid + ' to failed');
-            setProductToStatus(pid, status.FAILURE);
-          } else if (numUnstable > 0) {
-            log.info('setting pid ' + pid + ' to unstable');
-            setProductToStatus(pid, status.UNSTABLE);
-          }
-        });
-      }
+  var updateProductsStatus = function (callback) {
+    if (polling == false) {
+      polling = true;
+      pollProductUpdateQueue(callback);
+    } else {
+      callback();
     }
   };
 
-  var setProductToStatus = function (pid, status, callback) {
+  var pollProductUpdateQueue = function (callback) {
+    if (productIdsInQueue()) {
+      var pid = popProductId();
+      getJobsCountByStatus(pid, function (numUnstable, numFailed) {
+        var statusToSet;
+        if (numFailed > 0) {
+          log.info('setting pid ' + pid + ' to failed');
+          statusToSet = status.FAILURE;
+        } else if (numUnstable > 0) {
+          log.info('setting pid ' + pid + ' to unstable');
+          statusToSet = status.UNSTABLE;
+        }
+        setProductToStatus(pid, statusToSet, callback, pollProductUpdateQueue);
+      });
+    } else {
+      polling = false;
+      callback();
+    }
+  };
+
+  var productIdsInQueue = function () {
+    var size = Object.keys(productIdQueue).length;
+    return size !== 0;
+  };
+
+  /*
+  Stack methods, but actually functions as a queue
+   */
+  var pushProductId = function (pid) {
+    if (!productIdQueue.hasOwnProperty(pid)) {
+      productIdQueue[pid] = pid;
+      //log.info('added pid ' + pid + ' to queue');
+    }
+  };
+
+  var popProductId = function () {
+    var keys = Object.keys(productIdQueue);
+    var pid = keys.pop();
+    delete productIdQueue[pid];
+    return pid;
+  };
+
+  var setProductToStatus = function (pid, status, callbacksCallback, callback) {
 
     var sql = 'UPDATE products SET ' +
       'currentStatus=' +
@@ -420,15 +453,9 @@ var model = (function (log4js) {
         if (err) {
           log.warn('error updating product status ' + pid + ' to ' + status +': ' + err);
         }
+        callback(callbacksCallback);
       }
     );
-  };
-
-  var addProductIdToQueue = function (pid) {
-    if (!productIdQueue.hasOwnProperty(pid)) {
-      productIdQueue[pid] = pid;
-      //log.info('added pid ' + pid + ' to queue');
-    }
   };
 
   return {

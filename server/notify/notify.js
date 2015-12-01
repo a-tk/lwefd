@@ -106,9 +106,10 @@ var notify = (function (log4js, model) {
         poll();
       } else {
         log.info('polling done');
-        model.updateProductsStatus();
-        polling = false;
-        callback(result);
+        model.updateProductsStatus(function () {
+          polling = false;
+          callback(result);
+        });
       }
     });
   }
