@@ -16,7 +16,7 @@
 
 var travis_ci = (function (log4js) {
   var log = log4js.getLogger('travis-ci');
-  log.fatal('message received');
+
 
   return {
     transform: transform
@@ -24,6 +24,7 @@ var travis_ci = (function (log4js) {
 
   function transform (travisData, callback) {
     var data = {};
+    log.info(JSON.stringify(travisData));
 
     var status = 'FAILURE';
 
@@ -43,7 +44,7 @@ var travis_ci = (function (log4js) {
       phase = 'COMPLETED';
     }
 
-    data.name = travisData.repository.name;
+    data.name = 'LWEFD';
     data.build = {};
     data.build.full_url = travisData.build_url;
     data.build.number = travisData.number;
