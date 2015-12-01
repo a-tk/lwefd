@@ -17,7 +17,6 @@ var model = (function (log4js) {
     COMPLETED: "COMPLETED"
   };
 
-  var jobIdQueue = {};
   var productIdQueue = {};
 
   var connect = function () {
@@ -192,9 +191,8 @@ var model = (function (log4js) {
               log.warn('could not add run [1]: ' + err);
               callback(err);
             } else {
-              updateJobTimeAndUrl(result[0].id, time, notification.build.url);
-              updateJobsStatus();
-              callback();
+              addProductIdToQueue(notification.productId);
+              updateJobFromRun(result[0].id, time, notification.build.full_url, notification.build.status, callback);
             }
           });
         } else {
@@ -224,10 +222,8 @@ var model = (function (log4js) {
                 log.warn('could not add run [2]: ' + err);
                 callback(err);
               } else {
-                updateJobTimeAndUrl(jobId, time, notification.build.full_url);
-                addJobIdToQueue(jobId);
                 addProductIdToQueue(notification.productId);
-                callback(err);
+                updateJobFromRun(jobId, time, notification.build.full_url, notification.build.status, callback);
               }
             });
           });
@@ -239,7 +235,7 @@ var model = (function (log4js) {
     });
   };
 
-  var updateJobTimeAndUrl = function (jid, time, url) {
+  var updateJobFromRun = function (jid, time, url, status, callback) {
 
     var sql = 'UPDATE jobs SET ' +
       'latestTime=' +
@@ -249,14 +245,20 @@ var model = (function (log4js) {
       'full_url=' +
       '"' +
       url +
-      '" ' +
+      '",' +
+      'currentStatus=' +
+      '"' +
+      status +
+      '" '+
       'WHERE ' +
       ' id='+ jid +
       ';';
     db.run(sql, function (err) {
         if (err) {
-          log.warn('error updating job time ' + jid + ' to ' + time +': ' + err);
-          log.warn('error updating job time ' + jid + ' to ' + url +': ' + err);
+          log.warn('error updating job ' + jid + ' to run ' + time +', '+ url+ ', '+ status + ': ' + err);
+          callback(err);
+        } else {
+          callback();
         }
       }
     );
@@ -389,13 +391,14 @@ var model = (function (log4js) {
     //log.info('products to update ' + JSON.stringify(productIdQueue));
     for (var pid in productIdQueue) {
       if (productIdQueue.hasOwnProperty(pid)) {
+        log.info('productIdQueue = ' + JSON.stringify(productIdQueue));
         delete productIdQueue[pid];
         getJobsCountByStatus(pid, function (pid, numUnstable, numFailed) {
           if (numFailed > 0) {
-            //log.info('setting jid ' + jid + ' to failed');
+            log.info('setting pid ' + pid + ' to failed');
             setProductToStatus(pid, status.FAILURE);
           } else if (numUnstable > 0) {
-            //log.info('setting jid ' + jid + ' to unstable');
+            log.info('setting pid ' + pid + ' to unstable');
             setProductToStatus(pid, status.UNSTABLE);
           }
         });
@@ -421,47 +424,6 @@ var model = (function (log4js) {
     );
   };
 
-  var updateJobsStatus = function (updateProductsStatus) {
-    //log.info('jobs to update ' + JSON.stringify(jobIdQueue));
-    for (var jid in jobIdQueue) {
-      if (jobIdQueue.hasOwnProperty(jid)) {
-        delete jobIdQueue[jid];
-        getRunsStatus(jid, function (jid, resultStatus) {
-          if (status.hasOwnProperty(resultStatus)) {
-            //log.info('setting jid ' + jid + ' to failed');
-            setJobToStatus(jid, status[resultStatus]);
-          }
-          setTimeout(updateProductsStatus, 1000); //ugly I know, but need to fix race conditions with DB
-        });
-      }
-    }
-  };
-
-  var setJobToStatus = function (jid, status, callback) {
-
-    var sql = 'UPDATE jobs SET ' +
-      'currentStatus=' +
-      '"' +
-      status +
-      '" ' +
-      'WHERE ' +
-      ' id='+ jid +
-      ';';
-    db.run(sql, function (err) {
-        if (err) {
-          log.warn('error updating job status ' + jid + ' to ' + status +': ' + err);
-        }
-      }
-    );
-  };
-
-  var addJobIdToQueue = function (jid) {
-    if (!jobIdQueue.hasOwnProperty(jid)) {
-      jobIdQueue[jid] = jid;
-      //log.info('added jid ' + jid + ' to queue');
-    }
-  };
-
   var addProductIdToQueue = function (pid) {
     if (!productIdQueue.hasOwnProperty(pid)) {
       productIdQueue[pid] = pid;
@@ -478,7 +440,6 @@ var model = (function (log4js) {
     getJobRuns: getJobRuns,
     getProducts: getProducts,
     getAllJobs: getAllJobs,
-    updateJobsStatus: updateJobsStatus,
     updateProductsStatus: updateProductsStatus,
     close: close,
     status: status,

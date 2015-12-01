@@ -106,7 +106,7 @@ var notify = (function (log4js, model) {
         poll();
       } else {
         log.info('polling done');
-        model.updateJobsStatus(model.updateProductsStatus);
+        model.updateProductsStatus();
         polling = false;
         callback(result);
       }
