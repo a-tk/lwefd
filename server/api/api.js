@@ -42,6 +42,16 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
+  /*
+  Tested a run of this, for stability and performance. Submitted 250,000
+  notifications to the server, from localhost to localhost, and routinely
+  say response times of under 10ms, with as little as 2ms, and highest I saw
+  was 25ms. The system remained stable throughout this process, and I was
+  even able to routinely open the runs tab. After they were submitted,
+  I noticed that the query to gather runs from each job took about
+  30 - 40ms, and about .5s to render on the frontend. I miagine the
+  slow frontend is from Angular ordering.
+   */
   api.get('/api/:productId/notify/', function (req, res, next) {
     res.send(JSON.stringify(api.stack));
   });
