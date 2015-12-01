@@ -5,7 +5,7 @@ node_js:
 notifications:
     webhooks:
         urls:
-        - http://lwefd.me/api/1/travis
+        - http://lwefd.me/api/1/notify/travis
         on_success: always
         on_failure: always
         on_start: always
