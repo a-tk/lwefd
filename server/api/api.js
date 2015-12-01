@@ -1,6 +1,7 @@
 var api = (function (log4js, express, model, notify) {
   var log = log4js.getLogger('/api');
   var api = express.Router();
+  var travis_ci = require('../notify/travis-ci.js')(log4js);
 
   api.get('/api/', function (req, res, next) {
     //TODO: display all of the api
@@ -59,6 +60,14 @@ var api = (function (log4js, express, model, notify) {
   api.post('/api/:productId/notify/', function (req, res, next) {
     notify.process(req.params.productId, req.body, function (result) {
       res.send(result);
+    });
+  });
+
+  api.post('/api/:productId/notify/travis', function (req, res, next) {
+    travis_ci.transform(req.body, function (data) {
+      notify.process(req.params.productId, data, function (result) {
+        res.send(result);
+      });
     });
   });
 
