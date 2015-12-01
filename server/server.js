@@ -1,6 +1,6 @@
 var express = require('express');
 var path = require('path');
-var reqLogger= require('morgan');
+//var reqLogger= require('morgan');
 var log4js = require('log4js');
 /*
 log4js.configure({
@@ -24,7 +24,7 @@ var serverConfig = require('./env.json')[ environment ];
 app.set('views', path.join(__dirname, '/views'));
 app.set('view engine', 'jade');
 */
-app.use(reqLogger('dev'));
+//app.use(reqLogger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static('./client/'));
