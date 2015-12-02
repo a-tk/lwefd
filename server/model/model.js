@@ -1,8 +1,7 @@
-var model = (function (log4js) {
+var model = (function (log4js, dbFile) {
   var log = log4js.getLogger('model');
 
   var DbClient = require('sqlite3').verbose(),
-    dbfile = 'DB.sqlite',
     assert = require('assert');
 
   var db = null;
@@ -21,11 +20,11 @@ var model = (function (log4js) {
   var polling = false;
 
   var connect = function () {
-    db = new DbClient.Database(dbfile, function (err) {
+    db = new DbClient.Database(dbFile, function (err) {
       if (err) {
-        log.fatal('Could not connect to DB: ' + dbfile);
+        log.fatal('Could not connect to DB: ' + dbFile);
       } else {
-        log.info('Model connected to ' + dbfile);
+        log.info('Model connected to ' + dbFile);
         initialize();
       }
     });
@@ -408,6 +407,9 @@ var model = (function (log4js) {
         } else if (numUnstable > 0) {
           log.info('setting pid ' + pid + ' to unstable');
           statusToSet = status.UNSTABLE;
+        } else {
+          log.info('setting pid ' + pid + ' to success');
+          statusToSet = status.SUCCESS;
         }
         setProductToStatus(pid, statusToSet, callback, pollProductUpdateQueue);
       });

@@ -33,7 +33,7 @@ app.use('/', express.static('./'));
 
 
 var model = require('./model/model.js');
-model = model(log4js);
+model = model(log4js, serverConfig.dbFile);
 model.connect();
 
 var notify = require('./notify/notify.js');
