@@ -64,7 +64,7 @@ var api = (function (log4js, express, model, notify) {
   });
 
   api.post('/api/:productId/notify/travis', function (req, res, next) {
-    travis_ci.transform(req.body, function (data) {
+    travis_ci.transform(req.body.payload, function (data) {
       notify.process(req.params.productId, data, function (result) {
         res.send(result);
       });
