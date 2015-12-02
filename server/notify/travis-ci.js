@@ -28,26 +28,26 @@ var travis_ci = (function (log4js) {
 
     var status = 'FAILURE';
 
-    if (travisData.status_message === 'Passed' ||
-      travisData.status_message === 'Fixed') {
+    if (travisData.payload.status_message.localeCompare('Passed') ||
+      travisData.payload.status_message.localeCompare('Fixed')) {
         status = 'SUCCESS';
-    } else if (travisData.status_message === 'Broken' ||
-      travisData.status_message === 'Broken' ||
-      travisData.status_message === 'Broken') {
+    } else if (travisData.payload.status_message.localeCompare('Broken') ||
+      travisData.payload.status_message.localeCompare('Failed') ||
+      travisData.payload.status_message.localeCompare('Still Failing')) {
       status = 'FAILURE';
     }
 
     var phase;
-    if (travisData.status_message === 'Pending') {
+    if (travisData.payload.status_message.localeCompare('Pending')) {
       phase = 'STARTED';
     }else {
       phase = 'COMPLETED';
     }
 
-    data.name = 'LWEFD';
+    data.name = payload.repository.name;
     data.build = {};
-    data.build.full_url = travisData.build_url;
-    data.build.number = travisData.number;
+    data.build.full_url = travisData.payload.build_url;
+    data.build.number = travisData.payload.number;
     data.build.phase = phase;
     data.build.status = status;
 
