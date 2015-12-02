@@ -181,7 +181,7 @@ var model = (function (log4js) {
             result[0].id + ', ' +
             time + ', ' +
             '"' + notification.build.full_url + '", ' +
-            notification.build.number + ', ' +
+            notification.build.number + ', ' + //will cause an issue if number is undefined.
             '"' + notification.build.phase + '", ' +
             '"' + notification.build.status + '" ' +
             ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
