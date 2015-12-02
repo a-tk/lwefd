@@ -1,13 +1,13 @@
-/*var NotificationController = require('notify/NotificationController');
+/*var NotificationController = require('notify/NotificationController');*/
 var assert = require('assert');
 
-describe('NotificationController', function() {
+describe('FAILING Test', function() {
   describe('Constructor', function() {
-    it('should only ever create one NotificationController', function() {
-      var note1 = new NotificationController();
-      var note2 = new NotificationController();
+    it('should fail', function() {
+      var one = 1;
+      var two = 2;
 
-      assert.equal(note1, note2);
+      assert.equal(one, two);
     });
   });
-});*/
+});
