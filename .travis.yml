@@ -3,6 +3,7 @@ node_js:
     - "4.1"
 
 notifications:
+    email: false
     webhooks:
         urls:
         - http://lwefd.me/api/1/notify/travis
