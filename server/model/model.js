@@ -2,7 +2,7 @@ var model = (function (log4js) {
   var log = log4js.getLogger('model');
 
   var DbClient = require('sqlite3').verbose(),
-    dbfile = ':memory:',
+    dbfile = 'DB.sqlite',
     assert = require('assert');
 
   var db = null;
