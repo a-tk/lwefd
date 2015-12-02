@@ -25,21 +25,21 @@ var travis_ci = (function (log4js) {
   function transform (travisData, callback) {
     travisData = JSON.parse(travisData);
     var data = {};
-    //log.info(JSON.stringify(travisData, undefined, 2));
+    log.info(JSON.stringify(travisData, undefined, 2));
 
     var status = 'FAILURE';
 
-    if (travisData.status_message.localeCompare('Passed') ||
-      travisData.status_message.localeCompare('Fixed')) {
+    if (!travisData.status_message.localeCompare('Passed') ||
+      !travisData.status_message.localeCompare('Fixed')) {
         status = 'SUCCESS';
-    } else if (travisData.status_message.localeCompare('Broken') ||
-      travisData.status_message.localeCompare('Failed') ||
-      travisData.status_message.localeCompare('Still Failing')) {
+    } else if (!travisData.status_message.localeCompare('Broken') ||
+      !travisData.status_message.localeCompare('Failed') ||
+      !travisData.status_message.localeCompare('Still Failing')) {
       status = 'FAILURE';
     }
 
     var phase;
-    if (travisData.status_message.localeCompare('Pending')) {
+    if (!travisData.status_message.localeCompare('Pending')) {
       phase = 'STARTED';
     }else {
       phase = 'COMPLETED';
