@@ -57,7 +57,6 @@ var model = (function (log4js, dbFile) {
       'full_url TEXT NOT NULL, ' +
       'number INTEGER NOT NULL, ' +
       'status TEXT NOT NULL, ' +
-      'phase TEXT NOT NULL, ' +
       'value INTEGER, ' +
       'CONSTRAINT unq UNIQUE (jobId, number), ' +
       'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
@@ -226,7 +225,6 @@ var model = (function (log4js, dbFile) {
       'time, ' +
       'full_url, ' +
       'number, ' +
-      'phase, ' +
       'status ' +
       ((notification.build.value !== null) ? ', value ':'') +
       ') VALUES (';
@@ -235,7 +233,6 @@ var model = (function (log4js, dbFile) {
       time + ', ' +
       '"' + notification.build.full_url + '", ' +
       notification.build.number + ', ' + //will cause an issue if number is undefined.
-      '"' + notification.build.phase + '", ' +
       '"' + notification.build.status + '" ' +
       ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
       ');';
@@ -279,32 +276,37 @@ var model = (function (log4js, dbFile) {
   };
 
   var updateJobFromRun = function (jid, time, url, status, callback) {
+    if (status === phase.STARTED) {
+      //don't update jobs status
+      callback();
+    } else {
 
-    var sql = 'UPDATE jobs SET ' +
-      'latestTime=' +
-      '' +
-      time +
-      ', ' +
-      'full_url=' +
-      '"' +
-      url +
-      '",' +
-      'currentStatus=' +
-      '"' +
-      status +
-      '" '+
-      'WHERE ' +
-      ' id='+ jid +
-      ';';
-    db.run(sql, function (err) {
-        if (err) {
-          log.warn('error updating job ' + jid + ' to run ' + time +', '+ url+ ', '+ status + ': ' + err);
-          callback(err);
-        } else {
-          callback();
+      var sql = 'UPDATE jobs SET ' +
+        'latestTime=' +
+        '' +
+        time +
+        ', ' +
+        'full_url=' +
+        '"' +
+        url +
+        '",' +
+        'currentStatus=' +
+        '"' +
+        status +
+        '" ' +
+        'WHERE ' +
+        ' id=' + jid +
+        ';';
+      db.run(sql, function (err) {
+          if (err) {
+            log.warn('error updating job ' + jid + ' to run ' + time + ', ' + url + ', ' + status + ': ' + err);
+            callback(err);
+          } else {
+            callback();
+          }
         }
-      }
-    );
+      );
+    }
   };
 
   var addJobEntry = function (notification, callback) {
