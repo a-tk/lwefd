@@ -14,6 +14,7 @@
       vm.activate = activate();
       vm.jobs = [];
       vm.id = $routeParams.id;
+      vm.name = vm.id;
       vm.loadRuns = loadRuns;
       vm.deleteJob = deleteJob;
       vm.deleteRun = deleteRun;
@@ -56,6 +57,7 @@
 
       function activate() {
         vm.id = $routeParams.id;
+        getProductName(vm.id);
         getJobs(vm.id);
       }
 

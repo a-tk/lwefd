@@ -36,8 +36,8 @@
         });
       }
 
-      function getProductName(callback, errorCallback) {
-        $http.get('api/' + id + '/name').then(callback, errorCallback);
+      function getProductName(pid, callback, errorCallback) {
+        $http.get('api/' + pid + '/name').then(callback, errorCallback);
       }
 
       function updateProductName (id, name, callback, errorCallback) {
