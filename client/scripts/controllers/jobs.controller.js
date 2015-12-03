@@ -115,7 +115,8 @@
       // Configure all line charts
       ChartJsProvider.setOptions('Line', {
         datasetFill: false,
-        datasetStroke: false
+        datasetStroke: false,
+        bezierCurve: false
       });
     }]);
 })();
