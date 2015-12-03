@@ -23,9 +23,9 @@
       vm.deleteJob = deleteJob;
       vm.deleteRun = deleteRun;
 
-      function getProductSummary(pid) {
-        DbService.getProductSummary(pid, function(result) {
-          console.log(JSON.stringify(result.data));
+      function getProductSummary() {
+        DbService.getProductSummary(vm.id, function(result) {
+          //console.log(JSON.stringify(result.data));
           vm.name = result.data.name;
           vm.numSuccess = result.data.numSuccess;
           vm.numUnstable = result.data.numUnstable;
@@ -37,6 +37,7 @@
       function getJobs(id) {
         DbService.getJobs(id, function (result) {
           vm.jobs = result.data;
+          getProductSummary();
         }, fancyError);
       }
 
@@ -66,7 +67,7 @@
 
       function activate() {
         vm.id = $routeParams.id;
-        getProductSummary(vm.id);
+        getProductSummary();
         getJobs(vm.id);
       }
 
