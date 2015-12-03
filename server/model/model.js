@@ -210,6 +210,7 @@ var model = (function (log4js, dbFile) {
 
   var addRun = function (notification, callback) {
     //if first entry, add job, then add run, otherwise just add run
+    var time = Date.now();
 
     var checkQuery = 'SELECT * FROM ' +
       'jobs ' +
@@ -218,12 +219,7 @@ var model = (function (log4js, dbFile) {
       'name="' + notification.name + '"' +
       ';';
 
-    db.all(checkQuery, function (err, result) {
-      var time = Date.now();
-      if (!err) {
-        if (result.length !== 0) {
-          //there is already a job entry, so add a run
-          var runEntry = 'INSERT INTO runs ' +
+    var runEntryBeforeJid = 'INSERT INTO runs ' +
             '(' +
             'jobId, ' +
             'time, ' +
@@ -232,8 +228,9 @@ var model = (function (log4js, dbFile) {
             'phase, ' +
             'status ' +
             ((notification.build.value !== null) ? ', value ':'') +
-            ') VALUES (' +
-            result[0].id + ', ' +
+            ') VALUES (';
+
+    var runEntryAfterJid = ', ' +
             time + ', ' +
             '"' + notification.build.full_url + '", ' +
             notification.build.number + ', ' + //will cause an issue if number is undefined.
@@ -241,6 +238,12 @@ var model = (function (log4js, dbFile) {
             '"' + notification.build.status + '" ' +
             ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
             ');';
+
+    db.all(checkQuery, function (err, result) {
+      if (!err) {
+        if (result.length !== 0) {
+          //there is already a job entry, so add a run
+          var runEntry = runEntryBeforeJid + result[0].id + runEntryAfterJid;
           //log.info(runEntry);
           db.run(runEntry, function (err) {
             if (err) {
@@ -254,24 +257,7 @@ var model = (function (log4js, dbFile) {
         } else {
           //add a job entry, then add a run
           addJobEntry(notification, function (jobId) {
-            var runEntry = 'INSERT INTO runs ' +
-              '(' +
-              'jobId, ' +
-              'time, ' +
-              'full_url, ' +
-              'number, ' +
-              'phase, ' +
-              'status ' +
-              ((notification.build.value !== null) ? ', value ':'') +
-              ') VALUES (' +
-              jobId + ', ' +
-              time + ', ' +
-              '"' + notification.build.full_url + '", ' +
-              notification.build.number + ', ' +
-              '"' + notification.build.phase + '", ' +
-              '"' + notification.build.status + '" ' +
-              ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
-              ');';
+            var runEntry = runEntryBeforeJid + jobId + runEntryAfterJid;
             //log.info(runEntry);
             db.run(runEntry, function (err) {
               if (err) {
