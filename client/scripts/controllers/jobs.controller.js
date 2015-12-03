@@ -15,14 +15,22 @@
       vm.jobs = [];
       vm.id = $routeParams.id;
       vm.name = vm.id;
+      vm.numSuccess=0;
+      vm.numUnstable=0;
+      vm.numFailed=0;
+      vm.numTotal = 0;
       vm.loadRuns = loadRuns;
       vm.deleteJob = deleteJob;
       vm.deleteRun = deleteRun;
 
-      function getProductName(pid) {
-        DbService.getProductName(pid, function(result) {
-          //console.log(JSON.stringify(result.data.name));
+      function getProductSummary(pid) {
+        DbService.getProductSummary(pid, function(result) {
+          console.log(JSON.stringify(result.data));
           vm.name = result.data.name;
+          vm.numSuccess = result.data.numSuccess;
+          vm.numUnstable = result.data.numUnstable;
+          vm.numFailed = result.data.numFailed;
+          vm.numTotal = vm.numSuccess + vm.numUnstable + vm.numFailed;
         }, fancyError);
       }
 
@@ -58,7 +66,7 @@
 
       function activate() {
         vm.id = $routeParams.id;
-        getProductName(vm.id);
+        getProductSummary(vm.id);
         getJobs(vm.id);
       }
 

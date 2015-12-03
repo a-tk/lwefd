@@ -2,6 +2,11 @@
   <div data-ng-controller="JobsCtrl as vm">
     <div class="col-md-12">
       <h1>{{vm.name}} Jobs</h1>
+      <div class="progress">
+        <div class="progress-bar progress-bar-success" style="width: {{ ((vm.numSuccess/vm.numTotal) * 100) }}%"></div>
+        <div class="progress-bar progress-bar-warning" style="width: {{ ((vm.numUnstable/vm.numTotal) * 100) }}%"></div>
+        <div class="progress-bar progress-bar-danger" style="width: {{ ((vm.numFailed/vm.numTotal) * 100) }}%"></div>
+      </div>
       <p>Search <input type="text" ng-model="jobFilter"></p>
       <table class="table table-condensed table-hover">
         <thead>

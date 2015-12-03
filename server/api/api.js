@@ -89,9 +89,9 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
-  api.get('/api/:productId/name/', function (req, res, next) {
+  api.get('/api/:productId/summary/', function (req, res, next) {
     //TODO: view all jobs belonging to a product
-    model.getProductName(req.params.productId, function (result) {
+    model.getProductSummary(req.params.productId, function (result) {
       res.send(result);
     });
   });

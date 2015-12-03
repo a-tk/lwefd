@@ -14,7 +14,7 @@
       var DbService = {
         addProduct: addProduct,
         getProducts: getProducts,
-        getProductName: getProductName,
+        getProductSummary: getProductSummary,
         updateProductName: updateProductName,
         deleteProduct: deleteProduct,
         deleteJob: deleteJob,
@@ -36,8 +36,8 @@
         });
       }
 
-      function getProductName(pid, callback, errorCallback) {
-        $http.get('api/' + pid + '/name').then(callback, errorCallback);
+      function getProductSummary(pid, callback, errorCallback) {
+        $http.get('api/' + pid + '/summary').then(callback, errorCallback);
       }
 
       function updateProductName (id, name, callback, errorCallback) {

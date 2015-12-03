@@ -167,8 +167,13 @@ var model = (function (log4js, dbFile) {
     );
   };
 
-  var getProductName = function (id, callback) {
-    var selectName = 'SELECT name FROM ' +
+  var getProductSummary = function (id, callback) {
+    var selectName = 'SELECT ' +
+      'name, ' +
+      '(SELECT SUM(CASE WHEN currentStatus="'+status.SUCCESS+'" THEN 1 ELSE 0 END) FROM jobs WHERE productId='+id+') numSuccess, ' +
+      '(SELECT SUM(CASE WHEN currentStatus="'+status.UNSTABLE+'" THEN 1 ELSE 0 END) FROM jobs WHERE productId='+id+') numUnstable, ' +
+      '(SELECT SUM(CASE WHEN currentStatus="'+status.FAILURE+'" THEN 1 ELSE 0 END) FROM jobs WHERE productId='+id+') numFailed ' +
+      'FROM ' +
       'products ' +
       'WHERE ' +
       'id="' + id + '" ' +
@@ -511,7 +516,7 @@ var model = (function (log4js, dbFile) {
     connect: connect,
     addProduct: addProduct,
     updateProductName: updateProductName,
-    getProductName: getProductName,
+    getProductSummary: getProductSummary,
     deleteProduct: deleteProduct,
     deleteJob: deleteJob,
     deleteRun: deleteRun,
