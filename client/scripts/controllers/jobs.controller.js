@@ -21,7 +21,7 @@
 
       function getProductName(pid) {
         DbService.getProductName(pid, function(result) {
-          console.log(JSON.stringify(result.data.name));
+          //console.log(JSON.stringify(result.data.name));
           vm.name = result.data.name;
         }, fancyError);
       }
