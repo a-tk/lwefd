@@ -219,25 +219,25 @@ var model = (function (log4js, dbFile) {
       'name="' + notification.name + '"' +
       ';';
 
-    var runEntryBeforeJid = 'INSERT INTO runs ' +
-            '(' +
-            'jobId, ' +
-            'time, ' +
-            'full_url, ' +
-            'number, ' +
-            'phase, ' +
-            'status ' +
-            ((notification.build.value !== null) ? ', value ':'') +
-            ') VALUES (';
+    var runEntryBeforeJid = 'INSERT OR REPLACE INTO runs ' +
+      '(' +
+      'jobId, ' +
+      'time, ' +
+      'full_url, ' +
+      'number, ' +
+      'phase, ' +
+      'status ' +
+      ((notification.build.value !== null) ? ', value ':'') +
+      ') VALUES (';
 
     var runEntryAfterJid = ', ' +
-            time + ', ' +
-            '"' + notification.build.full_url + '", ' +
-            notification.build.number + ', ' + //will cause an issue if number is undefined.
-            '"' + notification.build.phase + '", ' +
-            '"' + notification.build.status + '" ' +
-            ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
-            ');';
+      time + ', ' +
+      '"' + notification.build.full_url + '", ' +
+      notification.build.number + ', ' + //will cause an issue if number is undefined.
+      '"' + notification.build.phase + '", ' +
+      '"' + notification.build.status + '" ' +
+      ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
+      ');';
 
     db.all(checkQuery, function (err, result) {
       if (!err) {
