@@ -14,8 +14,11 @@
       var DbService = {
         addProduct: addProduct,
         getProducts: getProducts,
+        getProductName: getProductName,
         updateProductName: updateProductName,
         deleteProduct: deleteProduct,
+        deleteJob: deleteJob,
+        deleteRun: deleteRun,
         getJobs: getJobs,
         getRuns: getRuns
       };
@@ -33,12 +36,24 @@
         });
       }
 
+      function getProductName(callback, errorCallback) {
+        $http.get('api/' + id + '/name').then(callback, errorCallback);
+      }
+
       function updateProductName (id, name, callback, errorCallback) {
         $http.get('api/update/productName/' + id + '/' + name).then(callback, errorCallback);
       }
 
       function deleteProduct(id, callback, errorCallback) {
         $http.get('api/delete/product/' + id).then(callback, errorCallback);
+      }
+
+      function deleteJob(id, callback, errorCallback) {
+        $http.get('api/delete/job/' + id).then(callback, errorCallback);
+      }
+
+      function deleteRun(id, callback, errorCallback) {
+        $http.get('api/delete/run/' + id).then(callback, errorCallback);
       }
 
       function getJobs(id, callback, errorCallback) {

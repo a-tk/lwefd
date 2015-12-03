@@ -6,7 +6,7 @@
       <table class="table table-condensed table-hover">
         <thead>
         <tr>
-          <th width="10%">#</th>
+          <th width="10%">ID #</th>
           <th width="30%">Job Name</th>
           <th width="30%">Time Received</th>
           <th width="30%">Actions</th>
@@ -18,13 +18,13 @@
         <!--<div ng-repeat="job in vm.jobs | orderBy: 'name' | filter:jobFilter">-->
         <table class="table table-condensed table-hover job-table">
           <tbody>
-          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse"
+          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, false);" data-toggle="collapse"
               data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
             <td width="30%"><a class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">
-              <button ng-click="" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
+              <button ng-click="vm.deleteJob(job.id);" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
             </td>
           </tr>
           </tbody>
@@ -45,7 +45,7 @@
               <td>{{run.time | date: 'medium'}}</td>
               <td ng-if="run.value !== null">{{run.value}}</td>
               <td>
-                <button ng-click="" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
+                <button ng-click="vm.deleteRun(vm.jobs.indexOf(job), job.id, run.id) ;" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
               </td>
             </tr>
             </tbody>
