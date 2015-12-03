@@ -15,15 +15,13 @@
       vm.products = [];
       vm.activate = activate();
       vm.getProducts = getProducts;
-      vm.timeSinceSuccess = timeSinceSuccess;
-
-      function timeSinceSuccess (index) {
-        return Date.now() - vm.products[index].lastSuccess;
-      }
 
       function getProducts () {
         DbService.getProducts(function (result) {
           vm.products = result.data;
+          for (var i = 0; i < vm.products.length; i++) {
+            vm.products[i].timeDifference = Date.now() - vm.products[i].lastSuccess;
+          }
         });
       }
 
@@ -32,16 +30,16 @@
       }
     })
     .filter('millisecondsToTime', function () {
-      return function(millseconds) {
-        var seconds = Math.floor(millseconds / 1000);
-        var days = Math.floor(seconds / 86400);
-        var hours = Math.floor((seconds % 86400) / 3600);
-        var minutes = Math.floor(((seconds % 86400) % 3600) / 60);
-        var timeString = '';
-        if(days > 0) timeString += (days > 1) ? (days + " days ") : (days + " day ");
-        if(hours > 0) timeString += (hours > 1) ? (hours + " hours ") : (hours + " hour ");
-        if(minutes >= 0) timeString += (minutes > 1) ? (minutes + " minutes ") : (minutes + " minute ");
-        return timeString;
+      return function(duration) {
+          var seconds = parseInt((duration/1000)%60)
+          , minutes = parseInt((duration/(1000*60))%60)
+          , hours = parseInt((duration/(1000*60*60))%24);
+
+        hours = (hours < 10) ? "0" + hours : hours;
+        minutes = (minutes < 10) ? "0" + minutes : minutes;
+        seconds = (seconds < 10) ? "0" + seconds : seconds;
+
+        return hours + ":" + minutes + ":" + seconds;
       }
     });
 })();

@@ -9,7 +9,7 @@
               <div class="summary-content">
                 <h1>{{product.name}}</h1>
                 <div ng-if="product.currentStatus !== 'SUCCESS'">
-                  {{vm.timeSinceSuccess($index) | millisecondsToTime }}
+                  {{product.timeDifference | millisecondsToTime }}
                 </div>
               </div>
             </div>
