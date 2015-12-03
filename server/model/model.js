@@ -247,9 +247,12 @@ var model = (function (log4js, dbFile) {
             if (err) {
               log.warn('could not add run [1]: ' + err);
               callback(err);
-            } else {
+            } else if (notification.build.status !== phase.STARTED) {
               pushProductId(notification.productId);
               updateJobFromRun(result[0].id, time, notification.build.full_url, notification.build.status, callback);
+            } else {
+              //don't add started changes
+              callback();
             }
           });
         } else {
@@ -261,9 +264,12 @@ var model = (function (log4js, dbFile) {
               if (err) {
                 log.warn('could not add run [2]: ' + err);
                 callback(err);
-              } else {
+              } else if (notification.build.status !== phase.STARTED) {
                 pushProductId(notification.productId);
                 updateJobFromRun(jobId, time, notification.build.full_url, notification.build.status, callback);
+              } else {
+                //don't add started changes
+                callback();
               }
             });
           });
@@ -276,37 +282,30 @@ var model = (function (log4js, dbFile) {
   };
 
   var updateJobFromRun = function (jid, time, url, status, callback) {
-    if (status === phase.STARTED) {
-      //don't update jobs status
-      callback();
-    } else {
-
-      var sql = 'UPDATE jobs SET ' +
-        'latestTime=' +
-        '' +
-        time +
-        ', ' +
-        'full_url=' +
-        '"' +
-        url +
-        '",' +
-        'currentStatus=' +
-        '"' +
-        status +
-        '" ' +
-        'WHERE ' +
-        ' id=' + jid +
-        ';';
-      db.run(sql, function (err) {
-          if (err) {
-            log.warn('error updating job ' + jid + ' to run ' + time + ', ' + url + ', ' + status + ': ' + err);
-            callback(err);
-          } else {
-            callback();
-          }
-        }
-      );
-    }
+    var sql = 'UPDATE jobs SET ' +
+      'latestTime=' +
+      '' +
+      time +
+      ', ' +
+      'full_url=' +
+      '"' +
+      url +
+      '",' +
+      'currentStatus=' +
+      '"' +
+      status +
+      '" ' +
+      'WHERE ' +
+      ' id=' + jid +
+      ';';
+    db.run(sql, function (err) {
+      if (err) {
+        log.warn('error updating job ' + jid + ' to run ' + time + ', ' + url + ', ' + status + ': ' + err);
+        callback(err);
+      } else {
+        callback();
+      }
+    });
   };
 
   var addJobEntry = function (notification, callback) {
