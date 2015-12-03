@@ -44,7 +44,7 @@
       }
 
       function deleteJob(jid) {
-        DbService.deleteJob(jid, function () {
+        DbService.deleteJob(vm.id, jid, function () {
           //niceMsg(msg);
           getJobs(vm.id);
         }, fancyError);

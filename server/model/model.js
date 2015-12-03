@@ -136,17 +136,18 @@ var model = (function (log4js, dbFile) {
     );
   };
 
-  var deleteJob = function (id, callback) {
+  var deleteJob = function (pid, jid, callback) {
 
     var sql = 'DELETE FROM jobs ' +
       'WHERE ' +
-      ' id='+ id +
+      ' id='+ jid +
       ';';
     db.run(sql, function (err) {
         if (err) {
-          log.warn('error deleting job ' + id + ': ' + err);
+          log.warn('error deleting job ' + jid + ': ' + err);
         }
-        callback(err);
+        pushProductId(pid);
+        pollProductUpdateQueue(callback);
       }
     );
   };
@@ -435,7 +436,6 @@ var model = (function (log4js, dbFile) {
 
   var updateProductsStatus = function (callback) {
     if (polling == false) {
-      polling = true;
       pollProductUpdateQueue(callback);
     } else {
       callback();
@@ -444,6 +444,7 @@ var model = (function (log4js, dbFile) {
 
   var pollProductUpdateQueue = function (callback) {
     if (productIdsInQueue()) {
+      polling = true;
       var pid = popProductId();
       getJobsCountByStatus(pid, function (numUnstable, numFailed) {
         var statusToSet;

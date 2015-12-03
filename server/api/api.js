@@ -16,7 +16,6 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
-  //TODO: make this consistent based on ID
   api.get('/api/:productId/', function (req, res, next) {
     //TODO: display product info
     model.getProducts(function (result) {
@@ -43,8 +42,8 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
-  api.get('/api/delete/job/:jobId', function (req, res, next) {
-    model.deleteJob(req.params.jobId, function (result) {
+  api.get('/api/:productId/delete/job/:jobId', function (req, res, next) {
+    model.deleteJob(req.params.productId, req.params.jobId, function (result) {
       res.send(result);
     });
   });

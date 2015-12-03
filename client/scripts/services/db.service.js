@@ -48,8 +48,8 @@
         $http.get('api/delete/product/' + id).then(callback, errorCallback);
       }
 
-      function deleteJob(id, callback, errorCallback) {
-        $http.get('api/delete/job/' + id).then(callback, errorCallback);
+      function deleteJob(pid, jid, callback, errorCallback) {
+        $http.get('api/' + pid + '/delete/job/' + jid).then(callback, errorCallback);
       }
 
       function deleteRun(id, callback, errorCallback) {
