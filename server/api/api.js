@@ -43,6 +43,18 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
+  api.get('/api/delete/job/:jobId', function (req, res, next) {
+    model.deleteJob(req.params.jobId, function (result) {
+      res.send(result);
+    });
+  });
+
+  api.get('/api/delete/run/:runId', function (req, res, next) {
+    model.deleteRun(req.params.runId, function (result) {
+      res.send(result);
+    });
+  });
+
   /*
   Tested a run of this, for stability and performance. Submitted 250,000
   notifications to the server, from localhost to localhost, and routinely
@@ -74,6 +86,13 @@ var api = (function (log4js, express, model, notify) {
   api.get('/api/:productId/jobs/', function (req, res, next) {
     //TODO: view all jobs belonging to a product
     model.getAllJobs(req.params.productId, function (result) {
+      res.send(result);
+    });
+  });
+
+  api.get('/api/:productId/name/', function (req, res, next) {
+    //TODO: view all jobs belonging to a product
+    model.getProductName(req.params.productId, function (result) {
       res.send(result);
     });
   });

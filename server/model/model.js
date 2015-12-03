@@ -129,11 +129,57 @@ var model = (function (log4js, dbFile) {
       ';';
     db.run(sql, function (err) {
         if (err) {
-          log.warn('error updating product ' + name + ': ' + err);
+          log.warn('error deleting product ' + id + ': ' + err);
         }
         callback(err);
       }
     );
+  };
+
+  var deleteJob = function (id, callback) {
+
+    var sql = 'DELETE FROM jobs ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error deleting job ' + id + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
+  var deleteRun = function (id, callback) {
+
+    var sql = 'DELETE FROM runs ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error deleting run ' + name + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
+  var getProductName = function (id, callback) {
+    var selectName = 'SELECT name FROM ' +
+      'products ' +
+      'WHERE ' +
+      'id="' + id + '" ' +
+      ';';
+    db.all(selectName, function (err, result) {
+      if (err) {
+        log.warn('error getting product name for id ' + id);
+        callback(err);
+      } else {
+        callback(result[0]);
+      }
+    });
   };
 
   var getProductIdForName = function (name, callback) {
@@ -464,7 +510,10 @@ var model = (function (log4js, dbFile) {
     connect: connect,
     addProduct: addProduct,
     updateProductName: updateProductName,
+    getProductName: getProductName,
     deleteProduct: deleteProduct,
+    deleteJob: deleteJob,
+    deleteRun: deleteRun,
     addRun: addRun,
     getJobRuns: getJobRuns,
     getProducts: getProducts,
