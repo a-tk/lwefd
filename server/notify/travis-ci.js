@@ -25,7 +25,7 @@ var travis_ci = (function (log4js) {
   function transform (travisData, callback) {
     travisData = JSON.parse(travisData);
     var data = {};
-    log.info(JSON.stringify(travisData, undefined, 2));
+    //log.info(JSON.stringify(travisData, undefined, 2));
 
     var status = 'FAILURE';
 
@@ -53,6 +53,7 @@ var travis_ci = (function (log4js) {
     data.build.status = status;
 
     //log.fatal(JSON.stringify(data));
+    log.info(JSON.stringify(data, undefined, 2));
 
     callback(data);
 
