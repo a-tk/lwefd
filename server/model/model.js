@@ -180,7 +180,7 @@ var model = (function (log4js, dbFile) {
       ';';
     db.all(selectName, function (err, result) {
       if (err) {
-        log.warn('error getting product name for id ' + id);
+        log.warn('error getting product summary for id ' + id);
         callback(err);
       } else {
         callback(result[0]);
