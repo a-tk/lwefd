@@ -52,6 +52,7 @@
               vm.jobs[jobindex].chartLabels = [];
               updateChartLabels(vm.jobs[jobindex]);
               vm.jobs[jobindex].chartData = [[]];
+              vm.jobs[jobindex].chartColors = [[]];
               updateChartData(vm.jobs[jobindex]);
               vm.jobs[jobindex].chartSeries = [];
               updateChartSeries(vm.jobs[jobindex]);
@@ -61,16 +62,15 @@
       }
 
       function updateChartLabels (job) {
-        console.log(JSON.stringify(job));
         for (var i = 0; i < job.runs.length; i++) {
           job.chartLabels.push(job.runs[i].number);
         }
       }
 
       function updateChartData (job) {
-        console.log(JSON.stringify(job));
         for (var i = 0; i < job.runs.length; i++) {
           job.chartData[0].push(job.runs[i].value);
+          job.chartColors[0].push('#FFF');
         }
       }
 
@@ -114,7 +114,8 @@
       });
       // Configure all line charts
       ChartJsProvider.setOptions('Line', {
-        datasetFill: true
+        datasetFill: false,
+        datasetStroke: false
       });
     }]);
 })();

@@ -35,7 +35,7 @@
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
           <div ng-if="job.valueUnit !== 'NULL' && job.runs !== undefined">
             <canvas class="chart chart-line" chart-data="job.chartData;" chart-labels="job.chartLabels;"
-                    chart-legend="true" chart-series="job.chartSeries;" ></canvas>
+                    chart-legend="true" chart-series="job.chartSeries;" chart.colors="job.chartColors" height="50px" ></canvas>
           </div>
           <table class="table table-condensed table-hover">
             <thead>
