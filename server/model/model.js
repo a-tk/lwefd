@@ -53,12 +53,13 @@ var model = (function (log4js, dbFile) {
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'jobId INTEGER NOT NULL, ' +
-      'time INTEGER NOT NULL, ' +
+      'time INTEGER NOT NULL UNIQUE, ' +
       'full_url TEXT NOT NULL, ' +
       'number INTEGER NOT NULL, ' +
       'status TEXT NOT NULL, ' +
       'phase TEXT NOT NULL, ' +
       'value INTEGER, ' +
+      'CONSTRAINT unq UNIQUE (jobId, number), ' +
       'FOREIGN KEY(jobId) REFERENCES jobs(id)' +
       ');';
 
