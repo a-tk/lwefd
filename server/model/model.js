@@ -154,7 +154,7 @@ var model = (function (log4js, dbFile) {
   };
 
 
-  var deleteRun = function (jid, rid, callback) {
+  var deleteRun = function (pid, jid, rid, callback) {
 
     var sql = 'DELETE FROM runs ' +
       'WHERE ' +
@@ -165,7 +165,10 @@ var model = (function (log4js, dbFile) {
           log.warn('error deleting run ' + name + ': ' + err);
         }
         getRunsStatus(jid, function (status) {
-          setJobToStatus(jid, status, callback);
+          setJobToStatus(jid, status, function () {
+            pushProductId(pid);
+            pollProductUpdateQueue(callback);
+          });
         });
       }
     );
