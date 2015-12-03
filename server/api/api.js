@@ -48,8 +48,8 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
-  api.get('/api/delete/run/:runId', function (req, res, next) {
-    model.deleteRun(req.params.runId, function (result) {
+  api.get('/api/delete/job/:jobId/run/:runId', function (req, res, next) {
+    model.deleteRun(req.params.jobId, req.params.runId, function (result) {
       res.send(result);
     });
   });

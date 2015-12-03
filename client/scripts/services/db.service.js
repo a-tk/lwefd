@@ -52,8 +52,8 @@
         $http.get('api/' + pid + '/delete/job/' + jid).then(callback, errorCallback);
       }
 
-      function deleteRun(id, callback, errorCallback) {
-        $http.get('api/delete/run/' + id).then(callback, errorCallback);
+      function deleteRun(jid, rid, callback, errorCallback) {
+        $http.get('api/delete/job/'+jid+'/run/' + rid).then(callback, errorCallback);
       }
 
       function getJobs(id, callback, errorCallback) {

@@ -153,17 +153,20 @@ var model = (function (log4js, dbFile) {
     );
   };
 
-  var deleteRun = function (id, callback) {
+
+  var deleteRun = function (jid, rid, callback) {
 
     var sql = 'DELETE FROM runs ' +
       'WHERE ' +
-      ' id='+ id +
+      ' id='+ rid +
       ';';
     db.run(sql, function (err) {
         if (err) {
           log.warn('error deleting run ' + name + ': ' + err);
         }
-        callback(err);
+        getRunsStatus(jid, function (status) {
+          setJobToStatus(jid, status, callback);
+        });
       }
     );
   };
@@ -431,13 +434,37 @@ var model = (function (log4js, dbFile) {
     db.all(sql, function (err, result) {
       if (!err) {
         //log.fatal('result = ' +JSON.stringify(result));
-        callback(jid, result[0].status);
+        if (result[0] === undefined) {
+          callback(status.SUCCESS);
+        } else {
+          callback(result[0].status);
+        }
       } else {
         log.warn('could not getRunsStatus: ' + err);
         //callback([]);
+        callback(status.SUCCESS);
       }
     });
 
+  };
+
+  var setJobToStatus = function (jid, setStatus, callback) {
+
+    var sql = 'UPDATE jobs SET ' +
+      'currentStatus=' +
+      '"' +
+      setStatus +
+      '" ' +
+      'WHERE ' +
+      ' id='+ jid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating job status ' + jid + ' to ' + setStatus +': ' + err);
+        }
+        callback(err);
+      }
+    );
   };
 
   var updateProductsStatus = function (callback) {

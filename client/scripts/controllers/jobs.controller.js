@@ -60,8 +60,9 @@
       }
 
       function deleteRun(jobindex, jid, rid) {
-        DbService.deleteRun(rid, function () {
+        DbService.deleteRun(jid, rid, function () {
           loadRuns(jobindex, jid, true);
+          getJobs(vm.id);
         }, fancyError);
       }
 
