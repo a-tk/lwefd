@@ -324,6 +324,7 @@ var model = (function (log4js, dbFile) {
         if (this.lastID) {
           id = this.lastID;
         } else {
+          log.warn('added job entry, but could not identify ID');
           id = -1; // never present id
         }
         callback(id);
