@@ -34,18 +34,30 @@ body {
     color: inherit;
 }
 
+.glyph-color-danger {
+    border-color: #752420;
+}
+
 .SUCCESS {
-    background: #dff0d8;
+    /*background: #c0e57c;*/
+    /*background: #dff0d8;*/
+    background: #5cb85c;
 }
 
 .UNSTABLE {
-    background: #fcf8e3;
+    /*background: #ffec94;*/
+    /*background: #fcf8e3;*/
+    background: #f0ad4e;
 }
 
 .FAILURE {
-    background: #f2dede;
+    /*background: #f2dede;*/
+    /*background: #ffaeae;*/
+    background: #d9534f;
 }
 
 .RUNNING {
-    background: #d9edf7;
+    /*background: #d9edf7;*/
+    /*background: #b4d8e7;*/
+    background: #5bc0de;
 }

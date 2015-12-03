@@ -16,14 +16,16 @@
       <!-- TODO orderBy with Date! orderBy breaks $index!-->
       <div ng-repeat="job in vm.jobs | filter:jobFilter">
         <!--<div ng-repeat="job in vm.jobs | orderBy: 'name' | filter:jobFilter">-->
-        <table class="table table-condensed table-hover table-bordered job-table">
+        <table class="table table-condensed table-hover job-table">
           <tbody>
           <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns($index, job.id, false);" data-toggle="collapse"
               data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
-            <td width="30%"><a href="{{job.full_url}}">{{job.name}}</a></td>
+            <td width="30%"><a class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
-            <td width="30%">Not done</td>
+            <td width="30%">
+              <button ng-click="" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -43,7 +45,7 @@
               <td>{{run.time | date: 'medium'}}</td>
               <td ng-if="run.value !== null">{{run.value}}</td>
               <td>
-                <button ng-click="" class="glyphicon glyphicon-trash btn btn-danger"></button>
+                <button ng-click="" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
               </td>
             </tr>
             </tbody>
