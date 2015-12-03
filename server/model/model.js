@@ -35,6 +35,7 @@ var model = (function (log4js, dbFile) {
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'name TEXT NOT NULL UNIQUE, ' +
+      'lastSuccess INTEGER NOT NULL DEFAULT ' + Date.now() + ', ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '" ' +
       ');';
     var createJobTable = 'CREATE TABLE IF NOT EXISTS jobs ' +
@@ -493,19 +494,20 @@ var model = (function (log4js, dbFile) {
     return pid;
   };
 
-  var setProductToStatus = function (pid, status, callbacksCallback, callback) {
+  var setProductToStatus = function (pid, setStatus, callbacksCallback, callback) {
 
     var sql = 'UPDATE products SET ' +
       'currentStatus=' +
       '"' +
-      status +
+      setStatus +
       '" ' +
+      ((setStatus === status.SUCCESS) ? ', lastSuccess='+Date.now()+' ':'') +
       'WHERE ' +
       ' id='+ pid +
       ';';
     db.run(sql, function (err) {
         if (err) {
-          log.warn('error updating product status ' + pid + ' to ' + status +': ' + err);
+          log.warn('error updating product status ' + pid + ' to ' + setStatus +': ' + err);
         }
         callback(callbacksCallback);
       }

@@ -1,13 +1,16 @@
 <div class="hero-unit">
   <div data-ng-controller="SummaryCtrl as vm">
     <div class="col-md-12">
-      <div data-ng-repeat="product in vm.products | orderBy: $index track by $index">
+      <div data-ng-repeat="product in vm.products">
         <div id="post-{{$index}}" class="line-horizontal">
           <a class="div-anchor" href="#/jobs/{{product.id}}">
             <div class="col-md-3 summary-block {{product.currentStatus}}">
               <span style="line-height: 370px;"></span>
               <div class="summary-content">
                 <h1>{{product.name}}</h1>
+                <div ng-if="product.currentStatus !== 'SUCCESS'">
+                  {{vm.timeSinceSuccess($index) | millisecondsToTime }}
+                </div>
               </div>
             </div>
           </a>
