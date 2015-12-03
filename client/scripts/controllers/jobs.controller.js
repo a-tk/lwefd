@@ -48,8 +48,34 @@
           DbService.getRuns(vm.id, id, function (result) {
             vm.jobs[jobindex].runs = result.data;
             vm.jobs[jobindex].runsAlreadyLoaded = true;
+            if (vm.jobs[jobindex].valueUnit !== undefined) {
+              vm.jobs[jobindex].chartLabels = [];
+              updateChartLabels(vm.jobs[jobindex]);
+              vm.jobs[jobindex].chartData = [[]];
+              updateChartData(vm.jobs[jobindex]);
+              vm.jobs[jobindex].chartSeries = [];
+              updateChartSeries(vm.jobs[jobindex]);
+            }
           }, fancyError);
         }
+      }
+
+      function updateChartLabels (job) {
+        console.log(JSON.stringify(job));
+        for (var i = 0; i < job.runs.length; i++) {
+          job.chartLabels.push(job.runs[i].number);
+        }
+      }
+
+      function updateChartData (job) {
+        console.log(JSON.stringify(job));
+        for (var i = 0; i < job.runs.length; i++) {
+          job.chartData[0].push(job.runs[i].value);
+        }
+      }
+
+      function updateChartSeries (job) {
+        job.chartSeries.push(job.valueUnit);
       }
 
       function deleteJob(jid) {
@@ -79,5 +105,16 @@
       function niceMsg(msg) {
         alert(msg);
       }
-    });
+    })
+    .config(['ChartJsProvider', function (ChartJsProvider) {
+      // Configure all charts
+      ChartJsProvider.setOptions({
+        colours: ['#5bc0de'],
+        responsive: true
+      });
+      // Configure all line charts
+      ChartJsProvider.setOptions('Line', {
+        datasetFill: true
+      });
+    }]);
 })();
