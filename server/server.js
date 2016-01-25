@@ -15,12 +15,9 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var log = log4js.getLogger('app');
-console.log('app.get("env"): ' + app.get('env'));
-console.log('process.argv[2]: ' + process.argv[2]);
 var environment = process.argv[2] || app.get('env') || 'development';
 var serverConfig = require('./env.json')[ environment ];
 
-console.log('Stringify environment: ' + JSON.stringify(serverConfig));
 
 
 // view engine setup
