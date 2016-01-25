@@ -47,14 +47,19 @@ var notify = (function (log4js, model) {
       data.hasOwnProperty('build') &&
       data.build.hasOwnProperty('full_url') &&
       data.build.hasOwnProperty('number') &&
-      data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase) &&
-      data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)
+      data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase) //&&
+      //data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)
     ) {
       notification.name = data.name;
       notification.build = {};
       notification.build.full_url = data.build.full_url;
       notification.build.number = data.build.number;
       //notification.build.phase = data.build.phase;
+      if (!data.build.hasOwnProperty('status')) {
+        //default to SUCCESS
+        data.build.status = model.status.SUCCESS;
+      }
+
       if (data.build.phase === model.phase.STARTED) {
         notification.build.status = model.phase.STARTED;
       } else {
