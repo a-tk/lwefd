@@ -22,6 +22,10 @@
       vm.loadRuns = loadRuns;
       vm.deleteJob = deleteJob;
       vm.deleteRun = deleteRun;
+      vm.defaultRunLimit = 15; //default limiter for runs
+      vm.runLimit = vm.defaultRunLimit;
+      vm.lastRunLimit = vm.defaultRunLimit;
+      
 
       function getProductSummary() {
         DbService.getProductSummary(vm.id, function(result) {
@@ -41,11 +45,16 @@
         }, fancyError);
       }
 
-      function loadRuns (jobindex, id, force, runLimit) {
+      function loadRuns (jobindex, id, force, limit) {
         if (!force && vm.jobs[jobindex].hasOwnProperty('runsAlreadyLoaded')) {
           //console.log('not reloading runs for jid ' + id);
         } else {
-          DbService.getRuns(vm.id, id, runLimit, function (result) {
+          if (limit == undefined) {
+            limit = vm.defaultRunLimit;
+            vm.runLimit = vm.defaultRunLimit;
+          }
+          DbService.getRuns(vm.id, id, limit, function (result) {
+            vm.lastRunLimit = limit; //set the last limit
             vm.jobs[jobindex].runs = result.data;
             vm.jobs[jobindex].runsAlreadyLoaded = true;
             if (vm.jobs[jobindex].valueUnit !== undefined) {
