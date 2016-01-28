@@ -60,8 +60,8 @@
         $http.get('api/' + id + '/jobs').then(callback, errorCallback);
       }
 
-      function getRuns(prodId, id, callback, errorCallback) {
-        $http.get('api/' + prodId + '/jobs/' + id).then(callback, errorCallback);
+      function getRuns(prodId, id, limit, callback, errorCallback) {
+        $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
       }
     });
 })();

@@ -356,6 +356,25 @@ var model = (function (log4js, dbFile) {
     });
   };
 
+  var getJobRunsLimited = function (jobId, limit, callback) {
+    var runQuery = 'SELECT * FROM runs ' +
+      'WHERE ' +
+      'jobId=' + jobId + ' ' +
+      'ORDER BY id DESC ' +
+      'LIMIT ' + limit + '' +
+      ';';
+
+    db.all(runQuery, function (err, result) {
+      if (!err) {
+        callback(result);
+      } else {
+        log.warn('could not getJobRunsLimited for jobId ' + jobId + ' and limit ' + limit);
+        callback();
+      }
+    });
+  };
+
+
   var getAllJobs = function (productId, callback) {
     var jobQuery = 'SELECT * FROM jobs ' +
       'WHERE ' +
@@ -544,6 +563,7 @@ var model = (function (log4js, dbFile) {
     deleteRun: deleteRun,
     addRun: addRun,
     getJobRuns: getJobRuns,
+    getJobRunsLimited: getJobRunsLimited,
     getProducts: getProducts,
     getAllJobs: getAllJobs,
     updateProductsStatus: updateProductsStatus,

@@ -41,11 +41,11 @@
         }, fancyError);
       }
 
-      function loadRuns (jobindex, id, force) {
+      function loadRuns (jobindex, id, force, runLimit) {
         if (!force && vm.jobs[jobindex].hasOwnProperty('runsAlreadyLoaded')) {
           //console.log('not reloading runs for jid ' + id);
         } else {
-          DbService.getRuns(vm.id, id, function (result) {
+          DbService.getRuns(vm.id, id, runLimit, function (result) {
             vm.jobs[jobindex].runs = result.data;
             vm.jobs[jobindex].runsAlreadyLoaded = true;
             if (vm.jobs[jobindex].valueUnit !== undefined) {

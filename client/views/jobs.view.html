@@ -7,7 +7,7 @@
         <div class="progress-bar progress-bar-warning" style="width: {{ ((vm.numUnstable/vm.numTotal) * 100) }}%"></div>
         <div class="progress-bar progress-bar-danger" style="width: {{ ((vm.numFailed/vm.numTotal) * 100) }}%"></div>
       </div>
-      <p>Search <input type="text" ng-model="jobFilter"></p>
+      <p>Search <input type="text" ng-model="jobFilter"> Run Limit <input type="number" min="1" max="50" value="15" ng-model="runLimit"></p>
       <table class="table table-condensed table-hover">
         <thead>
         <tr>
@@ -21,7 +21,7 @@
         <div ng-repeat="job in vm.jobs | orderBy: 'currentStatus' | filter:jobFilter">
         <table class="table table-condensed table-hover job-table">
           <tbody>
-          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, false);" data-toggle="collapse"
+          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, false, runLimit);" data-toggle="collapse"
               data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
             <td width="10%">{{job.id}}</td>
             <td width="30%"><a class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>

@@ -97,8 +97,13 @@ var api = (function (log4js, express, model, notify) {
   });
 
   api.get('/api/:productId/jobs/:id/', function (req, res, next) {
-    //TODO: display all of the run information for a specific job
     model.getJobRuns(req.params.id, function (result) {
+      res.send(result);
+    });
+  });
+  // Returns a limited list of the most recent jobs for job id
+  api.get('/api/:productId/jobs/:id/:limit/', function (req, res, next) {
+    model.getJobRunsLimited(req.params.id, req.params.limit, function (result) {
       res.send(result);
     });
   });
