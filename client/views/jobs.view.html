@@ -28,12 +28,12 @@
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">
               <button ng-click="vm.deleteJob(job.id);" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
-              <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, (vm.lastRunLimit != vm.runLimit), vm.runLimit);" class="glyphicon glyphicon-repeat btn btn-sm btn-primary"></button>
             </td>
           </tr>
           </tbody>
         </table>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
+          <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, true, vm.runLimit);" class="glyphicon glyphicon-repeat btn btn-sm btn-primary"></button>
           <div ng-if="job.valueUnit !== 'NULL' && job.runs !== undefined">
             <canvas class="chart chart-line" chart-data="job.chartData;" chart-labels="job.chartLabels;"
                     chart-legend="true" chart-series="job.chartSeries;" chart.colors="job.chartColors" height="50px" ></canvas>
