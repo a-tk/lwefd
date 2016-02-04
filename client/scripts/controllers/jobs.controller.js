@@ -25,6 +25,8 @@
       vm.defaultRunLimit = 15; //default limiter for runs
       vm.runLimit = vm.defaultRunLimit;
       vm.lastRunLimit = vm.defaultRunLimit;
+
+      vm.jobOrderBy = jobOrderBy;
       
 
       function getProductSummary() {
@@ -113,6 +115,26 @@
 
       function niceMsg(msg) {
         alert(msg);
+      }
+
+      function jobOrderBy(job) {
+        var value;
+        var status = job.currentStatus;
+        switch(status) {
+          case 'FAILURE': 
+            value = 0;
+            break;
+          case 'UNSTABLE':
+            value = 1;
+            break;
+          case 'SUCCESS':
+            value = 2;
+            break;
+          default:
+            value = 10;
+            break;
+        }
+        return value;
       }
     })
     .config(['ChartJsProvider', function (ChartJsProvider) {

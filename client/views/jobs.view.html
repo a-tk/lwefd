@@ -18,7 +18,7 @@
         </tr>
         </thead>
       </table>
-        <div ng-repeat="job in vm.jobs | orderBy: 'currentStatus' | filter:jobFilter">
+        <div ng-repeat="job in vm.jobs | orderBy: vm.jobOrderBy | filter:jobFilter">
         <table class="table table-condensed table-hover job-table">
           <tbody>
           <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, (vm.lastRunLimit != vm.runLimit), vm.runLimit);" data-toggle="collapse"
