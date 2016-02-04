@@ -74,14 +74,14 @@
 
       function updateChartLabels (job) {
         for (var i = 0; i < job.runs.length; i++) {
-          job.chartLabels.push(job.runs[i].number);
+          job.chartLabels.unshift(job.runs[i].number);
         }
       }
 
       function updateChartData (job) {
         for (var i = 0; i < job.runs.length; i++) {
-          job.chartData[0].push(job.runs[i].value);
-          job.chartColors[0].push('#FFF');
+          job.chartData[0].unshift(job.runs[i].value);
+          //job.chartColors[0].unshift('#FFF');
         }
       }
 
