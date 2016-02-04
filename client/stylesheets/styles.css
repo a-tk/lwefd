@@ -61,3 +61,7 @@ body {
     /*background: #b4d8e7;*/
     background: #5bc0de;
 }
+
+.ABORTED {
+    background: #ccc;
+}
