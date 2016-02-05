@@ -1,5 +1,6 @@
 var model = (function (log4js, dbFile) {
   var log = log4js.getLogger('model');
+  log.setLevel('WARN');
 
   var DbClient = require('sqlite3').verbose(),
     assert = require('assert');

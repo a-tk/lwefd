@@ -18,6 +18,7 @@ This is what I expect a notification to look like.
 
 var notify = (function (log4js, model) {
   var log = log4js.getLogger('notify');
+  log.setLevel('WARN');
   var queue = [];
   var polling = false;
 
