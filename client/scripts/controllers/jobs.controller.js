@@ -9,7 +9,7 @@
    * # JobsCtrl
    */
   angular.module('lwefd')
-    .controller('JobsCtrl', function ($scope, $routeParams, DbService) {
+    .controller('JobsCtrl', function ($scope, $routeParams, $filter,  DbService) {
       var vm = this;
       vm.activate = activate();
       vm.jobs = [];
@@ -74,7 +74,7 @@
 
       function updateChartLabels (job) {
         for (var i = 0; i < job.runs.length; i++) {
-          job.chartLabels.unshift(job.runs[i].number);
+          job.chartLabels.unshift($filter('date')(job.runs[i].time, 'short'));
         }
       }
 
