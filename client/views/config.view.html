@@ -55,7 +55,7 @@
         <tr>
           <th width="10%">Product ID #</th>
           <th>Name</th>
-          <th>Pins</th>
+          <th>Relay Mapping</th>
           <th>Use this as EFD?</th>
         </tr>
         </thead>
@@ -63,9 +63,9 @@
         <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
           <td>{{product.id}}</td>
           <td>{{product.name}}</td>
-          <td><input type="text" class="form-control" ng-model="pinMapping" placeholder="{{product.pinMapping}}"/></td>
+          <td><input type="text" class="form-control" ng-model="relayMapping" placeholder="{{product.relayMapping}}"/></td>
           <td>
-            <button ng-click="vm.enablePinWriting(product.id, pinMapping);" class="glyphicon glyphicon-ok btn btn-success"></button>
+            <button ng-click="vm.enablePinWriting(product.id, relayMapping);" class="glyphicon glyphicon-ok btn btn-success"></button>
             <button ng-click="vm.disablePinWriting(product.id)" class="glyphicon glyphicon-remove btn btn-danger"></button>
           </td>
         </tr>

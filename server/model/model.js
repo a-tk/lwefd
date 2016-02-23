@@ -37,6 +37,8 @@ var model = (function (log4js, dbFile) {
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
       'name TEXT NOT NULL UNIQUE, ' +
+      'forwardUrl TEXT DEFAULT NULL, ' +
+      'relayMapping TEXT DEFAULT NULL, ' +
       'lastSuccess INTEGER NOT NULL DEFAULT ' + Date.now() + ', ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '" ' +
       ');';
@@ -118,6 +120,44 @@ var model = (function (log4js, dbFile) {
     db.run(sql, function (err) {
         if (err) {
           log.warn('error updating product ' + name + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
+  var updateForwardUrl = function (id, url, callback) {
+
+    var sql = 'UPDATE products SET ' +
+      'forwardUrl=' +
+      '"' +
+      url +
+      '" ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product ' + id + ': ' + err);
+        }
+        callback(err);
+      }
+    );
+  };
+
+  var updateRelayMapping = function (id, relayMapping, callback) {
+
+    var sql = 'UPDATE products SET ' +
+      'relayMapping=' +
+      '"' +
+      relayMapping +
+      '" ' +
+      'WHERE ' +
+      ' id='+ id +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product ' + id + ': ' + err);
         }
         callback(err);
       }
@@ -568,6 +608,8 @@ var model = (function (log4js, dbFile) {
     getProducts: getProducts,
     getAllJobs: getAllJobs,
     updateProductsStatus: updateProductsStatus,
+    updateRelayMapping: updateRelayMapping,
+    updateForwardUrl: updateForwardUrl,
     close: close,
     status: status,
     phase: phase

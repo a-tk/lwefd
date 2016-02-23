@@ -36,6 +36,19 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
+
+  api.post('/api/update/forwardUrl/:productId', function (req, res, next) {
+    model.updateForwardUrl(req.params.productId, req.body['forwardUrl'], function (result) {
+      res.send(result);
+    });
+  });
+
+  api.post('/api/update/relayMapping/:productId', function (req, res, next) {
+    model.updateRelayMapping(req.params.productId, req.body['relayMapping'], function (result) {
+      res.send(result);
+    });
+  });
+
   api.get('/api/delete/product/:productId', function (req, res, next) {
     model.deleteProduct(req.params.productId, function (result) {
       res.send(result);
@@ -65,7 +78,7 @@ var api = (function (log4js, express, model, notify) {
   slow frontend is from Angular ordering.
    */
   api.get('/api/:productId/notify/', function (req, res, next) {
-    res.send(JSON.stringify(api.stack));
+    res.send(JSON.stringify(api.stack, null, '\t'));
   });
 
   api.post('/api/:productId/notify/', function (req, res, next) {

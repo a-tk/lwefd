@@ -58,7 +58,7 @@
       }
 
       function disableForwarding(pid) {
-        DbService.setForwardUrl(pid, null, function () {
+        DbService.setForwardUrl(pid, "", function () {
           getProducts();
         }, errorWithStyle);
       }
@@ -76,7 +76,7 @@
       }
 
       function disablePinWriting (pid) {
-        DbService.setRelayNumbers(pid, null, function () {
+        DbService.setRelayNumbers(pid, "", function () {
           getProducts();
         }, errorWithStyle);
 
