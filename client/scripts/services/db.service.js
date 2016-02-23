@@ -67,11 +67,13 @@
       }
 
       function setForwardUrl(pid, url, callback, errorCallback) {
-        $http.post('api/update/forwardUrl/' + pid, url).then(callback, errorCallback);
+        var data = '{"forwardUrl" : "'+url + '"}';
+        $http.post('api/update/forwardUrl/' + pid, data).then(callback, errorCallback);
       }
 
       function setRelayNumbers(pid, relayMapping, callback, errorCallback) {
-        $http.post('api/update/relayMapping/' + pid, relayMapping).then(callback, errorCallback);
+        var data = '{"relayMapping" : "'+relayMapping + '"}';
+        $http.post('api/update/relayMapping/' + pid, data).then(callback, errorCallback);
       }
     });
 })();
