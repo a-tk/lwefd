@@ -17,6 +17,10 @@
       vm.addProduct = addProduct;
       vm.updateProductName = updateProductName;
       vm.deleteProduct = deleteProduct;
+      vm.enableForwarding = enableForwarding;
+      vm.disableForwarding = disableForwarding;
+      vm.enablePinWriting = enablePinWriting;
+      vm.disablePinWriting = disablePinWriting;
       vm.url = $location.host();
 
       function getProducts () {
@@ -41,6 +45,41 @@
         DbService.addProduct(productName, function () {
           getProducts();
         }, errorWithStyle);
+      }
+
+      function enableForwarding(pid, forwardUrl) {
+        if (forwardUrl === null || forwardUrl == undefined) {
+          errorWithStyle('must provide a URL');
+        } else {
+          DbService.setForwardUrl(pid, forwardUrl, function () {
+            getProducts();
+          }, errorWithStyle);
+        }
+      }
+
+      function disableForwarding(pid) {
+        DbService.setForwardUrl(pid, null, function () {
+          getProducts();
+        }, errorWithStyle);
+      }
+
+      function enablePinWriting(pid, relayMapping) {
+        if (relayMapping === null || relayMapping == undefined) {
+          errorWithStyle('must provide a pin mapping');
+        } else if (!/^[0-9]+,(?=[0-9])[0-9]+$/i.test(relayMapping)) {
+          errorWithStyle('Relay Map must be two comma separated numbers.')
+        } else {
+          DbService.setRelayNumbers(pid, relayMapping, function () {
+            getProducts();
+          }, errorWithStyle);
+        }
+      }
+
+      function disablePinWriting (pid) {
+        DbService.setRelayNumbers(pid, null, function () {
+          getProducts();
+        }, errorWithStyle);
+
       }
 
       function activate() {

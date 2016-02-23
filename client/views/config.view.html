@@ -16,7 +16,8 @@
           <td>http://{{vm.url}}/api/{{product.id}}/notify/</td>
           <td><input type="text" class="form-control" ng-model="name" placeholder="{{product.name}}"/></td>
           <td>
-            <button ng-click="vm.updateProductName(product.id, name);" class="glyphicon glyphicon-pencil btn btn-success"></button>
+            <button ng-click="vm.updateProductName(product.id, name);"
+                    class="glyphicon glyphicon-pencil btn btn-success"></button>
             <button ng-click="vm.deleteProduct(product.id)" class="glyphicon glyphicon-trash btn btn-danger"></button>
           </td>
         </tr>
@@ -26,6 +27,46 @@
           <td><input ng-model="newProductName" type="text" class="form-control" placeholder="New Product Name"/></td>
           <td>
             <button ng-click="vm.addProduct(newProductName)" class="glyphicon glyphicon-ok btn btn-success"></button>
+          </td>
+        </tr>
+        </tbody>
+
+        <thead>
+        <tr>
+          <th width="10%">Product ID #</th>
+          <th>Name</th>
+          <th>Forwarding URL</th>
+          <th>Forward Product Status?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
+          <td>{{product.id}}</td>
+          <td>{{product.name}}</td>
+          <td><input type="text" class="form-control" ng-model="forwardUrl" placeholder="{{product.forwardUrl}}"/></td>
+          <td>
+            <button ng-click="vm.enableForwarding(product.id, forwardUrl);" class="glyphicon glyphicon-ok btn btn-success"></button>
+            <button ng-click="vm.disableForwarding(product.id)" class="glyphicon glyphicon-remove btn btn-danger"></button>
+          </td>
+        </tr>
+        </tbody>
+
+        <thead>
+        <tr>
+          <th width="10%">Product ID #</th>
+          <th>Name</th>
+          <th>Pins</th>
+          <th>Use this as EFD?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr data-ng-repeat="product in vm.products | orderBy: $index track by $index">
+          <td>{{product.id}}</td>
+          <td>{{product.name}}</td>
+          <td><input type="text" class="form-control" ng-model="pinMapping" placeholder="{{product.pinMapping}}"/></td>
+          <td>
+            <button ng-click="vm.enablePinWriting(product.id, pinMapping);" class="glyphicon glyphicon-ok btn btn-success"></button>
+            <button ng-click="vm.disablePinWriting(product.id)" class="glyphicon glyphicon-remove btn btn-danger"></button>
           </td>
         </tr>
         </tbody>

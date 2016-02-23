@@ -20,7 +20,9 @@
         deleteJob: deleteJob,
         deleteRun: deleteRun,
         getJobs: getJobs,
-        getRuns: getRuns
+        getRuns: getRuns,
+        setForwardUrl: setForwardUrl,
+        setRelayNumbers: setRelayNumbers
       };
 
       return DbService;
@@ -62,6 +64,14 @@
 
       function getRuns(prodId, id, limit, callback, errorCallback) {
         $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
+      }
+
+      function setForwardUrl(pid, url, callback, errorCallback) {
+        $http.post('api/update/forwardUrl/' + pid, url).then(callback, errorCallback);
+      }
+
+      function setRelayNumbers(pid, relayMapping, callback, errorCallback) {
+        $http.post('api/update/relayMapping/' + pid, relayMapping).then(callback, errorCallback);
       }
     });
 })();
