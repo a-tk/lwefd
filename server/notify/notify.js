@@ -23,8 +23,51 @@ var notify = (function (log4js, model) {
   var polling = false;
 
   return {
-    process: process
+    process: process,
+    createNotification: createNotification
   };
+
+  /**
+   * will build a notification accepted by this device
+   * @param name - name/title of the notification
+   * @param full_url - url to identify the notification
+   * @param number - number of the build
+   * @param phase - can be any of the items defined in model.js
+   * @param status - can be any of the statuses defined in model.js
+   * @param valueUnit - optional - to add a value to the notification
+   * @param value - optional - to add a value to the notification
+   * @returns {*}
+   */
+
+  function createNotification (name, full_url, number, phase, status, valueUnit, value) {
+    var notification;
+
+    if (valueUnit === undefined || value === undefined) {
+      notification = {
+        "name": name,
+        "build": {
+          "full_url": full_url,
+          "number": number,
+          "phase": phase,
+          "status": status
+        }
+      };
+    } else {
+      notification = {
+        "name": name,
+        "valueUnit": valueUnit,
+        "build": {
+          "full_url": full_url,
+          "number": number,
+          "phase": phase,
+          "status": status,
+          "value": value
+        }
+      };
+    }
+
+    return notification;
+  }
 
   function process (productId, data, callback) {
     var notification = parseNotification(productId, data);

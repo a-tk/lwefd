@@ -31,14 +31,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/', express.static('./client/'));
 app.use('/', express.static('./'));
 
+var request = require('request');
 
+var raspi = require('./action/raspi.js');
+raspi = raspi(log4js, serverConfig.isRaspi);
 
 var model = require('./model/model.js');
-model = model(log4js, serverConfig.dbFile);
+model = model(log4js, serverConfig.dbFile); //configure action
 model.connect();
 
 var notify = require('./notify/notify.js');
 notify = notify(log4js, model);
+
+var os = require('os');
+var hostname = os.hostname();
+
+var action = require('./action/action.js');
+action = action(log4js, request, hostname, notify, raspi, model);
+
+model.setAction(action);
 
 /**
  * set api routes up

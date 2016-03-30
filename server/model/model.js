@@ -5,6 +5,9 @@ var model = (function (log4js, dbFile) {
   var DbClient = require('sqlite3').verbose(),
     assert = require('assert');
 
+  var action = null; //this is used to trigger actions based on Database operations
+  // it must be set later because of dependencies.
+
   var db = null;
 
   var status = {
@@ -40,6 +43,7 @@ var model = (function (log4js, dbFile) {
       'forwardUrl TEXT DEFAULT NULL, ' +
       'relayMapping TEXT DEFAULT NULL, ' +
       'lastSuccess INTEGER NOT NULL DEFAULT ' + Date.now() + ', ' +
+      'forwardCount INTEGER NOT NULL DEFAULT ' + 0 + ', ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '" ' +
       ');';
     var createJobTable = 'CREATE TABLE IF NOT EXISTS jobs ' +
@@ -544,7 +548,21 @@ var model = (function (log4js, dbFile) {
           log.info('setting pid ' + pid + ' to success');
           statusToSet = status.SUCCESS;
         }
-        setProductToStatus(pid, statusToSet, callback, pollProductUpdateQueue);
+        setProductToStatus(pid, statusToSet, function () {
+          /*
+
+          This is exactly where to hook up code that detects when a products status has changed
+          So far, these actions are:
+            Forwarding to another server
+            Triggering changing EFD lights
+
+          I am fairly confident right now that these can be called asynchronously to the main polling loop
+          shouldn't rely on callbacks within the loop.
+
+          */
+          performStatusChangeActions(pid);
+          pollProductUpdateQueue(callback);
+        });
       });
     } else {
       polling = false;
@@ -574,7 +592,7 @@ var model = (function (log4js, dbFile) {
     return pid;
   };
 
-  var setProductToStatus = function (pid, setStatus, callbacksCallback, callback) {
+  var setProductToStatus = function (pid, setStatus, callback) {
 
     var sql = 'UPDATE products SET ' +
       'currentStatus=' +
@@ -589,13 +607,70 @@ var model = (function (log4js, dbFile) {
         if (err) {
           log.warn('error updating product status ' + pid + ' to ' + setStatus +': ' + err);
         }
-        callback(callbacksCallback);
+        callback();
       }
     );
   };
 
+  var performStatusChangeActions = function (pid) {
+    //TODO send forward a notification about status to the forward URL if exists
+    //TODO update EFD light configuration if this is a raspi
+    var sql = 'SELECT ' +
+      '* ' +
+      'FROM products ' +
+      'WHERE ' +
+      'id=' + pid +
+      ';';
+
+    db.all(sql, function (err, result) {
+      if (!err) {
+        //log.fatal('result = ' +JSON.stringify(result));
+        if (result[0] === undefined) {
+          log.warn('getting product info from pid ' + pid + ' returned undefined');
+        } else {
+          var forwardUrl = result[0].forwardUrl;
+          var relayMapping = result[0].relayMapping;
+
+          if (forwardUrl !== null && forwardUrl !== '' && forwardUrl !== undefined) {
+            action.sendProductStatusNotification(result[0]);
+          }
+
+          if (relayMapping !== null && relayMapping !== '' && relayMapping !== undefined) {
+            action.updateRaspiLights();
+          }
+
+        }
+      } else {
+        log.warn('could not get product Information for id: ' + pid);
+      }
+    });
+  };
+
+  var updateForwardCount = function (pid, count) {
+
+    var sql = 'UPDATE products SET ' +
+      'forwardCount=' +
+      '' +
+      count +
+      ' ' +
+      'WHERE ' +
+      ' id='+ pid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating product forwardCount ' + pid + ' to ' + count +': ' + err);
+        }
+      }
+    );
+  };
+
+  var setAction = function (a) {
+    action = a;
+  };
+
   return {
     connect: connect,
+    setAction: setAction,
     addProduct: addProduct,
     updateProductName: updateProductName,
     getProductSummary: getProductSummary,
@@ -610,6 +685,7 @@ var model = (function (log4js, dbFile) {
     updateProductsStatus: updateProductsStatus,
     updateRelayMapping: updateRelayMapping,
     updateForwardUrl: updateForwardUrl,
+    updateForwardCount: updateForwardCount,
     close: close,
     status: status,
     phase: phase
