@@ -19,7 +19,9 @@
     "morgan": "~1.6.1",
     "log4js": "~0.6.x",
     "mocha": "~2.3.x",
-    "sqlite3": "3.1.0"
+    "sqlite3": "3.1.0",
+    "request": "2.67.0",
+    "pi-gpio": "0.0.8"
   },
   "author": "Andre Keys",
   "license": "MIT",

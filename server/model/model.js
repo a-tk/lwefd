@@ -613,7 +613,6 @@ var model = (function (log4js, dbFile) {
   };
 
   var performStatusChangeActions = function (pid) {
-    //TODO send forward a notification about status to the forward URL if exists
     //TODO update EFD light configuration if this is a raspi
     var sql = 'SELECT ' +
       '* ' +

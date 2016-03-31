@@ -33,8 +33,15 @@ app.use('/', express.static('./'));
 
 var request = require('request');
 
+var gpio = undefined;
+if (serverConfig.isRaspi) {
+  log.info('Server configured as a raspberry pi. Loading gpio modules');
+  gpio = require('pi-gpio');
+}
+
+
 var raspi = require('./action/raspi.js');
-raspi = raspi(log4js, serverConfig.isRaspi);
+raspi = raspi(log4js, gpio, serverConfig.isRaspi);
 
 var model = require('./model/model.js');
 model = model(log4js, serverConfig.dbFile); //configure action
@@ -49,7 +56,11 @@ var hostname = os.hostname();
 var action = require('./action/action.js');
 action = action(log4js, request, hostname, notify, raspi, model);
 
+//Configure additional dependencies
 model.setAction(action);
+raspi.setStates(model.status)
+
+raspi.openPins();
 
 /**
  * set api routes up
