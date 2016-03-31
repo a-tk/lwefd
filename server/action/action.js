@@ -20,7 +20,6 @@ var action = (function (log4js, request, hostname, notify, raspi, model) {
   var updateRaspiLights = function (productData) {
     var relays = productData.relayMapping.split(',');
     var currentStatus = productData.currentStatus;
-    log.warn(JSON.stringify(relays));
 
     raspi.setRelaysToStatus(relays[0], relays[1], currentStatus)
 

@@ -24,7 +24,7 @@ var raspi = (function (log4js, gpio, isRaspi) {
     }
   };
 
-  var closePins = function () {
+  var closePins = function (callback) {
     if (isRaspi && gpio !== undefined) {
       var i = 0;
       for (;i < pinMap.length; i ++) {
@@ -37,6 +37,7 @@ var raspi = (function (log4js, gpio, isRaspi) {
         });
       }
     }
+    setTimeout(callback, 10000);
   };
 
   var setStates = function (modelStatusCodes) {

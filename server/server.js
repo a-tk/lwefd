@@ -19,7 +19,6 @@ var environment = process.argv[2] || app.get('env') || 'development';
 var serverConfig = require('./env.json')[ environment ];
 
 
-
 // view engine setup
 /*
 app.set('views', path.join(__dirname, '/views'));
@@ -58,7 +57,7 @@ action = action(log4js, request, hostname, notify, raspi, model);
 
 //Configure additional dependencies
 model.setAction(action);
-raspi.setStates(model.status)
+raspi.setStates(model.status);
 
 raspi.openPins();
 
@@ -112,6 +111,15 @@ app.use(function(err, req, res, next) {
   });
 });
 */
+
+process.on('SIGINT', function() {
+  log.info('CTRL C detected, exiting gracefully');
+  raspi.closePins(function () {
+    log.info('pins should be closed... exiting');
+    process.exit();
+  });
+});
+
 var server = app.listen(serverConfig.port, function () {
   log.info('lwefd listening on port '+ serverConfig.port)
 });

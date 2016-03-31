@@ -635,7 +635,7 @@ var model = (function (log4js, dbFile) {
           }
 
           if (relayMapping !== null && relayMapping !== '' && relayMapping !== undefined) {
-            action.updateRaspiLights();
+            action.updateRaspiLights(result[0]);
           }
 
         }
