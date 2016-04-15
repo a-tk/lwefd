@@ -18,7 +18,8 @@ var model = (function (log4js, dbFile) {
   var phase = {
     STARTED: "STARTED",
     FINISHED: "FINISHED",
-    COMPLETED: "COMPLETED"
+    COMPLETED: "COMPLETED",
+    FINALIZED: "FINALIZED"
   };
 
   var productIdQueue = {};
