@@ -61,6 +61,7 @@ var model = (function (log4js, dbFile) {
     var createRunTable = 'CREATE TABLE IF NOT EXISTS runs ' +
       '(' +
       'id INTEGER PRIMARY KEY AUTOINCREMENT, ' +
+      'productId INTEGER NOT NULL, ' +
       'jobId INTEGER NOT NULL, ' +
       'time INTEGER NOT NULL UNIQUE, ' +
       'full_url TEXT NOT NULL, ' +
@@ -171,9 +172,11 @@ var model = (function (log4js, dbFile) {
 
   var deleteProduct = function (id, callback) {
 
-    var sql = 'DELETE FROM products ' +
+    var sql = 'DELETE FROM products, jobs, runs ' +
       'WHERE ' +
-      ' id='+ id +
+      ' products.id='+ id +
+      ' AND jobs.productId=' + id +
+      ' AND runs.productId=' + id +
       ';';
     db.run(sql, function (err) {
         if (err) {
@@ -186,9 +189,10 @@ var model = (function (log4js, dbFile) {
 
   var deleteJob = function (pid, jid, callback) {
 
-    var sql = 'DELETE FROM jobs ' +
+    var sql = 'DELETE FROM jobs, runs ' +
       'WHERE ' +
-      ' id='+ jid +
+      ' jobs.id='+ jid +
+      'AND runs.jobId='+ jid +
       ';';
     db.run(sql, function (err) {
         if (err) {
@@ -258,9 +262,25 @@ var model = (function (log4js, dbFile) {
     });
   };
 
+  /**
+   * This method is in charge of adding run notifications, and as such,
+   * it must do several things in a string of callbacks.
+   * 1st, there are two possibilities for the notification:
+   *  1. a job exists
+   *  2. a job does not exist
+   * This is checked with a query called checkQuery.
+   * if checkQuery has a result (result.length !== 0) then 1 is true, and we can get the jobId for it.
+   * if checkQuery does not, then we must insert a new job, using addJobEntry, and then insert the notification in the
+   * run table. This is why addJobEntry must return the jid.
+   *
+   * In addition, this method must update the lists that keep track of what products should be checked at the end
+   * of a notification cascade. AND it must tell the server to update the current status of the job
+   * that the run belongs to. It is only after this job is updated that the original callback is called.
+   *
+   * @param notification - the notification from notify.js that is to be added as a run
+   * @param callback - where to return to.
+   */
   var addRun = function (notification, callback) {
-    //if first entry, add job, then add run, otherwise just add run
-    var time = Date.now();
 
     var checkQuery = 'SELECT * FROM ' +
       'jobs ' +
@@ -271,13 +291,22 @@ var model = (function (log4js, dbFile) {
 
     var runEntryBeforeJid = 'INSERT OR REPLACE INTO runs ' +
       '(' +
+      'productId, ' +
       'jobId, ' +
       'time, ' +
       'full_url, ' +
       'number, ' +
       'status ' +
       ((notification.build.value !== null) ? ', value ':'') +
-      ') VALUES (';
+      ') VALUES (' +
+      '"' + notification.productId + '", ';
+
+    var time;
+    if (notification.build.hasOwnProperty('date_override')) {
+      time = notification.build.date_override;
+    } else {
+      time = Date.now();
+    }
 
     var runEntryAfterJid = ', ' +
       time + ', ' +

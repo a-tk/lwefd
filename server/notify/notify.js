@@ -36,10 +36,12 @@ var notify = (function (log4js, model) {
    * @param status - can be any of the statuses defined in model.js
    * @param valueUnit - optional - to add a value to the notification
    * @param value - optional - to add a value to the notification
+   * @param date_override - optional - used to date the notification if it should not set the date from now
+   *  - must be seconds since unix epoch, like Date.now() returns
    * @returns {*}
    */
 
-  function createNotification (name, full_url, number, phase, status, valueUnit, value) {
+  function createNotification (name, full_url, number, phase, status, valueUnit, value, date_override) {
     var notification;
 
     if (valueUnit === undefined || value === undefined) {
@@ -64,6 +66,10 @@ var notify = (function (log4js, model) {
           "value": value
         }
       };
+    }
+
+    if (date_override !== undefined) {
+      notification.build['date_override'] = date_override;
     }
 
     return notification;
@@ -118,6 +124,10 @@ var notify = (function (log4js, model) {
         notification.valueUnit = null;
       }
 
+      if (data.build.hasOwnProperty('date_override')) {
+        notification.build.date_override = data.build.date_override;
+      }
+
       return notification;
     } else {
       log.warn('notification does not have all required fields, aborting insert');
@@ -135,6 +145,7 @@ var notify = (function (log4js, model) {
     log.warn('has number ' + data.build.hasOwnProperty('number'));
     log.warn('has phase ' + (data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase)));
     log.warn('has status ' + (data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)));
+    log.warn('has date_override ' + (data.build.date_override !== undefined));
   }
 
 
