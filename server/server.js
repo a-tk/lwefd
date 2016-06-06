@@ -77,6 +77,7 @@ app.use(api);
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   log.warn(req.originalUrl);
+  log.warn('404 requested from ' + req.ip);
   err.status = 404;
   next(err);
 });

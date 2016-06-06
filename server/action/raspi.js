@@ -32,12 +32,14 @@ var raspi = (function (log4js, gpio, isRaspi) {
           if (err) {
             log.error('failed to close pin ' + err);
           } else {
-            log.info('closed pin')
+            log.info('closed pin');
           }
         });
       }
+      setTimeout(callback, 10000);
+    } else {
+      callback();
     }
-    setTimeout(callback, 10000);
   };
 
   var setStates = function (modelStatusCodes) {
