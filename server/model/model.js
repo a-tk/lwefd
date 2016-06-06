@@ -172,34 +172,69 @@ var model = (function (log4js, dbFile) {
 
   var deleteProduct = function (id, callback) {
 
-    var sql = 'DELETE FROM products, jobs, runs ' +
+    var sql = 'DELETE FROM products ' +
       'WHERE ' +
       ' products.id='+ id +
-      ' AND jobs.productId=' + id +
-      ' AND runs.productId=' + id +
       ';';
     db.run(sql, function (err) {
         if (err) {
           log.warn('error deleting product ' + id + ': ' + err);
+          callback(err);
+        } else {
+
+          var sql = 'DELETE FROM jobs ' +
+            'WHERE ' +
+            ' jobs.productId=' + id +
+            ';';
+          db.run(sql, function (err) {
+              if (err) {
+                log.warn('error deleting jobs for pid ' + id + ': ' + err);
+                callback(err);
+              } else {
+                var sql = 'DELETE FROM runs ' +
+                  'WHERE ' +
+                  ' runs.productId=' + id +
+                  ';';
+                db.run(sql, function (err) {
+                    if (err) {
+                      log.warn('error deleting runs for pid ' + id + ': ' + err);
+                      callback(err);
+                    } else {
+                      callback();
+                    }
+                  }
+                );
+              }
+            }
+          );
         }
-        callback(err);
       }
     );
   };
 
   var deleteJob = function (pid, jid, callback) {
 
-    var sql = 'DELETE FROM jobs, runs ' +
+    var sql = 'DELETE FROM jobs ' +
       'WHERE ' +
       ' jobs.id='+ jid +
-      'AND runs.jobId='+ jid +
       ';';
     db.run(sql, function (err) {
         if (err) {
           log.warn('error deleting job ' + jid + ': ' + err);
+        } else {
+          var sql = 'DELETE FROM runs ' +
+            'WHERE ' +
+            ' runs.jobId='+ jid +
+            ';';
+          db.run(sql, function (err) {
+              if (err) {
+                log.warn('error deleting runs for jid ' + jid + ': ' + err);
+              }
+              pushProductId(pid);
+              pollProductUpdateQueue(callback);
+            }
+          );
         }
-        pushProductId(pid);
-        pollProductUpdateQueue(callback);
       }
     );
   };
