@@ -43,9 +43,9 @@ var raspi = (function (log4js, gpio, isRaspi) {
   };
 
   var setStates = function (modelStatusCodes) {
-    states[modelStatusCodes.SUCCESS] = [0, 0] ;
-    states[modelStatusCodes.UNSTABLE] = [1, 0] ;
-    states[modelStatusCodes.FAILURE] = [1, 1] ;
+    states[modelStatusCodes.SUCCESS] = [1, 1] ;
+    states[modelStatusCodes.UNSTABLE] = [0, 1] ;
+    states[modelStatusCodes.FAILURE] = [0, 0] ;
   };
 
   var setRelaysToStatus = function (relay1, relay2, status) {
