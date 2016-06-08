@@ -12,8 +12,7 @@ angular
   .module('lwefd', [
     'ngAnimate',
     'ngResource',
-    'ngRoute',
-    'chart.js'
+    'ngRoute'
   ])
   .config(function ($routeProvider) {
     $routeProvider

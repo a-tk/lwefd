@@ -9,7 +9,7 @@
    * # JobsCtrl
    */
   angular.module('lwefd')
-    .controller('JobsCtrl', function ($scope, $routeParams, $filter,  DbService) {
+    .controller('JobsCtrl', function ($scope, $routeParams, $filter,  DbService, ChartService) {
       var vm = this;
       vm.activate = activate();
       vm.jobs = [];
@@ -60,33 +60,19 @@
             vm.jobs[jobindex].runs = result.data;
             vm.jobs[jobindex].runsAlreadyLoaded = true;
             if (vm.jobs[jobindex].valueUnit !== undefined) {
-              vm.jobs[jobindex].chartLabels = [];
-              updateChartLabels(vm.jobs[jobindex]);
-              vm.jobs[jobindex].chartData = [[]];
-              vm.jobs[jobindex].chartColors = [[]];
-              updateChartData(vm.jobs[jobindex]);
-              vm.jobs[jobindex].chartSeries = [];
-              updateChartSeries(vm.jobs[jobindex]);
+              ChartService.fillControlChartData(vm.jobs[jobindex]);
+              ChartService.fillControlChartConfig(vm.jobs[jobindex]);
             }
           }, fancyError);
         }
       }
 
       function updateChartLabels (job) {
-        for (var i = 0; i < job.runs.length; i++) {
-          job.chartLabels.unshift($filter('date')(job.runs[i].time, 'short'));
-        }
+
       }
 
       function updateChartData (job) {
-        for (var i = 0; i < job.runs.length; i++) {
-          job.chartData[0].unshift(job.runs[i].value);
-          //job.chartColors[0].unshift('#FFF');
-        }
-      }
 
-      function updateChartSeries (job) {
-        job.chartSeries.push(job.valueUnit);
       }
 
       function deleteJob(jid) {
@@ -136,18 +122,5 @@
         }
         return value;
       }
-    })
-    .config(['ChartJsProvider', function (ChartJsProvider) {
-      // Configure all charts
-      ChartJsProvider.setOptions({
-        colours: ['#5bc0de'],
-        responsive: true
-      });
-      // Configure all line charts
-      ChartJsProvider.setOptions('Line', {
-        datasetFill: false,
-        datasetStroke: false,
-        bezierCurve: false
-      });
-    }]);
+    });
 })();
