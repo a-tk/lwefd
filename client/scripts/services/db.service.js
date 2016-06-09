@@ -75,5 +75,10 @@
         var data = '{"relayMapping" : "'+relayMapping + '"}';
         $http.post('api/update/relayMapping/' + pid, data).then(callback, errorCallback);
       }
+
+      function setControlLimits(pid, jid, upperControlLimit, lowerControlLimit, callback, errorCallback) {
+        var data = '{"upperControlLimit" : '+upperControlLimit + ', lowerControlLimit: '+ lowerControlLimit + '}';
+        $http.post('api/update/controlLimits/' + pid + '/' + jid, data).then(callback, errorCallback);
+      }
     });
 })();

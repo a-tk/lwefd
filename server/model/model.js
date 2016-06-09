@@ -56,6 +56,8 @@ var model = (function (log4js, dbFile) {
       'latestTime INTEGER, ' +
       'full_url TEXT, ' +
       'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
+      'upperControlLimit Integer NOT NULL DEFAULT 0, ' +
+      'lowerControlLimit INTEGER NOT NULL DEFAULT 0, ' +
       'FOREIGN KEY(productId) REFERENCES products(id)' +
       ');';
     var createRunTable = 'CREATE TABLE IF NOT EXISTS runs ' +
@@ -728,6 +730,28 @@ var model = (function (log4js, dbFile) {
     );
   };
 
+  var updateControlLimits = function (pid, jid, upperControlLimit, lowerControlLimit) {
+
+    var sql = 'UPDATE jobs SET ' +
+      'upperControlLimit=' +
+      '' +
+      upperControlLimit +
+      ' AND ' +
+      'lowerControlLimit=' +
+      '' +
+      lowerControlLimit +
+      ' ' +
+      'WHERE ' +
+      ' id='+ jid +
+      ';';
+    db.run(sql, function (err) {
+        if (err) {
+          log.warn('error updating job ' + jid + ' to LCL ' + lowerControlLimit +' and UCL '+ upperControlLimit +': ' + err);
+        }
+      }
+    );
+  };
+
   var setAction = function (a) {
     action = a;
   };
@@ -750,6 +774,7 @@ var model = (function (log4js, dbFile) {
     updateRelayMapping: updateRelayMapping,
     updateForwardUrl: updateForwardUrl,
     updateForwardCount: updateForwardCount,
+    updateControlLimits: updateControlLimits,
     close: close,
     status: status,
     phase: phase

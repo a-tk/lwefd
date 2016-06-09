@@ -27,6 +27,7 @@
             <td width="30%"><a target="_blank" class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">
+              <button ng-if="job.valueUnit !== 'NULL'" class="glyphicon glyphicon-signal btn btn-sm btn-primary"></button>
               <button ng-click="vm.deleteJob(job.id);" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
             </td>
           </tr>

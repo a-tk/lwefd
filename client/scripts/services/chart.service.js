@@ -41,8 +41,8 @@
           xAxisUnit: 'time...TODO',
           yAxisUnit: job.valueUnit,
           rotateXAxisLabels: 15,
-          lowerCL : 350,
-          upperCL : 400
+          lowerCL : job.upperControlLimit,
+          upperCL : job.lowerControlLimit
         };
       }
     });
