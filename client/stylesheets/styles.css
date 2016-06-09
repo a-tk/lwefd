@@ -74,9 +74,31 @@ path {
     fill: none;
 }
 
+.runningCL rect {
+    fill: #d2dcea;
+    fill-opacity: .5;
+}
+
+.runningCL line {
+    stroke: red;
+    stroke-width: 1;
+    stroke-dasharray: 5,5;
+}
+
+.definedCL line {
+    stroke: red;
+    stroke-width: 1;
+    stroke-dasharray: 5,5;
+}
+
+.definedCL rect {
+    fill: #dfdfef;
+    fill-opacity: .5;
+}
+
 .axis path,
 .axis line {
-    fill: non;
+    fill: none;
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;

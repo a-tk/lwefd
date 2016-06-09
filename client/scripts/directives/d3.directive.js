@@ -15,23 +15,28 @@
         options : '='
       };
 
+      function valueAccessor(d) {
+        return d.value;
+      }
+
       function link(scope, element, attrs) {
 
         var data = scope.data;
         var options = scope.options;
 
         //Analyze data
-        var dataMin = d3.min(data, function (d) {
-            return d.value;
-          }),
-          dataMax = d3.max(data, function (d) {
-            return d.value;
-          });
+        var dataMin = d3.min(data, valueAccessor),
+          dataMax = d3.max(data, valueAccessor),
+          dataMean = d3.mean(data, valueAccessor),
+          dataStdDev = d3.deviation(data, valueAccessor);
 
-        var dataRange = dataMax - dataMin;
+        var lowerRunningCL = dataMean - (dataStdDev * 3),
+          upperRunningCL = dataMean + (dataStdDev * 3),
+          lowerDefinedCL = options.lowerCL,
+          upperDefinedCL = options.upperCL;
 
         // Set the dimensions of the canvas / graph
-        var margin = {top: 10, right: 80, bottom: 70, left: 75},
+        var margin = options.margin,
           width = element[0].offsetParent.offsetWidth - margin.left - margin.right,
           height = options.height - margin.top - margin.bottom;
 
@@ -66,8 +71,58 @@
           return d.index;
         }));
 
-        var rangePadding = dataRange / 10;
-        y.domain([dataMin - rangePadding, dataMax + rangePadding]);
+        var yDomainLowerBound = d3.min([dataMin, lowerRunningCL, lowerDefinedCL]);
+        var yDomainUpperBound = d3.max([dataMax, upperRunningCL, upperDefinedCL]);
+        var domainPadding = (yDomainUpperBound - yDomainLowerBound) / 10;
+        y.domain([yDomainLowerBound - domainPadding, yDomainUpperBound + domainPadding]);
+
+
+        //running CTRL limits
+        svg.append('g')
+          .attr('class', 'runningCL')
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', y(upperRunningCL))
+          .attr('x2', width)
+          .attr('y2',  y(upperRunningCL));
+        svg.append('g')
+          .attr('class', 'runningCL')
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', y(lowerRunningCL))
+          .attr('x2', width)
+          .attr('y2',  y(lowerRunningCL));
+        svg.append('g')
+          .attr('class', 'runningCL')
+          .append('rect')
+          .attr('x', 0)
+          .attr('y', y(upperRunningCL))
+          .attr('width', width)
+          .attr('height',  y(lowerRunningCL) -  y(upperRunningCL));
+
+        //defined CL
+        svg.append('g')
+          .attr('class', 'definedCL')
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', y(upperDefinedCL))
+          .attr('x2', width)
+          .attr('y2',  y(upperDefinedCL));
+        svg.append('g')
+          .attr('class', 'definedCL')
+          .append('line')
+          .attr('x1', 0)
+          .attr('y1', y(lowerDefinedCL))
+          .attr('x2', width)
+          .attr('y2',  y(lowerDefinedCL));
+        svg.append('g')
+          .attr('class', 'definedCL')
+          .append('rect')
+          .attr('x', 0)
+          .attr('y', y(upperDefinedCL))
+          .attr('width', width)
+          .attr('height',  y(lowerDefinedCL) -  y(upperDefinedCL));
+
 
         svg.append('path')
           .attr('class', 'line')
@@ -85,12 +140,13 @@
           .attr('class', 'y axis')
           .call(yAxis);
 
-        svg.append('text')
-          .attr('x', - height / 2)
-          .attr('y', -50)//because of rotation, text placement coordinates are reversed
-          .attr('transform', 'rotate(-90)')
-          .style('text-anchor', 'middle')
-          .text(options.yAxisUnit);
+
+        //svg.append('text')
+        //  .attr('x', - height / 2)
+        //  .attr('y', -50)//because of rotation, text placement coordinates are reversed
+        //  .attr('transform', 'rotate(-90)')
+        //  .style('text-anchor', 'middle')
+        //  .text(options.yAxisUnit);
 
         //svg.selectAll('path').on('mouseover', function (d){
         //  console.log(JSON.stringify(d));
