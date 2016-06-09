@@ -31,7 +31,7 @@
         var dataRange = dataMax - dataMin;
 
         // Set the dimensions of the canvas / graph
-        var margin = {top: 30, right: 20, bottom: 30, left: 50},
+        var margin = {top: 10, right: 80, bottom: 70, left: 75},
           width = element[0].offsetParent.offsetWidth - margin.left - margin.right,
           height = options.height - margin.top - margin.bottom;
 
@@ -45,7 +45,7 @@
           });
 
         var yAxis = d3.svg.axis().scale(y)
-          .orient('left').ticks(15);
+          .orient('left').ticks(10);
 
         var path = d3.svg.line()
           .x(function(d) {
@@ -76,12 +76,21 @@
         svg.append('g')
           .attr('class', 'x axis')
           .attr('transform', 'translate(0,' + height + ')')
-          .attr('transform', 'rotate()')
-          .call(xAxis);
+          .call(xAxis)
+          .selectAll('text')
+          .attr('transform', 'rotate('+options.rotateXAxisLabels+')')
+          .style('text-anchor', 'start');
 
         svg.append('g')
           .attr('class', 'y axis')
           .call(yAxis);
+
+        svg.append('text')
+          .attr('x', - height / 2)
+          .attr('y', -50)//because of rotation, text placement coordinates are reversed
+          .attr('transform', 'rotate(-90)')
+          .style('text-anchor', 'middle')
+          .text(options.yAxisUnit);
 
         //svg.selectAll('path').on('mouseover', function (d){
         //  console.log(JSON.stringify(d));

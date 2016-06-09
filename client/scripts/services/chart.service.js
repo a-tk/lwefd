@@ -36,7 +36,8 @@
           title : job.name,
           height: 450,
           xAxisUnit: 'time...TODO',
-          yAxisUnit: job.valueUnit
+          yAxisUnit: job.valueUnit,
+          rotateXAxisLabels: 15
         };
       }
     });
