@@ -51,24 +51,24 @@
 
         var yAxis = d3.svg.axis().scale(y).orient('left').ticks(10);
 
-        var path = getCtrlChartPath(x, y);
-
-        var svg = getCtrlChartSvg(element[0], '100%', height + margin.top + margin.bottom, margin);
-
         x.domain(d3.extent(data, function(d) {
           return d.index;
         }));
 
+        //If any more information is displayed on the graph, add it to these arrays so that is fits within the scale
         var yDomainLowerBound = d3.min([dataMin, lowerRunningCL, lowerDefinedCL]);
         var yDomainUpperBound = d3.max([dataMax, upperRunningCL, upperDefinedCL]);
+
+        //Pad by x% to make the graph more readable
         var domainPadding = (yDomainUpperBound - yDomainLowerBound) / 10;
+
         y.domain([yDomainLowerBound - domainPadding, yDomainUpperBound + domainPadding]);
 
-        appendControlLimits(svg, y, width, 'runningCL', upperRunningCL, lowerRunningCL);
+        //Draw the chart
 
-        appendControlLimits(svg, y, width, 'definedCL', upperDefinedCL, lowerDefinedCL);
+        var svg = getCtrlChartSvg(element[0], '100%', height + margin.top + margin.bottom, margin);
 
-        appendPath(svg, path, data);
+        var path = getCtrlChartPath(x, y);
 
         appendXAxis(svg, height, xAxis, options.rotateXAxisLabels);
 
@@ -77,6 +77,12 @@
         appendGrid(svg, xAxis, height);
 
         appendGrid(svg, yAxis, -width);
+
+        appendControlLimits(svg, y, width, 'runningCL', upperRunningCL, lowerRunningCL, 'Calculated');
+
+        appendControlLimits(svg, y, width, 'definedCL', upperDefinedCL, lowerDefinedCL, 'Defined');
+
+        appendPath(svg, path, data);
 
         appendYAxisTitle(svg, height, options.yAxisUnit);
 
@@ -143,7 +149,7 @@
           .call(axisFunction.tickSize(gridDistance, 0, 0).tickFormat(""));
       }
 
-      function appendControlLimits(svg, yScale, width, cssClass, ucl, lcl){
+      function appendControlLimits(svg, yScale, width, cssClass, ucl, lcl, desc){
         svg.append('g')
           .attr('class', cssClass)
           .append('line')
@@ -158,13 +164,19 @@
           .attr('y1', yScale(lcl))
           .attr('x2', width)
           .attr('y2',  yScale(lcl));
-        svg.append('g')
-          .attr('class', cssClass)
-          .append('rect')
+        var fillSpace = svg.append('g')
+          .attr('class', cssClass);
+        fillSpace.append('rect')
           .attr('x', 0)
           .attr('y', yScale(ucl))
           .attr('width', width)
           .attr('height',  yScale(lcl) -  yScale(ucl));
+        fillSpace.append('text')
+          .attr('x', 5)
+          .attr('y', yScale(ucl) + 10)
+          .attr('dy', '.35em')
+          .attr('font-size', '10')
+          .text(desc + ' UCL = ' + d3.round(ucl, 0) + ' LCL = ' + d3.round(lcl, 0));
       }
 
       return {
