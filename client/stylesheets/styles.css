@@ -75,12 +75,12 @@ path {
 }
 
 .runningCL rect {
-    fill: #d2dcea;
+    fill: #eaeac3;
     fill-opacity: .5;
 }
 
 .runningCL line {
-    stroke: red;
+    stroke: #000bff;
     stroke-width: 1;
     stroke-dasharray: 5,5;
 }
@@ -102,4 +102,12 @@ path {
     stroke: grey;
     stroke-width: 1;
     shape-rendering: crispEdges;
+}
+
+.grid .tick {
+    stroke: #e3e3e3;
+    opacity: 0.9;
+}
+.grid path {
+    stroke-width: 0;
 }

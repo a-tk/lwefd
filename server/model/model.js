@@ -730,13 +730,13 @@ var model = (function (log4js, dbFile) {
     );
   };
 
-  var updateControlLimits = function (pid, jid, upperControlLimit, lowerControlLimit) {
+  var updateControlLimits = function (pid, jid, upperControlLimit, lowerControlLimit, callback) {
 
     var sql = 'UPDATE jobs SET ' +
       'upperControlLimit=' +
       '' +
       upperControlLimit +
-      ' AND ' +
+      ', ' +
       'lowerControlLimit=' +
       '' +
       lowerControlLimit +
@@ -744,10 +744,12 @@ var model = (function (log4js, dbFile) {
       'WHERE ' +
       ' id='+ jid +
       ';';
+
     db.run(sql, function (err) {
         if (err) {
           log.warn('error updating job ' + jid + ' to LCL ' + lowerControlLimit +' and UCL '+ upperControlLimit +': ' + err);
         }
+        callback(err);
       }
     );
   };

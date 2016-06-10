@@ -22,7 +22,8 @@
         getJobs: getJobs,
         getRuns: getRuns,
         setForwardUrl: setForwardUrl,
-        setRelayNumbers: setRelayNumbers
+        setRelayNumbers: setRelayNumbers,
+        setControlLimits: setControlLimits
       };
 
       return DbService;
@@ -77,7 +78,7 @@
       }
 
       function setControlLimits(pid, jid, upperControlLimit, lowerControlLimit, callback, errorCallback) {
-        var data = '{"upperControlLimit" : '+upperControlLimit + ', lowerControlLimit: '+ lowerControlLimit + '}';
+        var data = '{"upperControlLimit" : '+upperControlLimit + ', "lowerControlLimit": '+ lowerControlLimit + '}';
         $http.post('api/update/controlLimits/' + pid + '/' + jid, data).then(callback, errorCallback);
       }
     });

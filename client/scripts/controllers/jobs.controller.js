@@ -25,9 +25,9 @@
       vm.defaultRunLimit = 15; //default limiter for runs
       vm.runLimit = vm.defaultRunLimit;
       vm.lastRunLimit = vm.defaultRunLimit;
+      vm.setControlLimits = setControlLimits;
 
       vm.jobOrderBy = jobOrderBy;
-      
 
       function getProductSummary() {
         DbService.getProductSummary(vm.id, function(result) {
@@ -67,12 +67,14 @@
         }
       }
 
-      function updateChartLabels (job) {
+      function setControlLimits(jid, upperControlLimit, lowerControlLimit) {
 
-      }
-
-      function updateChartData (job) {
-
+        if (jid !== undefined || upperControlLimit !== undefined || lowerControlLimit !== undefined || !isNaN(upperControlLimit) || !isNaN(lowerControlLimit)) {
+          console.log(jid + ' ' + upperControlLimit + ' ' + lowerControlLimit);
+          DbService.setControlLimits(vm.id, jid, upperControlLimit, lowerControlLimit, function () {
+            console.log('success');
+          }, fancyError);
+        }
       }
 
       function deleteJob(jid) {

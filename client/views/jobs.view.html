@@ -27,16 +27,41 @@
             <td width="30%"><a target="_blank" class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>
             <td width="30%">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">
-              <button ng-if="job.valueUnit !== 'NULL'" class="glyphicon glyphicon-signal btn btn-sm btn-primary"></button>
               <button ng-click="vm.deleteJob(job.id);" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
             </td>
           </tr>
           </tbody>
         </table>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
+          <button class="glyphicon glyphicon-signal btn btn-sm btn-primary" type="button" id="CLBox{{job.id}}" data-toggle="modal" data-target=".{{job.id}}-modal"></button>
+          <div class="modal fade {{job.id}}-modal" tabindex="-1" role="dialog" aria-labelledby="{{job.id}}-modal">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title">{{job.name}} Configuration</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="input-group">
+                    <span class="input-group-addon" id="{{job.id}}UCLLabel">Upper Control Limit</span>
+                    <input aria-describedby="{{job.id}}UCLLabel" ng-model="upperControlLimit" type="number" class="form-control" placeholder="{{job.upperControlLimit}}"/>
+                  </div>
+                  <div class="input-group">
+                    <span class="input-group-addon" id="{{job.id}}LCLLabel">Lower Control Limit</span>
+                    <input aria-describedby="{{job.id}}LCLLabel" ng-model="lowerControlLimit" type="number" class="form-control" placeholder="{{job.lowerControlLimit}}"/>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button ng-click="vm.setControlLimits(job.id, upperControlLimit, lowerControlLimit)" type="button" data-dismiss="modal" class="btn btn-primary">Save</button>
+                </div>
+              </div>
+            </div>
+          </div>
           <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, true, vm.runLimit);" class="glyphicon glyphicon-repeat btn btn-sm btn-primary"></button>
+
           <div ng-if="job.valueUnit !== 'NULL' && job.runs !== undefined">
-            <d3 id="{{job.id}}" data="job.chartData" options="job.chartOptions"></d3>
+            <control-chart id="{{job.id}}" data="job.chartData" options="job.chartOptions"></control-chart>
           </div>
           <table class="table table-condensed table-hover">
             <thead>
