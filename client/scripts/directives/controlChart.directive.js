@@ -24,6 +24,24 @@
         var data = scope.data;
         var options = scope.options;
 
+        drawGraph(scope, element, attrs, data, options);
+
+        scope.$watch('options', function () {
+          d3.select(element[0]).select('svg').remove();
+          data = scope.data;
+          options = scope.options;
+          drawGraph(scope, element, attrs, data, options);
+        });
+        scope.$watch('data', function () {
+          d3.select(element[0]).select('svg').remove();
+          data = scope.data;
+          options = scope.options;
+          drawGraph(scope, element, attrs, data, options);
+        });
+      }
+
+      function drawGraph (scope, element, attrs, data, options) {
+
         //Analyze data
         var dataMin = d3.min(data, valueAccessor),
           dataMax = d3.max(data, valueAccessor),
@@ -149,7 +167,7 @@
           .call(axisFunction.tickSize(gridDistance, 0, 0).tickFormat(""));
       }
 
-      function appendControlLimits(svg, yScale, width, cssClass, ucl, lcl, desc){
+      function appendControlLimits(svg, yScale, width, cssClass, ucl, lcl, description){
         svg.append('g')
           .attr('class', cssClass)
           .append('line')
@@ -176,7 +194,7 @@
           .attr('y', yScale(ucl) + 10)
           .attr('dy', '.35em')
           .attr('font-size', '10')
-          .text(desc + ' UCL = ' + d3.round(ucl, 0) + ' LCL = ' + d3.round(lcl, 0));
+          .text(description + ' UCL = ' + d3.round(ucl, 0) + ' LCL = ' + d3.round(lcl, 0));
       }
 
       return {

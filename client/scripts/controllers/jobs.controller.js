@@ -67,12 +67,16 @@
         }
       }
 
-      function setControlLimits(jid, upperControlLimit, lowerControlLimit) {
+      function setControlLimits(jid, upperControlLimit, lowerControlLimit, job) {
 
         if (jid !== undefined || upperControlLimit !== undefined || lowerControlLimit !== undefined || !isNaN(upperControlLimit) || !isNaN(lowerControlLimit)) {
-          console.log(jid + ' ' + upperControlLimit + ' ' + lowerControlLimit);
           DbService.setControlLimits(vm.id, jid, upperControlLimit, lowerControlLimit, function () {
-            console.log('success');
+
+            delete job.chartOptions;
+            ChartService.fillControlChartConfig(job);
+            job.chartOptions.lowerCL = lowerControlLimit;
+            job.chartOptions.upperCL = upperControlLimit;
+            $scope.$applyAsync();
           }, fancyError);
         }
       }

@@ -38,11 +38,10 @@
           margin: {top: 10, right: 80, bottom: 70, left: 75},
           title : job.name,
           height: 450,
-          xAxisUnit: 'time...TODO',
           yAxisUnit: job.valueUnit,
           rotateXAxisLabels: 15,
-          lowerCL : job.upperControlLimit,
-          upperCL : job.lowerControlLimit
+          lowerCL : job.lowerControlLimit,
+          upperCL : job.upperControlLimit
         };
       }
     });
