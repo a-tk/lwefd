@@ -345,10 +345,16 @@ var model = (function (log4js, dbFile) {
       time = Date.now();
     }
 
+    //If user passes -1 to number, it is auto-filled with a run number starting from 0.
+    var number = notification.build.number;
+    if (notification.build.number === -1) {
+      number = '(SELECT COUNT(*) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name + '"))';
+    }
+
     var runEntryAfterJid = ', ' +
       time + ', ' +
       '"' + notification.build.full_url + '", ' +
-      notification.build.number + ', ' + //will cause an issue if number is undefined.
+      number + ', ' + //will cause an issue if number is undefined.
       '"' + notification.build.status + '" ' +
       ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
       ');';
