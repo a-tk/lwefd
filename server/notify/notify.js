@@ -83,7 +83,7 @@ var notify = (function (log4js, model) {
         poll();
       }
     } else {
-      callback();
+      callback('500: notification not accepted, verify that it fulfills the notification requirements');
     }
   }
 
@@ -114,6 +114,14 @@ var notify = (function (log4js, model) {
         notification.build.status = model.phase.STARTED;
       } else {
         notification.build.status = data.build.status;
+        if (notification.build.status === model.status.VARIABLE_CL && !data.build.hasOwnProperty('value')) {
+          /*
+            If there is a variable status, but the job doesn't accept values, then FAIL the notification because
+            there is conflicting information supplied
+          */
+          log.warn(model.status.VARIABLE_CL + ' selected as status when value not supplied');
+          return null;
+        }
       }
 
       if (data.build.hasOwnProperty('value') && data.hasOwnProperty('valueUnit')) {

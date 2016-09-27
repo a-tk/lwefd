@@ -13,7 +13,8 @@ var model = (function (log4js, dbFile) {
   var status = {
     SUCCESS: "SUCCESS",
     FAILURE: "FAILURE",
-    UNSTABLE: "UNSTABLE"
+    UNSTABLE: "UNSTABLE",
+    VARIABLE_CL: "VARIABLE_CL"
   };
   var phase = {
     STARTED: "STARTED",
@@ -350,12 +351,23 @@ var model = (function (log4js, dbFile) {
     if (notification.build.number === -1) {
       number = '(SELECT COUNT(*) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name + '"))';
     }
+    var statusStringSQL;
+    if (notification.build.status === status.VARIABLE_CL){
+      statusStringSQL = '(SELECT CASE WHEN ('+notification.build.value+'  <= ucl AND '+notification.build.value+' >= lcl) ' +
+        'THEN "'+status.SUCCESS+'" ELSE "'+status.FAILURE+'" END FROM ' +
+        '(SELECT ' +
+        'jobs.upperControlLimit AS ucl, ' +
+        'jobs.lowerControlLimit AS lcl ' +
+        'FROM jobs WHERE jobs.name="'+notification.name+'" ))';
+    } else {
+      statusStringSQL = '"' + notification.build.status + '" ';
+    }
 
     var runEntryAfterJid = ', ' +
       time + ', ' +
       '"' + notification.build.full_url + '", ' +
       number + ', ' + //will cause an issue if number is undefined.
-      '"' + notification.build.status + '" ' +
+      statusStringSQL +
       ((notification.build.value !== null) ? ', ' + notification.build.value + ' ':'') +
       ');';
 
@@ -371,7 +383,8 @@ var model = (function (log4js, dbFile) {
               callback(err);
             } else if (notification.build.status !== phase.STARTED) {
               pushProductId(notification.productId);
-              updateJobFromRun(result[0].id, time, notification.build.full_url, notification.build.status, callback);
+              var rid = this.lastID;// this is only to pass the rid on to the next function. Builtin from sqlite3
+              updateJobFromRun(result[0].id, rid, time, notification.build.full_url, notification.build.status, callback);
             } else {
               //don't add started changes
               callback();
@@ -388,7 +401,8 @@ var model = (function (log4js, dbFile) {
                 callback(err);
               } else if (notification.build.status !== phase.STARTED) {
                 pushProductId(notification.productId);
-                updateJobFromRun(jobId, time, notification.build.full_url, notification.build.status, callback);
+                var rid = this.lastID; // this is only to pass the rid on to the next function. Builtin from sqlite3
+                updateJobFromRun(jobId, rid, time, notification.build.full_url, notification.build.status, callback);
               } else {
                 //don't add started changes
                 callback();
@@ -403,7 +417,15 @@ var model = (function (log4js, dbFile) {
     });
   };
 
-  var updateJobFromRun = function (jid, time, url, status, callback) {
+  var updateJobFromRun = function (jid, rid, time, url, rstatus, callback) {
+
+    var statusString;
+    if (rstatus == status.VARIABLE_CL) {
+      statusString = '(SELECT runs.status FROM runs WHERE id='+rid+') ';
+    } else {
+      statusString = '"' + rstatus + '" ';
+    }
+
     var sql = 'UPDATE jobs SET ' +
       'latestTime=' +
       '' +
@@ -413,16 +435,13 @@ var model = (function (log4js, dbFile) {
       '"' +
       url +
       '",' +
-      'currentStatus=' +
-      '"' +
-      status +
-      '" ' +
+      'currentStatus=' + statusString +
       'WHERE ' +
       ' id=' + jid +
       ';';
     db.run(sql, function (err) {
       if (err) {
-        log.warn('error updating job ' + jid + ' to run ' + time + ', ' + url + ', ' + status + ': ' + err);
+        log.warn('error updating job ' + jid + ' to run ' + time + ', ' + url + ', ' + rstatus + ': ' + err);
         callback(err);
       } else {
         callback();
