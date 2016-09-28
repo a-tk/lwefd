@@ -23,6 +23,11 @@ body {
 
 .job-table {
     margin-bottom: 0;
+    table-layout: fixed;
+}
+
+.job-table-jobname-column {
+    word-wrap: break-word;
 }
 
 .no-padding {
