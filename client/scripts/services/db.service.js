@@ -44,11 +44,11 @@
       }
 
       function updateProductName (id, name, callback, errorCallback) {
-        $http.get('api/update/productName/' + id + '/' + name).then(callback, errorCallback);
+        $http.get('api/' + id + '/update/productName/' + name).then(callback, errorCallback);
       }
 
       function deleteProduct(id, callback, errorCallback) {
-        $http.get('api/delete/product/' + id).then(callback, errorCallback);
+        $http.get('api/' + id + 'delete/product').then(callback, errorCallback);
       }
 
       function deleteJob(pid, jid, callback, errorCallback) {
@@ -69,17 +69,17 @@
 
       function setForwardUrl(pid, url, callback, errorCallback) {
         var data = '{"forwardUrl" : "'+url + '"}';
-        $http.post('api/update/forwardUrl/' + pid, data).then(callback, errorCallback);
+        $http.post('api/' + pid + 'update/forwardUrl', data).then(callback, errorCallback);
       }
 
       function setRelayNumbers(pid, relayMapping, callback, errorCallback) {
-        var data = '{"relayMapping" : "'+relayMapping + '"}';
-        $http.post('api/update/relayMapping/' + pid, data).then(callback, errorCallback);
+        var data = '{"relayMapping" : "' + relayMapping + '"}';
+        $http.post('api/' + pid + '/update/relayMapping', data).then(callback, errorCallback);
       }
 
       function setControlLimits(pid, jid, upperControlLimit, lowerControlLimit, callback, errorCallback) {
-        var data = '{"upperControlLimit" : '+upperControlLimit + ', "lowerControlLimit": '+ lowerControlLimit + '}';
-        $http.post('api/update/controlLimits/' + pid + '/' + jid, data).then(callback, errorCallback);
+        var data = '{"upperControlLimit" : ' + upperControlLimit + ', "lowerControlLimit": ' + lowerControlLimit + '}';
+        $http.post('api/' + pid + 'update/controlLimits/' + jid, data).then(callback, errorCallback);
       }
     });
 })();
