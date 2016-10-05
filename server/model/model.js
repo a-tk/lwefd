@@ -381,7 +381,7 @@ var model = (function (log4js, dbFile) {
             } else if (notification.build.status !== phase.STARTED) {
               pushProductId(notification.productId);
               var rid = this.lastID;// this is only to pass the rid on to the next function. Builtin from sqlite3
-              updateJobFromRun(result[0].id, rid, time, notification.build.full_url, notification.build.status, callback);
+              updateJobFromRun(result[0].id, rid, notification.build.time, notification.build.full_url, notification.build.status, callback);
             } else {
               //don't add started changes
               callback();
@@ -399,7 +399,7 @@ var model = (function (log4js, dbFile) {
               } else if (notification.build.status !== phase.STARTED) {
                 pushProductId(notification.productId);
                 var rid = this.lastID; // this is only to pass the rid on to the next function. Builtin from sqlite3
-                updateJobFromRun(jobId, rid, time, notification.build.full_url, notification.build.status, callback);
+                updateJobFromRun(jobId, rid, notification.build.time, notification.build.full_url, notification.build.status, callback);
               } else {
                 //don't add started changes
                 callback();
