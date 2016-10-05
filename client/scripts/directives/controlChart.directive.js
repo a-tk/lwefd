@@ -5,7 +5,7 @@
    * @ngdoc directive
    * @name lwefd.directive:controlChart
    * @description
-   * # d3
+   * # controlChart
    */
   angular.module('lwefd')
     .directive('controlChart', function ($filter) {

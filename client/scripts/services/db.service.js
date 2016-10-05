@@ -6,8 +6,8 @@
    * @ngdoc service
    * @name lwefd.DbService
    * @description
-   * # BlogModel
-   * Service in the simpleBlogApp.
+   * # DbService
+   * Service in the LWEFD, interface for server API.
    */
   angular.module('lwefd')
     .service('DbService', function ($http) {
