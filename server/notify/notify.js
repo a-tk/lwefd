@@ -10,7 +10,9 @@ This is what I expect a notification to look like.
     "number": 13,
     "phase": "COMPLETED", //could be STARTED or COMPLETED,
     "status": "SUCCESS", //could be SUCCESS UNSTABLE or FAILURE
-    "value": 0 //for use in assigning a value to a notification, like on a performance run!
+    "valueUnit": "Miles er Hour", //the unit to be associated with value, purely for label purposes
+    "value": 0, //for use in assigning a value to a notification, like on a performance run!
+    "time": 1458876135 // Optional param to spec the date. If not supplied, Date.now() is called
   }
 };
 */
@@ -36,13 +38,17 @@ var notify = (function (log4js, model) {
    * @param status - can be any of the statuses defined in model.js
    * @param valueUnit - optional - to add a value to the notification
    * @param value - optional - to add a value to the notification
-   * @param date_override - optional - used to date the notification if it should not set the date from now
-   *  - must be seconds since unix epoch, like Date.now() returns
+   * @param time - optional - used to date the notification if it should not set the date from now
+   *  - must be milliseconds since unix epoch, like Date.now() returns
    * @returns {*}
    */
 
-  function createNotification (name, full_url, number, phase, status, valueUnit, value, date_override) {
+  function createNotification (name, full_url, number, phase, status, valueUnit, value, time) {
     var notification;
+
+    if (time === null || time === undefined) {
+      time = Date.now();
+    }
 
     if (valueUnit === undefined || value === undefined) {
       notification = {
@@ -51,7 +57,8 @@ var notify = (function (log4js, model) {
           "full_url": full_url,
           "number": number,
           "phase": phase,
-          "status": status
+          "status": status,
+          "time": time
         }
       };
     } else {
@@ -63,13 +70,10 @@ var notify = (function (log4js, model) {
           "number": number,
           "phase": phase,
           "status": status,
-          "value": value
+          "value": value,
+          "time": time
         }
       };
-    }
-
-    if (date_override !== undefined) {
-      notification.build['date_override'] = date_override;
     }
 
     return notification;
@@ -132,8 +136,10 @@ var notify = (function (log4js, model) {
         notification.valueUnit = null;
       }
 
-      if (data.build.hasOwnProperty('date_override')) {
-        notification.build.date_override = data.build.date_override;
+      if (data.build.hasOwnProperty('time')) {
+        notification.build.time = data.build.time;
+      } else {
+        notification.build.time = Date.now();
       }
 
       return notification;
@@ -153,7 +159,7 @@ var notify = (function (log4js, model) {
     log.warn('has number ' + data.build.hasOwnProperty('number'));
     log.warn('has phase ' + (data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase)));
     log.warn('has status ' + (data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)));
-    log.warn('has date_override ' + (data.build.date_override !== undefined));
+    log.warn('has time ' + (data.build.time !== undefined));
   }
 
 

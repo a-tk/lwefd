@@ -339,13 +339,6 @@ var model = (function (log4js, dbFile) {
       ') VALUES (' +
       '"' + notification.productId + '", ';
 
-    var time;
-    if (notification.build.hasOwnProperty('date_override')) {
-      time = notification.build.date_override;
-    } else {
-      time = Date.now();
-    }
-
     //If user passes -1 to number, it is auto-filled with a run number starting from 0.
     var number = notification.build.number;
     if (notification.build.number === -1) {
@@ -353,6 +346,10 @@ var model = (function (log4js, dbFile) {
     }
     var statusStringSQL;
     if (notification.build.status === status.VARIABLE_CL){
+      /*
+        If a VARIABLE_CL status is provided, create a subquery to check the run against
+        Control Limits defined in the job, autofilling the success with a CASE statement
+       */
       statusStringSQL = '(SELECT CASE WHEN ('+notification.build.value+'  <= ucl AND '+notification.build.value+' >= lcl) ' +
         'THEN "'+status.SUCCESS+'" ELSE "'+status.FAILURE+'" END FROM ' +
         '(SELECT ' +
@@ -364,7 +361,7 @@ var model = (function (log4js, dbFile) {
     }
 
     var runEntryAfterJid = ', ' +
-      time + ', ' +
+      notification.build.time + ', ' +
       '"' + notification.build.full_url + '", ' +
       number + ', ' + //will cause an issue if number is undefined.
       statusStringSQL +
