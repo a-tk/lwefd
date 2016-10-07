@@ -2,14 +2,14 @@ var express = require('express');
 var path = require('path');
 //var reqLogger= require('morgan');
 var log4js = require('log4js');
-/*
+
 log4js.configure({
   appenders: [
     {type: 'console'},
     {type: 'file', filename: 'logs/app.log', category: 'app'}
   ]
 });
-*/
+
 
 var bodyParser = require('body-parser');
 
@@ -32,15 +32,17 @@ app.use('/', express.static('./'));
 
 var request = require('request');
 
+/*
+  Setup raspberry pi modules if this is one.
+ */
 var gpio = undefined;
+var raspi = undefined;
 if (serverConfig.isRaspi) {
   log.info('Server configured as a raspberry pi. Loading gpio modules');
   gpio = require('pi-gpio');
+  raspi = require('./action/raspi.js');
+  raspi = raspi(log4js, gpio, serverConfig.isRaspi);
 }
-
-
-var raspi = require('./action/raspi.js');
-raspi = raspi(log4js, gpio, serverConfig.isRaspi);
 
 var model = require('./model/model.js');
 model = model(log4js, serverConfig.dbFile); //configure action
@@ -57,9 +59,11 @@ action = action(log4js, request, hostname, notify, raspi, model);
 
 //Configure additional dependencies
 model.setAction(action);
-raspi.setStates(model.status);
 
-raspi.openPins();
+if (serverConfig.isRaspi) {
+  raspi.setStates(model.status);
+  raspi.openPins();
+}
 
 /**
  * set api routes up
@@ -110,10 +114,15 @@ app.use(function(err, req, res, next) {
 
 process.on('SIGINT', function() {
   log.info('CTRL C detected, exiting gracefully');
-  raspi.closePins(function () {
-    log.info('pins should be closed... exiting');
+
+  if (serverConfig.isRaspi) {
+    raspi.closePins(function () {
+      log.info('pins should be closed... exiting');
+      process.exit();
+    });
+  } else {
     process.exit();
-  });
+  }
 });
 
 var server = app.listen(serverConfig.port, function () {
