@@ -76,8 +76,6 @@ app.use(api);
 
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
-  log.warn(req.originalUrl);
-  log.warn('404 requested from ' + req.ip);
   err.status = 404;
   next(err);
 });
@@ -89,29 +87,26 @@ app.use(function(req, res, next) {
  * Error Handlers
  *
  */
-/*
+
 if (environment === 'development') {
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    err.message = err.message || 'Internal Server Error';
+    log.error(err.status + ' - ' + err.message + ': Error in request of ' + req.originalUrl + ' from ' + req.ip);
     log.error(err.message);
     log.error(err.stack);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
+    res.send(err.status + ': ' + err.message);
   });
 }
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
-  log.error(err.message);
-  log.error(err.stack);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
+  err.message = err.message || 'Internal Server Error';
+  log.error(err.status + ' - ' + err.message + ': Error in request of ' + req.originalUrl + ' from ' + req.ip);
+  //log.error(err.stack);
+  res.send(err.status + ': ' + err.message);
 });
-*/
+
 
 process.on('SIGINT', function() {
   log.info('CTRL C detected, exiting gracefully');
