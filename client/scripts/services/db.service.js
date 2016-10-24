@@ -69,7 +69,7 @@
 
       function setForwardUrl(pid, url, callback, errorCallback) {
         var data = '{"forwardUrl" : "'+url + '"}';
-        $http.post('api/' + pid + 'update/forwardUrl', data).then(callback, errorCallback);
+        $http.post('api/' + pid + '/update/forwardUrl', data).then(callback, errorCallback);
       }
 
       function setRelayNumbers(pid, relayMapping, callback, errorCallback) {
@@ -79,7 +79,7 @@
 
       function setControlLimits(pid, jid, upperControlLimit, lowerControlLimit, callback, errorCallback) {
         var data = '{"upperControlLimit" : ' + upperControlLimit + ', "lowerControlLimit": ' + lowerControlLimit + '}';
-        $http.post('api/' + pid + 'update/controlLimits/' + jid, data).then(callback, errorCallback);
+        $http.post('api/' + pid + '/update/controlLimits/' + jid, data).then(callback, errorCallback);
       }
     });
 })();
