@@ -7,7 +7,7 @@
         <div class="progress-bar progress-bar-warning" style="width: {{ ((vm.numUnstable/vm.numTotal) * 100) }}%"></div>
         <div class="progress-bar progress-bar-danger" style="width: {{ ((vm.numFailed/vm.numTotal) * 100) }}%"></div>
       </div>
-      <p>Search <input type="text" ng-model="jobFilter"> Run Limit <input type="number" min="1" max="50" ng-model="vm.runLimit"></p>
+      <p>Search <input type="text" ng-model="jobFilter"></p>
       <table class="table table-condensed table-hover">
         <thead>
         <tr>
@@ -21,44 +21,81 @@
         <div ng-repeat="job in vm.jobs | orderBy: vm.jobOrderBy | filter:jobFilter">
         <table class="table table-condensed table-hover job-table">
           <tbody>
-          <tr class="{{job.currentStatus}}" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, (vm.lastRunLimit != vm.runLimit), vm.runLimit);" data-toggle="collapse"
-              data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
-            <td width="10%">{{job.id}}</td>
-            <td class="job-table-jobname-column" width="30%"><a target="_blank" class="div-anchor" href="{{job.full_url}}">{{job.name}}</a></td>
-            <td width="30%">{{job.latestTime | date: 'medium'}}</td>
+          <tr class="{{job.currentStatus}}" >
+            <td width="10%"ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, !vm.jobs[vm.jobs.indexOf(job)].hasOwnProperty('runsAlreadyLoaded'), vm.jobs[vm.jobs.indexOf(job)].runLimit);" data-toggle="collapse"
+                data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">{{job.id}}</td>
+            <td class="job-table-jobname-column" width="30%" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, !vm.jobs[vm.jobs.indexOf(job)].hasOwnProperty('runsAlreadyLoaded'), vm.jobs[vm.jobs.indexOf(job)].runLimit);" data-toggle="collapse"
+                data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">
+              <a target="_blank" class="div-anchor" href="{{job.full_url}}">
+              {{job.name}}
+              </a>
+            </td>
+            <td width="30%" ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, !vm.jobs[vm.jobs.indexOf(job)].hasOwnProperty('runsAlreadyLoaded'), vm.jobs[vm.jobs.indexOf(job)].runLimit);" data-toggle="collapse"
+                data-target="#runs-{{job.id}}" aria-expanded="false" aria-controls="runs-{{job.id}}">{{job.latestTime | date: 'medium'}}</td>
             <td width="30%">
+              <button class="glyphicon glyphicon-signal btn btn-sm btn-primary" type="button" id="CLBox{{job.id}}" data-toggle="modal" data-target=".{{job.id}}-modal"></button>
+              <div class="modal fade {{job.id}}-modal" tabindex="-1" role="dialog" aria-labelledby="{{job.id}}-modal">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title"><b>{{job.name}} Configuration</b></h4>
+                    </div>
+
+                    <div class="modal-body">
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4>Display Options</h4>
+                        </div>
+                        <div class="panel-body">
+                          <div class="input-group col-md-4">
+                            <span class="input-group-addon" id="{{job.id}}-RLLabel">Run Limit</span>
+                            <input aria-describedby="{{job.id}}-RLLabel" type="number" min="1" max="150" ng-model="vm.jobs[vm.jobs.indexOf(job)].runLimit" class="form-control">
+                            <span class="input-group-btn">
+                              <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, true);" class="glyphicon glyphicon-repeat btn btn-primary"></button>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div class="panel panel-default">
+                        <div class="panel-heading">
+                          <h4>Data Options</h4>
+                        </div>
+                        <div class="panel-body">
+                          <div class="input-group col-md-10">
+                            <span class="input-group-addon" id="{{job.id}}-UCLLabel">Upper Control Limit</span>
+                            <input aria-describedby="{{job.id}}-UCLLabel" ng-model="vm.jobs[vm.jobs.indexOf(job)].upperControlLimit" type="number" class="form-control"/>
+                            <span class="input-group-addon" id="{{job.id}}-LCLLabel">Lower Control Limit</span>
+                            <input aria-describedby="{{job.id}}-LCLLabel" ng-model="vm.jobs[vm.jobs.indexOf(job)].lowerControlLimit" type="number" class="form-control"/>
+                            <span class="input-group-btn">
+                              <button ng-click="vm.setControlLimits(job.id, vm.jobs[vm.jobs.indexOf(job)].upperControlLimit, vm.jobs[vm.jobs.indexOf(job)].lowerControlLimit, job)" type="button" class="btn btn-primary">Save</button>
+                            </span>
+                          </div>
+                          </div>
+                        </div>
+
+                      <!--
+                        TODO: implement two date pickers that react to a new API call that will
+                        fill up to runLimit runs from inside the selected dates
+                        Date Pickers should only be active upon marking a checkbox
+                        TODO: move run limit inside of this modal
+                      -->
+
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <button ng-click="vm.deleteJob(job.id);" class="glyphicon glyphicon-remove btn btn-sm btn-danger glyph-color-danger"></button>
             </td>
           </tr>
           </tbody>
         </table>
         <div id="runs-{{job.id}}" class="collapse col-md-11 col-md-offset-1 no-padding" aria-expanded="false">
-          <button class="glyphicon glyphicon-signal btn btn-sm btn-primary" type="button" id="CLBox{{job.id}}" data-toggle="modal" data-target=".{{job.id}}-modal"></button>
-          <div class="modal fade {{job.id}}-modal" tabindex="-1" role="dialog" aria-labelledby="{{job.id}}-modal">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title">{{job.name}} Configuration</h4>
-                </div>
-                <div class="modal-body">
-                  <div class="input-group">
-                    <span class="input-group-addon" id="{{job.id}}UCLLabel">Upper Control Limit</span>
-                    <input aria-describedby="{{job.id}}UCLLabel" ng-model="upperControlLimit" type="number" class="form-control" placeholder="{{job.upperControlLimit}}"/>
-                  </div>
-                  <div class="input-group">
-                    <span class="input-group-addon" id="{{job.id}}LCLLabel">Lower Control Limit</span>
-                    <input aria-describedby="{{job.id}}LCLLabel" ng-model="lowerControlLimit" type="number" class="form-control" placeholder="{{job.lowerControlLimit}}"/>
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                  <button ng-click="vm.setControlLimits(job.id, upperControlLimit, lowerControlLimit, job)" type="button" data-dismiss="modal" class="btn btn-primary">Save</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, true, vm.runLimit);" class="glyphicon glyphicon-repeat btn btn-sm btn-primary"></button>
 
           <div ng-if="job.valueUnit !== 'NULL' && job.runs !== undefined">
             <control-chart id="{{job.id}}" data="job.chartData" options="job.chartOptions"></control-chart>
