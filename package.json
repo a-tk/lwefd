@@ -5,7 +5,8 @@
   "private": true,
   "main": "server.js",
   "scripts": {
-      "test": "./node_modules/mocha/bin/mocha --recursive test/"
+    "test": "node .\\node_modules\\mocha\\bin\\mocha --recursive test\\",
+    "coverage": "istanbul cover .\\node_modules\\mocha\\bin\\_mocha -- --recursive test\\"
   },
   "repository": {
     "type": "git",

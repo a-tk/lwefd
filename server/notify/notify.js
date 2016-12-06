@@ -151,15 +151,20 @@ var notify = (function (log4js, model) {
   }
 
   function print_parse_trace (data) {
+    log.warn('Entering the parse trace function');
     log.warn(JSON.stringify(data));
     log.warn('data: ' + (data !== undefined));
-    log.warn('has name ' + data.hasOwnProperty('name'));
-    log.warn('has build ' + data.hasOwnProperty('build'));
-    log.warn('has full_url ' + data.build.hasOwnProperty('full_url'));
-    log.warn('has number ' + data.build.hasOwnProperty('number'));
-    log.warn('has phase ' + (data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase)));
-    log.warn('has status ' + (data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)));
-    log.warn('has time ' + (data.build.time !== undefined));
+    if (data !== undefined) {
+      log.warn('has name ' + data.hasOwnProperty('name'));
+      log.warn('has build ' + data.hasOwnProperty('build'));
+      if (data.hasOwnProperty('build')) {
+        log.warn('has full_url ' + data.build.hasOwnProperty('full_url'));
+        log.warn('has number ' + data.build.hasOwnProperty('number'));
+        log.warn('has phase ' + (data.build.hasOwnProperty('phase') && model.phase.hasOwnProperty(data.build.phase)));
+        log.warn('has status ' + (data.build.hasOwnProperty('status') && model.status.hasOwnProperty(data.build.status)));
+        log.warn('has time ' + (data.build.time !== undefined));
+      }
+    }
   }
 
 
