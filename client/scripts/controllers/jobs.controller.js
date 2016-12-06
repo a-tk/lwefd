@@ -46,6 +46,9 @@
           for (var i = 0; i <  vm.jobs.length; i++) {
             //Set the default number of runs that are loaded.
             vm.jobs[i].runLimit = defaultRunLimit;
+            vm.jobs[i].beginSelectionDate = undefined;
+            vm.jobs[i].endSelectionDate = undefined;
+
           }
 
           getProductSummary();
@@ -58,8 +61,20 @@
         } else {
 
           var limit = vm.jobs[jobindex].runLimit;
+          var beginSelectionDate = undefined;
+          var endSelectionDate = undefined;
 
-          DbService.getRuns(vm.id, id, limit, function (result) {
+          if (vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].endSelectionDate !== undefined) {
+            beginSelectionDate = vm.jobs[jobindex].beginSelectionDate.getTime();
+            endSelectionDate = vm.jobs[jobindex].endSelectionDate.getTime();
+
+          } else if (vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].endSelectionDate === undefined) {
+            beginSelectionDate = vm.jobs[jobindex].beginSelectionDate.getTime();
+            endSelectionDate = Date.now();
+          }
+
+          //DbService Handles the values of beginSelectionDate and endSelectionDate
+          DbService.getRuns(vm.id, id, limit, beginSelectionDate, endSelectionDate, function (result) {
 
             result.data.sort(function(a, b) {
               if (a.time > b.time) {

@@ -63,8 +63,13 @@
         $http.get('api/' + id + '/jobs').then(callback, errorCallback);
       }
 
-      function getRuns(prodId, id, limit, callback, errorCallback) {
-        $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
+      function getRuns(prodId, id, limit, beginSelectionDate, endSelectionDate, callback, errorCallback) {
+        if (beginSelectionDate === undefined || endSelectionDate === undefined) {
+          $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
+        } else {
+          console.log(beginSelectionDate + "  " + endSelectionDate);
+          $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
+        }
       }
 
       function setForwardUrl(pid, url, callback, errorCallback) {
