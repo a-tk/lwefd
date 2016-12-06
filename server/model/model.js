@@ -509,6 +509,27 @@ var model = (function (log4js, dbFile) {
   };
 
 
+  var getJobRunsRanged = function (jobId, beginSelectionDate, endSelectionDate, callback) {
+    var runQuery = 'SELECT * FROM runs ' +
+      'WHERE ' +
+      'jobId=' + jobId + ' ' +
+      'AND time>=' + beginSelectionDate + ' ' +
+      'AND time<=' + endSelectionDate + ' ' +
+      'ORDER BY id DESC ' +
+      ';';
+
+    db.all(runQuery, function (err, result) {
+      if (!err) {
+        callback(result);
+      } else {
+        log.warn('could not getJobRunsRanged for jobId ' + jobId + ' and beginSelectionDate ' + beginSelectionDate +
+          ' and endSelectionDate ' + endSelectionDate);
+        callback();
+      }
+    });
+  };
+
+
   var getAllJobs = function (productId, callback) {
     var jobQuery = 'SELECT * FROM jobs ' +
       'WHERE ' +
@@ -792,6 +813,7 @@ var model = (function (log4js, dbFile) {
     addRun: addRun,
     getJobRuns: getJobRuns,
     getJobRunsLimited: getJobRunsLimited,
+    getJobRunsRanged: getJobRunsRanged,
     getProducts: getProducts,
     getAllJobs: getAllJobs,
     updateProductsStatus: updateProductsStatus,

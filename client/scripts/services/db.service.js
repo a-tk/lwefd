@@ -68,7 +68,7 @@
           $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
         } else {
           console.log(beginSelectionDate + "  " + endSelectionDate);
-          $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
+          $http.get('api/' + prodId + '/jobs/' + id + '/range/' + beginSelectionDate + '/' + endSelectionDate).then(callback, errorCallback);
         }
       }
 

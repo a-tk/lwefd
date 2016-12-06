@@ -330,6 +330,33 @@ var api = (function (log4js, express, model, notify) {
     });
   });
 
+
+  /**
+   *  url: /api/:productId/jobs/:id/range/:beginSelectionDate/:endSelectionDate
+   *  method: GET
+   *  result: returns array of runs associated with the job from :beginSelectionDate to :endSelectionDate
+   *    object contains id, jobId, time, full_url, number, status, value, productId
+   *
+   *    [
+   *      {
+   *        "id" : 1,
+   *        "jobId" : 16,
+   *        "productId" : 12,
+   *        "full_url" : "http://something",
+   *        "time" : 1475678113822,
+   *        "value" : 42,
+   *        "number" : 1000,
+   *        "status" : "SUCCESS"
+   *      },
+   *      { ... }
+   *    ]
+   */
+  api.get('/api/:productId/jobs/:id/range/:beginSelectionDate/:endSelectionDate', function (req, res, next) {
+    model.getJobRunsRanged(req.params.id, req.params.beginSelectionDate, req.params.endSelectionDate, function (result) {
+      res.send(result);
+    });
+  });
+
   return api;
 });
 
