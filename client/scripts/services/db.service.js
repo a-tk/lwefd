@@ -64,10 +64,10 @@
       }
 
       function getRuns(prodId, id, limit, beginSelectionDate, endSelectionDate, callback, errorCallback) {
-        if (beginSelectionDate === undefined || endSelectionDate === undefined) {
+        if ((beginSelectionDate === undefined || beginSelectionDate === null) ||
+          (endSelectionDate === undefined || endSelectionDate === null)) {
           $http.get('api/' + prodId + '/jobs/' + id + '/' + limit).then(callback, errorCallback);
         } else {
-          console.log(beginSelectionDate + "  " + endSelectionDate);
           $http.get('api/' + prodId + '/jobs/' + id + '/range/' + beginSelectionDate + '/' + endSelectionDate).then(callback, errorCallback);
         }
       }

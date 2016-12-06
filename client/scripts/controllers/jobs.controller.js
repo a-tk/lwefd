@@ -61,14 +61,19 @@
         } else {
 
           var limit = vm.jobs[jobindex].runLimit;
-          var beginSelectionDate = undefined;
-          var endSelectionDate = undefined;
+          var beginSelectionDate = null;
+          var endSelectionDate = null;
 
-          if (vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].endSelectionDate !== undefined) {
+          //Annoyingly, the html5 input type of date can be either undefined or null. This is why the complex statements
+          if ((vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].beginSelectionDate !== null) &&
+            (vm.jobs[jobindex].endSelectionDate !== undefined && vm.jobs[jobindex].endSelectionDate !== null)) {
+
             beginSelectionDate = vm.jobs[jobindex].beginSelectionDate.getTime();
             endSelectionDate = vm.jobs[jobindex].endSelectionDate.getTime();
 
-          } else if (vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].endSelectionDate === undefined) {
+          } else if ((vm.jobs[jobindex].beginSelectionDate !== undefined && vm.jobs[jobindex].beginSelectionDate !== null) &&
+            (vm.jobs[jobindex].endSelectionDate === undefined || vm.jobs[jobindex].endSelectionDate === null)) {
+
             beginSelectionDate = vm.jobs[jobindex].beginSelectionDate.getTime();
             endSelectionDate = Date.now();
           }
@@ -111,10 +116,12 @@
       }
 
       function deleteJob(jid) {
-        DbService.deleteJob(vm.id, jid, function () {
-          //niceMsg(msg);
-          getJobs(vm.id);
-        }, fancyError);
+        if (confirm('Are you sure you want to permanently delete job id ' + jid + '?')) {
+          DbService.deleteJob(vm.id, jid, function () {
+            //niceMsg(msg);
+            getJobs(vm.id);
+          }, fancyError);
+        }
       }
 
       function deleteRun(jobindex, jid, rid) {

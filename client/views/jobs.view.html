@@ -54,7 +54,7 @@
                             <span class="input-group-addon" id="{{job.id}}-BeginDate">Begin Date</span>
                             <input aria-describedby="{{job.id}}-BeginDate" ng-model="vm.jobs[vm.jobs.indexOf(job)].beginSelectionDate" type="date" class="form-control"/>
                             <span class="input-group-addon" id="{{job.id}}-EndDate">End Date</span>
-                            <input aria-describedby="{{job.id}}-EndDate" ng-model="vm.jobs[vm.jobs.indexOf(job)].endSelectionDateDate" type="date" class="form-control"/>
+                            <input aria-describedby="{{job.id}}-EndDate" ng-model="vm.jobs[vm.jobs.indexOf(job)].endSelectionDate" type="date" class="form-control"/>
                             <span class="input-group-btn">
                               <button ng-click="vm.loadRuns(vm.jobs.indexOf(job), job.id, true);" class="glyphicon glyphicon-repeat btn btn-primary"></button>
                             </span>
