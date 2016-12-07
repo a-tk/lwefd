@@ -109,7 +109,7 @@ var notify = (function (log4js, model) {
       notification.build.full_url = data.build.full_url;
       notification.build.number = data.build.number;
       //notification.build.phase = data.build.phase;
-      if (!data.build.hasOwnProperty('status')) {
+      if (!data.build.hasOwnProperty('status') || !model.status.hasOwnProperty(data.build.status)) {
         //default to SUCCESS
         data.build.status = model.status.SUCCESS;
       }

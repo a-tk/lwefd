@@ -212,6 +212,63 @@ describe('notify', function () {
 
     });
 
+    it('should successfully process with a positive number', function () {
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          phase: "STARTED",
+          number: 1
+        }
+      };
+
+      notify.process(12, data, processCallback);
+
+      assert.equal(countOfAddRun, 1);
+
+    });
+
+    it('should successfully process with a negative number', function () {
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          phase: "STARTED",
+          number: -1
+        }
+      };
+
+      notify.process(12, data, processCallback);
+
+      assert.equal(countOfAddRun, 1);
+
+    });
+
+    it('should successfully process with a zero number', function () {
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          phase: "STARTED",
+          number: 0
+        }
+      };
+
+      notify.process(12, data, processCallback);
+
+      assert.equal(countOfAddRun, 1);
+
+    });
+
     it('should fail to process without phase', function () {
 
       countOfAddRun = 0; //reset the addRun method count
@@ -220,7 +277,8 @@ describe('notify', function () {
         name : "test1",
         build: {
           full_url: "http://something",
-          number: 20
+          number: 20,
+          status: "FAILURE"
         }
       };
 
@@ -358,7 +416,7 @@ describe('notify', function () {
 
     });
 
-    it('should not process with an unknown status', function () {
+    it('should default status to success with unknown status and be successful (phase cannot be STARTED)', function () {
 
       countOfAddRun = 0; //reset the addRun method count
       countOfUpdateProductsStatus = 0;
@@ -367,12 +425,25 @@ describe('notify', function () {
         build: {
           full_url: "http://something",
           number: 20,
-          phase: "STARTED",
+          phase: "FINALIZED",
           status: "unknown"
         }
       };
 
+      /*
+      I am hijacking the addRun method to test that the unknown status was actually changed to SUCCESS
+       */
+      var temp = mockModel.addRun;
+      mockModel.addRun = function (notification, callback) {
+        countOfAddRun++;
+        assert.equal(notification.build.status, mockModel.status.SUCCESS);
+        callback();
+      };
+
       notify.process(12, data, processCallback);
+
+      //Make sure to set the addRun method back.
+      mockModel.addRun = temp;
 
       assert.equal(countOfAddRun, 1);
       assert.equal(countOfUpdateProductsStatus, 1);
@@ -484,6 +555,75 @@ describe('notify', function () {
       assert.equal(countOfUpdateProductsStatus, 1);
 
     });
+
+    it('should successfully process with time parameter', function () {
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          number: 20,
+          phase: "FINALIZED",
+          status: "UNSTABLE",
+          time: 132165468
+        }
+      };
+
+      notify.process(12, data, processCallback);
+
+      //process will call each of these once given its input
+      assert.equal(countOfAddRun, 1);
+      assert.equal(countOfUpdateProductsStatus, 1);
+
+    });
+
+
+    it('should successfully process two notifications in a row', function () {
+
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          number: 20,
+          phase: "STARTED"
+        }
+      };
+
+
+      /*
+        I am nastily hijacking the addRun method, to submit another notification
+        while the first is still processing. This is a "clever" bit of whitebox testing,
+        to insure that the notification queueing system is working correctly.
+
+        As such, the way that this addRun is written is to closely mimic the way that notify handles its
+        internal queueing. The result of this is that it calls addRun as many times as inside this function,
+        and only updates the productsStatus once, after all of the notifications in the queue get added.
+       */
+      var tempFunction = mockModel.addRun;
+      mockModel.addRun = function(notification, callback) {
+        countOfAddRun++;
+        //must reset the function to prevent infinite recursion
+        mockModel.addRun = tempFunction;
+        notify.process(12, data, processCallback);
+        notify.process(12, data, processCallback);
+        notify.process(12, data, processCallback);
+        notify.process(12, data, processCallback);
+        callback();
+      };
+
+      notify.process(12, data, processCallback);
+
+      //process will call each of these once given its input
+      assert.equal(countOfAddRun, 5); //must call add run twice, one for each notification
+      assert.equal(countOfUpdateProductsStatus, 1); // and update status only once, after all notifications have been emptied from notifies internal queue
+
+    });
+
 
   })
 });
