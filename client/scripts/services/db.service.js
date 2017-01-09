@@ -48,7 +48,7 @@
       }
 
       function deleteProduct(id, callback, errorCallback) {
-        $http.get('api/' + id + 'delete/product').then(callback, errorCallback);
+        $http.get('api/' + id + '/delete/product').then(callback, errorCallback);
       }
 
       function deleteJob(pid, jid, callback, errorCallback) {
