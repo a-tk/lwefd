@@ -342,7 +342,8 @@ var model = (function (log4js, dbFile) {
     //If user passes -1 to number, it is auto-filled with a run number starting from 0.
     var number = notification.build.number;
     if (notification.build.number === -1) {
-      number = '(SELECT COUNT(*) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name + '"))';
+      number = '(SELECT COUNT(*) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name +
+        '" AND productId=' + notification.productId + '))';
     }
     var statusStringSQL;
     if (notification.build.status === status.VARIABLE_CL){
