@@ -342,7 +342,14 @@ var model = (function (log4js, dbFile) {
     //If user passes -1 to number, it is auto-filled with a run number starting from 0.
     var number = notification.build.number;
     if (notification.build.number === -1) {
-      number = '(SELECT COUNT(*) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name +
+      /*
+      Technically, number + 1 will always be greater than COUNT(*).
+      TODO: remove COUNT(*). be sure to test solution when adding a new job. COUNT(*) allowed this to work correctly
+        TODO: by forcing the query to return a value. otherwise, no value (not null, just no value at all) was returned by IFNULL(number, 0)
+        TODO: Tested performance on large numbers of runs (several hundred), and adding the aggregate query COUNT(*)
+        TODO: did not affect the performance of the overall query
+      */
+      number = '(SELECT MAX(COUNT(*), IFNULL(number, 0) + 1) FROM runs WHERE jobId=(SELECT jobs.id FROM jobs WHERE name="'+ notification.name +
         '" AND productId=' + notification.productId + '))';
     }
     var statusStringSQL;
