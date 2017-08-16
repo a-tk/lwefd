@@ -54,6 +54,7 @@ var model = (function (log4js, dbFile) {
       'productId INTEGER NOT NULL, ' +
       'name TEXT NOT NULL DEFAULT "NO_NAME_PROVIDED", ' +
       'currentStatus TEXT NOT NULL DEFAULT "' + status.SUCCESS + '", ' +
+      'currentValue INTEGER DEFAULT NULL, ' +
       'latestTime INTEGER, ' +
       'full_url TEXT, ' +
       'valueUnit TEXT NOT NULL DEFAULT "NULL", ' +
@@ -389,7 +390,7 @@ var model = (function (log4js, dbFile) {
             } else if (notification.build.status !== phase.STARTED) {
               pushProductId(notification.productId);
               var rid = this.lastID;// this is only to pass the rid on to the next function. Builtin from sqlite3
-              updateJobFromRun(result[0].id, rid, notification.build.time, notification.build.full_url, notification.build.status, callback);
+              updateJobFromRun(result[0].id, rid, notification.build.time, notification.build.full_url, notification.build.status, notification.build.value, callback);
             } else {
               //don't add started changes
               callback();
@@ -407,7 +408,7 @@ var model = (function (log4js, dbFile) {
               } else if (notification.build.status !== phase.STARTED) {
                 pushProductId(notification.productId);
                 var rid = this.lastID; // this is only to pass the rid on to the next function. Builtin from sqlite3
-                updateJobFromRun(jobId, rid, notification.build.time, notification.build.full_url, notification.build.status, callback);
+                updateJobFromRun(jobId, rid, notification.build.time, notification.build.full_url, notification.build.status, notification.build.value, callback);
               } else {
                 //don't add started changes
                 callback();
@@ -422,7 +423,7 @@ var model = (function (log4js, dbFile) {
     });
   };
 
-  var updateJobFromRun = function (jid, rid, time, url, rstatus, callback) {
+  var updateJobFromRun = function (jid, rid, time, url, rstatus, rvalue, callback) {
 
     var statusString;
     if (rstatus == status.VARIABLE_CL) {
@@ -441,7 +442,9 @@ var model = (function (log4js, dbFile) {
       url +
       '",' +
       'currentStatus=' + statusString +
-      'WHERE ' +
+      ', ' +
+      'currentValue=' + rvalue +
+      ' WHERE ' +
       ' id=' + jid +
       ';';
     db.run(sql, function (err) {
