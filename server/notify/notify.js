@@ -114,7 +114,7 @@ var notify = (function (log4js, model) {
         data.build.status = model.status.SUCCESS;
       }
 
-      if (data.build.phase === model.phase.STARTED) {
+      if (data.build.phase === model.phase.STARTED || data.build.phase === model.phase.QUEUED) {
         notification.build.status = model.phase.STARTED;
       } else {
         notification.build.status = data.build.status;

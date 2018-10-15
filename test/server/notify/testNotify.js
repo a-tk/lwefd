@@ -14,6 +14,7 @@ var mockModel = (function () {
   };
   var phase = {
     STARTED: "STARTED",
+    QUEUED: "QUEUED",
     FINISHED: "FINISHED",
     COMPLETED: "COMPLETED",
     FINALIZED: "FINALIZED"
@@ -460,6 +461,27 @@ describe('notify', function () {
           full_url: "http://something",
           number: 20,
           phase: "STARTED",
+          status: "VARIABLE_CL"
+        }
+      };
+
+      notify.process(12, data, processCallback);
+
+      assert.equal(countOfAddRun, 1);
+      assert.equal(countOfUpdateProductsStatus, 1);
+
+    });
+
+    it('should successfully process QUEUED phase', function () {
+
+      countOfAddRun = 0; //reset the addRun method count
+      countOfUpdateProductsStatus = 0;
+      var data = {
+        name : "test1",
+        build: {
+          full_url: "http://something",
+          number: 20,
+          phase: "QUEUED",
           status: "VARIABLE_CL"
         }
       };

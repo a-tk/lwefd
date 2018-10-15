@@ -18,6 +18,7 @@ var model = (function (log4js, dbFile) {
   };
   var phase = {
     STARTED: "STARTED",
+    QUEUED: "QUEUED",
     FINISHED: "FINISHED",
     COMPLETED: "COMPLETED",
     FINALIZED: "FINALIZED"
