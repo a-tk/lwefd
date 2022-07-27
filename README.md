@@ -1,5 +1,14 @@
 
-# lwefd
-A Light Weight Extreme Feedback Device
+# Light Weight Extreme Feedback Device (LWEFD)
+
+# Building
+
+# Running
+
+## Tests
+
+# Notification Examples
+
+
 
 
