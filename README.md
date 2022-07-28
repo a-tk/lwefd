@@ -38,7 +38,47 @@ overtime, along with standard deviation and other trend information.
 
 # Getting Started
 
-The notifications look like this. 
+There are two types of notificaitons: standard and value. 
+
+Standard notifications look like this: 
+
+    {
+        "name": "testSuccess",
+        "build": {
+            "full_url": "http://localhost:3000",
+            "number": 1,
+            "phase": "COMPLETED",
+            "status": "SUCCESS"
+            }
+    }
+
+`name` (mandatory): the name of the job
+`build` (mandatory): is the current information to be updated
+`full_url` (mandatory): is a location that can link to the job. This is presented as an href in the UI.
+`number` (mandatory): can be set to any number, and can be used to overwrite old runs. Set to -1 for autoincrementing. 
+`phase` (mandatory): one of `STARTED` `COMPLETED` `FINISHED` 
+`status` (mandatory): one of `SUCCESS` `UNSTABLE` `FAILURE` 
+
+The value type notifications contain only 2 additional fields.
+
+
+    {
+        "name": "testValue",
+        "valueUnit": "MPH"
+        "build": {
+            "full_url": "http://localhost:3000",
+            "number": 1,
+            "phase": "COMPLETED",
+            "status": "SUCCESS"
+            "value": 32
+            }
+    }
+
+`valueUnit` (required for value): a string to display in the UI. 
+`value` (required for value): a numerical value. 
+
+For value notifications, its recommended at always use "number": -1 for autoincrements. 
+
 
 # Building
 
