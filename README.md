@@ -38,7 +38,35 @@ overtime, along with standard deviation and other trend information.
 
 # Getting Started
 
-There are two types of notificaitons: standard and value. 
+To get started, a Product needs to be created. Create one 
+by navigating to the UI, "Configure" tab, and adding a product name. 
+
+Adding a product will allow additional configuration for 
+rasberry pi output pins and `Forwarding`
+
+## Pin Configuration
+
+Using the output pins is simple, but there are a couple of important
+rules. 
+- the pin output power is limited to what a raspberry pi can source. 
+It is required in all cases except those of very low current to use a relay board
+with external power source to drive bright lights or servos or whatever. 
+- The pin numbers DO NOT map to the raspberry pi standard output pin numbers. 
+raspberry pi pin numbers. They DO map to raspberry pi GPIO pin numbers. So use 1
+for GPIO pin 1, and not 28 for GPIO pin 1. 
+
+## Forwarding
+
+Forwarding allows this LWEFD to send a notification on product status
+change to another LWEFD system. This allows chaining of the systems, and is
+useful when more products are configured than the raspberry pi has pins, 
+but notifications are desired to go to the same endpoint. 
+
+## Notifications
+
+LWEFD won't do anything unless something is sending it notifications. 
+
+There are two types of notifications: standard and value. 
 
 Standard notifications look like this: 
 
@@ -54,8 +82,10 @@ Standard notifications look like this:
 
 - `name` (mandatory): the name of the job
 - `build` (mandatory): is the current information to be updated
-- `full_url` (mandatory): is a location that can link to the job. This is presented as an href in the UI.
-- `number` (mandatory): can be set to any number, and can be used to overwrite old runs. Set to -1 for autoincrementing. 
+- `full_url` (mandatory): is a location that can link to the job. This is
+presented as an href in the UI.
+- `number` (mandatory): can be set to any number, and can be used to 
+overwrite old runs. Set to -1 for autoincrementing. 
 - `phase` (mandatory): one of `STARTED` `COMPLETED` `FINISHED` 
 - `status` (mandatory): one of `SUCCESS` `UNSTABLE` `FAILURE` 
 
@@ -77,7 +107,8 @@ The value type notifications contain only 2 additional fields.
 - `valueUnit` (required for value): a string to display in the UI. 
 - `value` (required for value): a numerical value. 
 
-For value notifications, its recommended at always use "number": -1 for autoincrements. 
+For value notifications, its recommended at always use "number": -1 for
+autoincrements. 
 
 
 # Building
@@ -86,27 +117,43 @@ NPM manages backend dependencies, and Bower for frontend.
 
     npm install
     bower install
-    node server/server.js
 
 # Running
+
+Running LWEFD is simple, just call the main server file with node.
+
+    node server/server.js
+
+This will start the server with the default settings, which are in memory
+database and hosting on port 3000.
+
+The settings can be changed via the `env.json` file in the server folder.
 
     {
       "development": {
           "dbFile": ":memory:",
           "port": 3000,
           "isRaspi": false
-          },
-          "production": {
-              "dbFile": "DB.sqlite",
-              "port":80,
-              "isRaspi": false
-              }
+      },
+      "production": {
+          "dbFile": "DB.sqlite",
+          "port":80,
+          "isRaspi": false
+      }
     }
+
+To use the "production" settings, simply add a parameter.
+
+    node server/server.js production
+
+In this manner, additional sets of config can be added to `env.json`
 
 ## Tests
 
-# Notification Examples
+there is an NPM script to run the tests. 
 
+    npm run test
+    npm run coverage
 
-
-
+There is also a script in the `test` folder that demonstrates how to 
+load up a sample DB, or to send a notification with curl. 
