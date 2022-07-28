@@ -52,12 +52,12 @@ Standard notifications look like this:
             }
     }
 
-`name` (mandatory): the name of the job
-`build` (mandatory): is the current information to be updated
-`full_url` (mandatory): is a location that can link to the job. This is presented as an href in the UI.
-`number` (mandatory): can be set to any number, and can be used to overwrite old runs. Set to -1 for autoincrementing. 
-`phase` (mandatory): one of `STARTED` `COMPLETED` `FINISHED` 
-`status` (mandatory): one of `SUCCESS` `UNSTABLE` `FAILURE` 
+- `name` (mandatory): the name of the job
+- `build` (mandatory): is the current information to be updated
+- `full_url` (mandatory): is a location that can link to the job. This is presented as an href in the UI.
+- `number` (mandatory): can be set to any number, and can be used to overwrite old runs. Set to -1 for autoincrementing. 
+- `phase` (mandatory): one of `STARTED` `COMPLETED` `FINISHED` 
+- `status` (mandatory): one of `SUCCESS` `UNSTABLE` `FAILURE` 
 
 The value type notifications contain only 2 additional fields.
 
@@ -74,8 +74,8 @@ The value type notifications contain only 2 additional fields.
             }
     }
 
-`valueUnit` (required for value): a string to display in the UI. 
-`value` (required for value): a numerical value. 
+- `valueUnit` (required for value): a string to display in the UI. 
+- `value` (required for value): a numerical value. 
 
 For value notifications, its recommended at always use "number": -1 for autoincrements. 
 
